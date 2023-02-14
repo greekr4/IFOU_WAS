@@ -439,7 +439,7 @@ public class trans_ora_manager {
 	
 	
 	/**
-	 * glob_mng_icvan Select Query
+	 * glob_mng_icvan_tot Select Query
 	 * @param jary(tb_sys_domain)
 	 * @return json형식으로 dhx형식에 맞게
 	 * 2023-02-01 김태균
