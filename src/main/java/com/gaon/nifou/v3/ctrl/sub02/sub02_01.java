@@ -25,7 +25,7 @@ public class sub02_01 extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		
 		
-		out.print(oram.select_glob_mng_icvan(oram.get_tb_sys_domain("OR026", "0204")));
+		out.print(oram.select_glob_mng_icvan(oram.get_tb_sys_domain("OR026", "0201")));
 		
 		
 	}
