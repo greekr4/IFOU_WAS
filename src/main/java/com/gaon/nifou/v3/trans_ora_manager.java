@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.Objects;
 import java.util.Properties;
 
 import org.json.simple.JSONArray;
@@ -411,16 +412,21 @@ public class trans_ora_manager {
 			
 			rs = stmt.executeQuery();
 
-			
+			int orn = 1;
 			while(rs.next()) {
 				JSONObject jsonob = new JSONObject();
 				for(int i=0; i<jary.size();i++) {
 					JSONObject jsonob2 = new JSONObject();
 					jsonob2 = (JSONObject) jary.get(i);	
 					String id = (String)(jsonob2.get("id"));
+					if(!Objects.equals(id, "ORN") && !Objects.equals(id, null)) {
 					System.out.println(id);
 					jsonob.put(id,rs.getString(id));
 					System.out.println("성공");
+					}else {
+					jsonob.put("ORN",orn);
+					orn++;
+					}
 					}
 
 	            
@@ -606,9 +612,14 @@ public class trans_ora_manager {
 					JSONObject jsonob2 = new JSONObject();
 					jsonob2 = (JSONObject) jary.get(i);	
 					String id = (String)(jsonob2.get("id"));
+					System.out.println(id+"ck");
+					if(!id.equals("ORN")) {
 					System.out.println(id + " = " + (rsmd.getCatalogName(1)));
 					jsonob.put(id,rs.getString(id));
 					System.out.println("성공");
+					}else {
+					jsonob.put("ORN", i);
+					}
 					}
 
 	            
