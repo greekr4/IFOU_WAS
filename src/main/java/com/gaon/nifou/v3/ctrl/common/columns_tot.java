@@ -28,6 +28,8 @@ public class columns_tot extends HttpServlet {
         JSONArray jsonary = new JSONArray();
 		PrintWriter out = response.getWriter();
 		
+		
+		
 		out.print(oram.get_tb_sys_domain("OR026", "0201T"));
 		
 		

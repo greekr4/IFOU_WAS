@@ -183,10 +183,10 @@ public class trans_ora_manager {
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		
-		String[] rtnstr = new String[9];
+		String[] rtnstr = new String[10];
 		try {
 			strbuf = new StringBuffer();
-			strbuf.append("SELECT t2.USER_ID, t2.ORG_CD, t2.DEP_CD , t1.ORG_NO , t1.PTAB , t1.VTAB , t1.DTAB , t2.USER_LV,t2.TRANS_NO FROM TB_BAS_ORG t1 ");
+			strbuf.append("SELECT t2.USER_ID, t2.ORG_CD, t2.DEP_CD , t1.ORG_NO , t1.PTAB , t1.VTAB , t1.DTAB , t2.USER_LV,t2.TRANS_NO,t2.AUTH_SEQ FROM TB_BAS_ORG t1 ");
 			strbuf.append("INNER JOIN TB_BAS_USER t2 ");
 			strbuf.append("ON (t1.ORG_CD=t2.ORG_CD) ");
 			strbuf.append("where t2.USER_ID = ?");
@@ -207,6 +207,7 @@ public class trans_ora_manager {
 				rtnstr[6] = rs.getString(7);
 				rtnstr[7] = rs.getString(8);
 				rtnstr[8] = rs.getString(9);
+				rtnstr[9] = rs.getString(10);
 			}
 
 		} catch (Exception e) {

@@ -28,7 +28,10 @@ public class columns extends HttpServlet {
         JSONArray jsonary = new JSONArray();
 		PrintWriter out = response.getWriter();
 		
-		out.print(oram.get_tb_sys_domain("OR026", "0201"));
+		String orgcd = request.getParameter("orgcd");
+		String pages = request.getParameter("pages");
+		
+		out.print(oram.get_tb_sys_domain(orgcd, pages));
 		
 		
 		

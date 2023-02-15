@@ -23,9 +23,10 @@ public class sub02_01_tot extends HttpServlet {
 		trans_ora_manager oram = new trans_ora_manager();
         JSONArray jsonary = new JSONArray();
 		PrintWriter out = response.getWriter();
+		String orgcd = request.getParameter("orgcd");
+		String pages = request.getParameter("pages");
 		
-		
-		out.print(oram.select_glob_mng_icvan_tot(oram.get_tb_sys_domain("OR026", "0205")));
+		out.print(oram.select_glob_mng_icvan_tot(oram.get_tb_sys_domain(orgcd, pages)));
 		
 		
 	}
