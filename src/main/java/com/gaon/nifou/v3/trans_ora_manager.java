@@ -400,7 +400,7 @@ public class trans_ora_manager {
 			strbuf.append("			SELECT DEP_NM, DEP_CD FROM TB_BAS_DEPART WHERE ORG_CD='OR008'\r\n");
 			strbuf.append("		)T4 ON(T3.DEP_CD=T4.DEP_CD)\r\n");
 			strbuf.append("		LEFT OUTER JOIN( SELECT PUR_NM, PUR_OCD, PUR_CD FROM TB_BAS_PURINFO)T5 ON (T1.ACQ_CD=T5.PUR_OCD OR T1.ACQ_CD=T5.PUR_CD)\r\n");
-			strbuf.append("		WHERE SVCGB IN ('CC', 'CE')  AND AUTHCD='0000' AND TID IN (select tid from tb_bas_tidmap  where org_cd='OR008' AND dep_cd='DP30101')   AND T1.APPDD>='20220203' and (T1.APPDD<='20230203' AND T1.APPTM<='155357')\r\n");
+			strbuf.append("		WHERE SVCGB IN ('CC', 'CE')  AND AUTHCD='0000' AND TID IN (select tid from tb_bas_tidmap  where org_cd='OR008' AND dep_cd='DP30101')   AND T1.APPDD>='20230203' and T1.APPDD<='20230203'\r\n");
 			strbuf.append("		order by appdd desc, apptm desc\r\n");
 			strbuf.append("	)\r\n");
 			strbuf.append(")\r\n");

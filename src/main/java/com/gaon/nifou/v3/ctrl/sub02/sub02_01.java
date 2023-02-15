@@ -16,7 +16,7 @@ import com.gaon.nifou.v3.trans_ora_manager;
 
 @WebServlet("/sub02/01.gaon")
 public class sub02_01 extends HttpServlet {
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
 		response.setHeader("Access-Control-Allow-Origin", "*");
@@ -28,7 +28,7 @@ public class sub02_01 extends HttpServlet {
 		String orgcd = request.getParameter("orgcd");
 		String pages = request.getParameter("pages");
 		
-		out.print(oram.select_glob_mng_icvan_tot(oram.get_tb_sys_domain(orgcd, pages)));
+		out.print(oram.select_glob_mng_icvan(oram.get_tb_sys_domain(orgcd, pages)));
 		
 		
 	}

@@ -16,7 +16,7 @@ import com.gaon.nifou.v3.trans_ora_manager;
 
 @WebServlet("/sub02/01_tot.gaon")
 public class sub02_01_tot extends HttpServlet {
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
 		response.setHeader("Access-Control-Allow-Origin", "*");

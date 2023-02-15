@@ -20,7 +20,7 @@ import com.gaon.nifou.v3.trans_ora_manager;
 public class columns extends HttpServlet {
 
 	
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
 		response.setHeader("Access-Control-Allow-Origin", "*");
