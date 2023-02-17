@@ -277,15 +277,54 @@ public class trans_ora_manager {
 			
 			while(rs.next()) {
 				JSONObject jsonob = new JSONObject();
+				JSONObject jsonob2 = new JSONObject();
+				JSONObject jsonob_header = new JSONObject();
+				JSONObject jsonob_header2 = new JSONObject();
+				JSONObject jsonob_header3 = new JSONObject();
+				JSONArray jsonary_header = new JSONArray();
+				JSONArray jsonary3 = new JSONArray();
+
+            	JSONObject jsonob_colheader = new JSONObject();
+				JSONArray jsonary_colheader = new JSONArray();
+
 	            jsonob.put("width",rs.getInt("WIDTHS"));
 	            jsonob.put("id",rs.getString("POS_FIELD"));
-	            jsonob.put("header",rs.getString("FIELDS_TXT"));
+
+	            
+	            
+	            if(rs.getInt("ROWSPAN") != 0) {
+		            jsonob_header.put("text",rs.getString("FIELDS_TXT"));
+	            	jsonob_header.put("rowspan",rs.getInt("ROWSPAN"));	
+	            	jsonob_header.put("align",rs.getString("ALIGNS"));
+	            	jsonary_header.add(jsonob_header);
+	            	
+	            }
+				
+	            if(rs.getInt("COLSPAN") != 0) {
+		            jsonob_header.put("text",rs.getString("FIELDS_TXT"));
+	            	jsonob_header.put("colspan",rs.getInt("COLSPAN"));	
+	            	jsonob_header.put("align",rs.getString("ALIGNS"));
+	            	jsonary_header.add(jsonob_header);
+	            	jsonob_colheader.put("text",rs.getString("COL_TXT"));
+	            	jsonary_header.add(jsonob_colheader);
+		            System.out.println(jsonob_colheader);
+	            }
+
+	            if(rs.getInt("COLSPAN") == 0 && rs.getInt("ROWSPAN") == 0 && rs.getString("COL_CHK").equals("Y")) {
+					JSONObject jsonob_header_test = new JSONObject();
+					jsonob_header_test.put("text2","");	
+		            jsonob_header.put("text",rs.getString("FIELDS_TXT"));
+	            	jsonob_header.put("align",rs.getString("ALIGNS"));
+		            jsonary_header.add(jsonob_header_test);
+		            jsonary_header.add(jsonob_header);
+	            }
+	            
 	            
 	            if(rs.getString("SORTS").equals("int")) {
 	            jsonob.put("format","#,###");
 	            }
-	            
-	            
+	           
+	            jsonob.put("header",jsonary_header);
 				jsonary.add(jsonob);
 
 				
@@ -346,7 +385,10 @@ public class trans_ora_manager {
 			strbuf.append("	TRANIDX		TR_SEQNO,\r\n");
 			strbuf.append("	ADD_RECP,\r\n");
 			strbuf.append("	AUTHMSG		TR_RST_MSG,\r\n");
-			strbuf.append(" OAPP_AMT    TR_CANDD\r\n");
+			strbuf.append(" OAPP_AMT    TR_CANDD,\r\n");
+			strbuf.append(" '정상거래'    APP_MSG,\r\n");
+			strbuf.append(" '국내카드'    OVSEA_CARD,\r\n");
+			strbuf.append(" '진료과'      ADD_RHK\r\n");
 			strbuf.append("FROM(\r\n");
 			strbuf.append("	SELECT\r\n");
 			strbuf.append("		SEQNO, DEP_NM, TERM_NM, TID, MID, PUR_NM,\r\n");
@@ -417,19 +459,26 @@ public class trans_ora_manager {
 			while(rs.next()) {
 				JSONObject jsonob = new JSONObject();
 				for(int i=0; i<jary.size();i++) {
+					
+					
+					
 					JSONObject jsonob2 = new JSONObject();
 					jsonob2 = (JSONObject) jary.get(i);	
 					String id = (String)(jsonob2.get("id"));
 					if(!Objects.equals(id, "ORN") && !Objects.equals(id, null)) {
 					System.out.println(id);
-					jsonob.put(id,rs.getString(id));
+					
+					if(Objects.equals(rs.getString(id), null)) {
+						jsonob.put(id,"");	
+					}else{
+						jsonob.put(id,rs.getString(id));	
+					}
 					System.out.println("성공");
 					}else {
 					jsonob.put("ORN",orn);
 					orn++;
 					}
 					}
-
 	            
 				jsonary.add(jsonob);
 
@@ -462,7 +511,7 @@ public class trans_ora_manager {
 			strbuf = new StringBuffer();
 			
 			strbuf.append("SELECT\r\n"
-					+ "     DEP_NM\r\n"
+					+ "  DEP_NM\r\n"
 					+ "	,TERM_ID\r\n"
 					+ "	,TERM_NM\r\n"
 					+ "    ,ACNT\r\n"
@@ -480,6 +529,8 @@ public class trans_ora_manager {
 					+ "    ,HD\r\n"
 					+ "    ,SI\r\n"
 					+ "	,GD\r\n"
+					+ ",'0' ZERO,'0' KAKAO,'0' HN, '0' JH, '0' AP, '0' WP"
+					+ "\r\n"					
 					+ "FROM(    \r\n"
 					+ "    SELECT\r\n"
 					+ "         TID\r\n"
@@ -605,21 +656,29 @@ public class trans_ora_manager {
 			System.out.println(strbuf.toString());	//로그
 			
 			rs = stmt.executeQuery();
-
+			
 			ResultSetMetaData rsmd = rs.getMetaData();
+			int orn = 1;
 			while(rs.next()) {
 				JSONObject jsonob = new JSONObject();
 				for(int i=0; i<jary.size();i++) {
+					
+					
+					
 					JSONObject jsonob2 = new JSONObject();
 					jsonob2 = (JSONObject) jary.get(i);	
 					String id = (String)(jsonob2.get("id"));
-					System.out.println(id+"ck");
-					if(!id.equals("ORN")) {
-					System.out.println(id + " = " + (rsmd.getCatalogName(1)));
-					jsonob.put(id,rs.getString(id));
+					if(!Objects.equals(id, "ORN") && !Objects.equals(id, null)) {
+					System.out.println(id);
+					if(Objects.equals(rs.getString(id), null)) {
+						jsonob.put(id,"");	
+					}else{
+						jsonob.put(id,rs.getString(id));	
+					}
 					System.out.println("성공");
 					}else {
-					jsonob.put("ORN", i);
+					jsonob.put("ORN",orn);
+					orn++;
 					}
 					}
 
@@ -635,6 +694,73 @@ public class trans_ora_manager {
 		}
 		return jsonary;
 	}
+	
+	
+	/**
+	 * sub0301 검색 Query
+	 * @param jary(tb_sys_domain)
+	 * @return json형식으로 dhx형식에 맞게
+	 * 2023-02-16 김태균
+	 */
+	public JSONArray select_sub0301(JSONArray jary) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		JSONArray jsonary = new JSONArray();
+		
+		try {
+			strbuf = new StringBuffer();
+			
+			strbuf.append("");
+			//System.lineSeparator()
+			
+			
+			con = getOraConnect();
+			stmt = con.prepareStatement(strbuf.toString());
+			System.out.println(strbuf.toString());	//로그
+			
+			rs = stmt.executeQuery();
+			
+			ResultSetMetaData rsmd = rs.getMetaData();
+			int orn = 1;
+			while(rs.next()) {
+				JSONObject jsonob = new JSONObject();
+				for(int i=0; i<jary.size();i++) {
+					
+					
+					
+					JSONObject jsonob2 = new JSONObject();
+					jsonob2 = (JSONObject) jary.get(i);	
+					String id = (String)(jsonob2.get("id"));
+					if(!Objects.equals(id, "ORN") && !Objects.equals(id, null)) {
+					System.out.println(id);
+					if(Objects.equals(rs.getString(id), null)) {
+						jsonob.put(id,"");	
+					}else{
+						jsonob.put(id,rs.getString(id));	
+					}
+					System.out.println("성공");
+					}else {
+					jsonob.put("ORN",orn);
+					orn++;
+					}
+					}
+
+	            
+				jsonary.add(jsonob);
+				
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			setOraClose(con,stmt,rs);
+		}
+		return jsonary;
+	}
+	
+	
 	
 	
 	
