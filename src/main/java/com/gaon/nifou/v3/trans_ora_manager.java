@@ -893,6 +893,7 @@ public class trans_ora_manager {
 	 * @return json
 	 * 2023-02-13 김태균
 	 */
+	@SuppressWarnings("unchecked")
 	public JSONArray get_menu(String auth_seq, String orgcd) {
 		Connection con = null;
 		PreparedStatement stmt = null;
@@ -952,8 +953,181 @@ public class trans_ora_manager {
 		return jsonary;
 	}
 	
+	/**
+	 * 즐겨찾기 메뉴 컬럼 Select Query
+	 * @param user_id
+	 * @return json
+	 * 2023-02-13 김태균
+	 */
+	public JSONArray get_favorite(String userid) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		JSONArray jsonary = new JSONArray();
+		
+		try {
+			strbuf = new StringBuffer();
+			strbuf.append("SELECT T2.PROGRAM_NAME,T2.SRC_LOCATION,T1.SORT FROM TB_SYS_FAVORITE T1 ");
+			strbuf.append("INNER JOIN TB_SYS_PROGRAM T2 ");
+			strbuf.append("ON (T1.PROGRAM_SEQ=T2.PROGRAM_SEQ) ");
+			strbuf.append("WHERE T1.USER_ID = ? ORDER BY SORT ASC");
+					
+			con = getOraConnect();
+			stmt = con.prepareStatement(strbuf.toString());
+			System.out.println(strbuf.toString());	//로그
+			stmt.setString(1, userid); //유저 ID
+				
+			
+			rs = stmt.executeQuery();
+			
+			while(rs.next()) {
+				JSONObject jsonob = new JSONObject();
+	            jsonob.put("PROGRAM_NAME",rs.getString("PROGRAM_NAME"));
+	            jsonob.put("SRC_LOCATION",rs.getString("SRC_LOCATION"));
+	            jsonob.put("SORT",rs.getString("SORT"));
+				jsonary.add(jsonob);
+				
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			setOraClose(con,stmt,rs);
+		}
+		return jsonary;
+	}
+	
+	/**
+	 * 즐겨찾기 메뉴 컬럼 INSERT Query
+	 * @param user_id,program_seq,sort
+	 * @return 1 : 성공 / 0 : 실패 (인서트된 로우 수)
+	 * 2023-02-13 김태균
+	 */
+	public int insert_favorite(String userid,String program_seq,String sort) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		try {
+			strbuf = new StringBuffer();
+			strbuf.append("INSERT INTO TB_SYS_FAVORITE (USER_ID,PROGRAM_SEQ,SORT,USE_YN) VALUES(?,?,?,'Y')");
+					
+			con = getOraConnect();
+			stmt = con.prepareStatement(strbuf.toString());
+			System.out.println(strbuf.toString());	//로그
+			stmt.setString(1, userid); //유저 ID
+			stmt.setString(2, program_seq); //PROGRAM_SEQ SEQ
+			stmt.setString(3, sort); //SORT(순번)
+			
+			
+				
+			
+			int rowsInserted = stmt.executeUpdate();
+			
+            if (rowsInserted > 0) {
+                return rowsInserted;
+            } else {
+                return 0;
+            }
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			setOraClose(con,stmt,rs);
+		}
+		return 0;
+	}
+	
+	/**
+	 * 즐겨찾기 메뉴 컬럼 DELETE Query
+	 * @param user_id,program_seq,sort
+	 * @return 1 : 성공 / 0 : 실패 (삭제된 로우 수)
+	 * 2023-02-13 김태균
+	 */
+	public int del_favorite(String userid,String program_seq,String sort) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		try {
+			strbuf = new StringBuffer();
+			strbuf.append("DELETE FROM TB_SYS_FAVORITE WHERE ");
+			strbuf.append("USER_ID = ? AND ");
+			strbuf.append("PROGRAM_SEQ = ? AND ");
+			strbuf.append("SORT = ?");
+					
+			con = getOraConnect();
+			stmt = con.prepareStatement(strbuf.toString());
+			System.out.println(strbuf.toString());	//로그
+			stmt.setString(1, userid); //유저 ID
+			stmt.setString(2, program_seq); //PROGRAM_SEQ SEQ
+			stmt.setString(3, sort); //SORT(순번)
+			
+			
+				
+			
+			int rowsInserted = stmt.executeUpdate();
+			
+            if (rowsInserted > 0) {
+                return rowsInserted;
+            } else {
+                return 0;
+            }
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			setOraClose(con,stmt,rs);
+		}
+		return 0;
+	}
+	
+	/**
+	 * 즐겨찾기 메뉴 컬럼 UPDATE Query
+	 * @param user_id,program_seq,sort
+	 * @return 1 : 성공 / 0 : 실패 (삭제된 로우 수)
+	 * 2023-02-13 김태균
+	 */
+	public int mod_favorite(String userid,String program_seq,String sort,String new_sort) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		try {
+			strbuf = new StringBuffer();
+			strbuf.append("UPDATE TB_SYS_FAVORITE SET SORT = ? WHERE");
+			strbuf.append("USER_ID = ? AND ");
+			strbuf.append("PROGRAM_SEQ = ? AND ");
+			strbuf.append("SORT = ?");
+					
+			con = getOraConnect();
+			stmt = con.prepareStatement(strbuf.toString());
+			System.out.println(strbuf.toString());	//로그
+			stmt.setString(1, new_sort); //NEW_SORT(순번)
+			stmt.setString(2, userid); //유저 ID
+			stmt.setString(3, program_seq); //PROGRAM_SEQ SEQ
+			stmt.setString(4, sort); //SORT(순번)
+			
+			
+				
+			
+			int rowsInserted = stmt.executeUpdate();
+			
+            if (rowsInserted > 0) {
+                return rowsInserted;
+            } else {
+                return 0;
+            }
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			setOraClose(con,stmt,rs);
+		}
+		return 0;
+	}
 	
 	
 	
-	
-}
+}//end class
