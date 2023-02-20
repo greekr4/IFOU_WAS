@@ -968,7 +968,7 @@ public class trans_ora_manager {
 		
 		try {
 			strbuf = new StringBuffer();
-			strbuf.append("SELECT T2.PROGRAM_NAME,T2.SRC_LOCATION,T1.SORT FROM TB_SYS_FAVORITE T1 ");
+			strbuf.append("SELECT T1.PROGRAM_SEQ,T2.PROGRAM_NAME,T2.SRC_LOCATION,T1.SORT FROM TB_SYS_FAVORITE T1 ");
 			strbuf.append("INNER JOIN TB_SYS_PROGRAM T2 ");
 			strbuf.append("ON (T1.PROGRAM_SEQ=T2.PROGRAM_SEQ) ");
 			strbuf.append("WHERE T1.USER_ID = ? ORDER BY SORT ASC");
@@ -983,7 +983,8 @@ public class trans_ora_manager {
 			
 			while(rs.next()) {
 				JSONObject jsonob = new JSONObject();
-	            jsonob.put("PROGRAM_NAME",rs.getString("PROGRAM_NAME"));
+				jsonob.put("PROGRAM_SEQ",rs.getString("PROGRAM_SEQ"));
+				jsonob.put("PROGRAM_NAME",rs.getString("PROGRAM_NAME"));
 	            jsonob.put("SRC_LOCATION",rs.getString("SRC_LOCATION"));
 	            jsonob.put("SORT",rs.getString("SORT"));
 				jsonary.add(jsonob);
