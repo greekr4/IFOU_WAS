@@ -893,7 +893,6 @@ public class trans_ora_manager {
 	 * @return json
 	 * 2023-02-13 ±èÅÂ±Õ
 	 */
-	@SuppressWarnings("unchecked")
 	public JSONArray get_menu(String auth_seq, String orgcd) {
 		Connection con = null;
 		PreparedStatement stmt = null;
@@ -903,36 +902,35 @@ public class trans_ora_manager {
 		
 		try {
 			strbuf = new StringBuffer();
-			strbuf.append("SELECT\r\n"
-					+ "	A.PROGRAM_SEQ MENU_SEQ,\r\n"
-					+ "	B.PROGRAM_NAME MENU_NAME,\r\n"
-					+ "	B.DEPTH MENU_DEPTH,\r\n"
-					+ "	B.PARENT_SEQ PARENT_SEQ,\r\n"
-					+ "	A.ENABLE_READ AUTH_R,\r\n"
-					+ "	A.ENABLE_CREATE AUTH_C,\r\n"
-					+ "	A.ENABLE_UPDATE AUTH_U,\r\n"
-					+ "	A.ENABLE_DELETE AUTH_D,\r\n"
-					+ "	B.SRC_LOCATION MURL\r\n"
-					+ "FROM \r\n"
-					+ "    TB_SYS_MENU A\r\n"
-					+ "LEFT OUTER JOIN\r\n"
-					+ "    (SELECT PROGRAM_SEQ, PROGRAM_NAME, PARENT_SEQ, DEPTH, SRC_LOCATION, SORT FROM TB_SYS_PROGRAM) B\r\n"
-					+ "ON (A.PROGRAM_SEQ=B.PROGRAM_SEQ)\r\n"
-					+ "WHERE A.AUTH_SEQ=? AND ORGCD=? \r\n"
-					+ "ORDER BY B.SORT ASC");
+			strbuf.append("SELECT ");
+			strbuf.append(" A.PROGRAM_SEQ AS PROGRAM_SEQ, ");
+			strbuf.append(" B.PROGRAM_NAME MENU_NAME, ");
+			strbuf.append(" B.DEPTH MENU_DEPTH, ");
+			strbuf.append(" B.PARENT_SEQ PARENT_SEQ, ");
+			strbuf.append(" A.ENABLE_READ AUTH_R, ");
+			strbuf.append(" A.ENABLE_CREATE AUTH_C, ");
+			strbuf.append(" A.ENABLE_UPDATE AUTH_U, ");
+			strbuf.append(" A.ENABLE_DELETE AUTH_D, ");
+			strbuf.append(" B.SRC_LOCATION MURL ");
+			strbuf.append(" FROM TB_SYS_MENU A ");
+			strbuf.append(" LEFT OUTER JOIN ");
+			strbuf.append(" (SELECT PROGRAM_SEQ, PROGRAM_NAME, PARENT_SEQ, DEPTH, SRC_LOCATION, SORT FROM TB_SYS_PROGRAM) B ");
+			strbuf.append(" ON (A.PROGRAM_SEQ=B.PROGRAM_SEQ) ");
+			strbuf.append(" WHERE A.AUTH_SEQ=? AND ORGCD=? ");
+			strbuf.append(" ORDER BY B.SORT ASC ");
 			
 			con = getOraConnect();
 			stmt = con.prepareStatement(strbuf.toString());
 			System.out.println(strbuf.toString());	//·Î±×
 			stmt.setString(1, auth_seq); //À¯Àú ID
-			stmt.setString(2, orgcd); //À¯Àú ID
+			stmt.setString(2, orgcd); //ORGCD
 				
 			
 			rs = stmt.executeQuery();
 			
 			while(rs.next()) {
 				JSONObject jsonob = new JSONObject();
-	            jsonob.put("MENU_SEQ",rs.getString("MENU_SEQ"));
+				jsonob.put("MENU_SEQ",rs.getString("PROGRAM_SEQ"));
 	            jsonob.put("MENU_NAME",rs.getString("MENU_NAME"));
 	            jsonob.put("MENU_DEPTH",rs.getString("MENU_DEPTH"));
 	            jsonob.put("PARENT_SEQ",rs.getString("PARENT_SEQ"));
@@ -1097,10 +1095,10 @@ public class trans_ora_manager {
 		
 		try {
 			strbuf = new StringBuffer();
-			strbuf.append("UPDATE TB_SYS_FAVORITE SET SORT = ? WHERE");
+			strbuf.append("UPDATE TB_SYS_FAVORITE SET SORT = ? WHERE ");
 			strbuf.append("USER_ID = ? AND ");
 			strbuf.append("PROGRAM_SEQ = ? AND ");
-			strbuf.append("SORT = ?");
+			strbuf.append("SORT = ? ");
 					
 			con = getOraConnect();
 			stmt = con.prepareStatement(strbuf.toString());
