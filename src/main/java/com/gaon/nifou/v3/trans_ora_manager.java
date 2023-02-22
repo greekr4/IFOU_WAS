@@ -307,15 +307,21 @@ public class trans_ora_manager {
 	            	jsonary_header.add(jsonob_header);
 	            	jsonob_colheader.put("text",rs.getString("COL_TXT"));
 	            	jsonary_header.add(jsonob_colheader);
-		            System.out.println(jsonob_colheader);
 	            }
 
-	            if(rs.getInt("COLSPAN") == 0 && rs.getInt("ROWSPAN") == 0 && rs.getString("COL_CHK").equals("Y")) {
+	            if(rs.getInt("COLSPAN") == 0 && rs.getInt("ROWSPAN") == 0 && Objects.equals(rs.getString("COL_CHK"), "Y")) {
 					JSONObject jsonob_header_test = new JSONObject();
 					jsonob_header_test.put("text2","");	
 		            jsonob_header.put("text",rs.getString("FIELDS_TXT"));
 	            	jsonob_header.put("align",rs.getString("ALIGNS"));
 		            jsonary_header.add(jsonob_header_test);
+		            jsonary_header.add(jsonob_header);
+	            }
+	            
+	            if(rs.getInt("COLSPAN") == 0 && rs.getInt("ROWSPAN") == 0 && !Objects.equals(rs.getString("COL_CHK"), "Y")) {
+					JSONObject jsonob_header_test = new JSONObject();
+		            jsonob_header.put("text",rs.getString("FIELDS_TXT"));
+	            	jsonob_header.put("align",rs.getString("ALIGNS"));
 		            jsonary_header.add(jsonob_header);
 	            }
 	            
