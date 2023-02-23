@@ -14,7 +14,7 @@ import org.json.simple.JSONObject;
 
 import com.gaon.nifou.v3.trans_ora_manager;
 
-@WebServlet("/sub02/06.gaon")
+@WebServlet("/sub02/06T.gaon")
 public class sub02_06T extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");

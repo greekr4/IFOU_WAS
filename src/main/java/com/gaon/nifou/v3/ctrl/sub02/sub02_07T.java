@@ -14,7 +14,7 @@ import org.json.simple.JSONObject;
 
 import com.gaon.nifou.v3.trans_ora_manager;
 
-@WebServlet("/sub02/07.gaon")
+@WebServlet("/sub02/07T.gaon")
 public class sub02_07T extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
