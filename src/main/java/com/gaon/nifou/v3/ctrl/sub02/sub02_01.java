@@ -16,20 +16,19 @@ import com.gaon.nifou.v3.trans_ora_manager;
 
 @WebServlet("/sub02/01.gaon")
 public class sub02_01 extends HttpServlet {
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setCharacterEncoding("UTF-8");
-        response.setContentType("text/html; charset=UTF-8");
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		request.setCharacterEncoding("UTF-8");
+		response.setContentType("text/html; charset=UTF-8");
 		response.setHeader("Access-Control-Allow-Origin", "*");
 		trans_ora_manager oram = new trans_ora_manager();
-        JSONArray jsonary = new JSONArray();
+		JSONArray jsonary = new JSONArray();
 		PrintWriter out = response.getWriter();
-		
-		
+
 		String orgcd = request.getParameter("orgcd");
 		String pages = request.getParameter("pages");
-		
-		out.print(oram.select_glob_mng_icvan(oram.get_tb_sys_domain(orgcd, pages)));
-		
-		
+
+		out.print(oram.get_sub0201(oram.get_tb_sys_domain(orgcd, pages)));
+
 	}
 }

@@ -345,12 +345,12 @@ public class trans_ora_manager {
 	}
 	
 	/**
-	 * glob_mng_icvan Select Query
+	 * get_sub0201 glob_mng_icvan Select Query 
 	 * @param jary(tb_sys_domain)
 	 * @return json형식으로 dhx형식에 맞게
 	 * 2023-02-01 김태균
 	 */
-	public JSONArray select_glob_mng_icvan(JSONArray jary) {
+	public JSONArray get_sub0201(JSONArray jary) {
 		Connection con = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -506,7 +506,7 @@ public class trans_ora_manager {
 	 * @return json형식으로 dhx형식에 맞게
 	 * 2023-02-01 김태균
 	 */
-	public JSONArray select_glob_mng_icvan_tot(JSONArray jary) {
+	public JSONArray get_sub0201T(JSONArray jary) {
 		Connection con = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -703,12 +703,859 @@ public class trans_ora_manager {
 	
 	
 	/**
+	 * get_sub0202 
+	 * @param jary(tb_sys_domain)
+	 * @return json형식으로 dhx형식에 맞게
+	 * 2023-02-22 장현석
+	 */
+	public JSONArray get_sub0202(JSONArray jary) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		JSONArray jsonary = new JSONArray();
+		
+		try {
+			strbuf = new StringBuffer();
+			//쿼리입력
+
+			strbuf.append("SELECT \r\n");
+			strbuf.append("		DEP_NM, PUR_NM, T1.MID, ACQ_CD, APPDD TR_APPDD,ACNT+CCNT TOTCNT,AAMT-CAMT TOTAMT, ACNT, CCNT, AAMT, CAMT \r\n");
+			strbuf.append("FROM( \r\n");
+			strbuf.append("			SELECT \r\n");
+			strbuf.append("				MID, ACQ_CD, APPDD, SUM(ACNT) ACNT, SUM(CCNT) CCNT, SUM(AAMT) AAMT, SUM(CAMT) CAMT \r\n");
+			strbuf.append("			FROM( \r\n");
+			strbuf.append("				SELECT \r\n");
+			strbuf.append("					MID,  \r\n");
+			strbuf.append("					ACQ_CD, \r\n");
+			strbuf.append("					APPDD, \r\n");
+			strbuf.append("					CASE WHEN APPGB='A' THEN COUNT(1) ELSE 0 END ACNT, \r\n");
+			strbuf.append("					CASE WHEN APPGB='A' THEN SUM(AMOUNT) ELSE 0 END AAMT, \r\n");
+			strbuf.append("					CASE WHEN APPGB='C' THEN COUNT(1) ELSE 0 END CCNT,\r\n");
+			strbuf.append("					CASE WHEN APPGB='C' THEN SUM(AMOUNT) ELSE 0 END CAMT  \r\n");
+			strbuf.append("				FROM  \r\n");
+			strbuf.append("					GLOB_MNG_ICVAN \r\n");
+			strbuf.append("				WHERE SVCGB IN ('CC', 'CE') AND AUTHCD='0000' AND TID IN (select tid from tb_bas_tidmap where org_cd='OR0015') AND APPDD LIKE '202302%' \r\n");
+			strbuf.append("				GROUP BY MID, ACQ_CD, APPDD, APPGB \r\n");
+			strbuf.append("				)T1 \r\n");
+			strbuf.append("			GROUP BY MID, ACQ_CD, APPDD \r\n");
+			strbuf.append("			ORDER BY MID \r\n");
+			strbuf.append("			)T1 \r\n");
+			strbuf.append("LEFT OUTER JOIN( \r\n");
+			strbuf.append("		SELECT MER_NO, PUR_CD, DEP_CD FROM TB_BAS_MERINFO WHERE ORG_CD='OR0015' \r\n");
+			strbuf.append("		)TM ON(T1.MID=TM.MER_NO) \r\n");
+			strbuf.append("LEFT OUTER JOIN( SELECT DEP_NM, DEP_CD FROM TB_BAS_DEPART WHERE ORG_CD='OR0015')T4 ON(TM.DEP_CD=T4.DEP_CD) \r\n");
+			strbuf.append("LEFT OUTER JOIN(  \r\n");
+			strbuf.append("		SELECT PUR_NM, PUR_KOCES, PUR_SORT,PUR_CD, PUR_OCD FROM TB_BAS_PURINFO \r\n");
+			strbuf.append("		)T5 ON(T1.ACQ_CD=T5.PUR_KOCES OR T1.ACQ_CD=T5.PUR_OCD) \r\n");
+			strbuf.append("LEFT OUTER JOIN( \r\n");
+			strbuf.append("		SELECT ORG_CD, USER_PUR_CD, USER_PURSORT FROM TB_BAS_USERPURINFO WHERE ORG_CD='OR0015' \r\n");
+			strbuf.append("		)S3 ON(T5.PUR_CD=S3.USER_PUR_CD) \r\n");
+			strbuf.append("ORDER BY APPDD ASC, DEP_NM ASC, PUR_NM ASC \r\n");			
+			
+			//System.lineSeparator()
+			
+			
+			con = getOraConnect();
+			stmt = con.prepareStatement(strbuf.toString());
+			System.out.println(strbuf.toString());	//로그
+			
+			rs = stmt.executeQuery();
+
+			int orn = 1;
+			while(rs.next()) {
+				JSONObject jsonob = new JSONObject();
+				for(int i=0; i<jary.size();i++) {				
+					
+					JSONObject jsonob2 = new JSONObject();
+					jsonob2 = (JSONObject) jary.get(i);	
+					String id = (String)(jsonob2.get("id"));
+					if(!Objects.equals(id, "ORN") && !Objects.equals(id, null)) {
+					System.out.println(id);
+					
+					if(Objects.equals(rs.getString(id), null)) {
+						jsonob.put(id,"");	
+					}else{
+						jsonob.put(id,rs.getString(id));	
+					}
+					System.out.println("성공");
+					}else {
+					jsonob.put("ORN",orn);
+					orn++;
+					}
+					}
+	            
+				jsonary.add(jsonob);				
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			setOraClose(con,stmt,rs);
+		}
+		return jsonary;
+	}
+	
+	/**
+	 * get_sub0203 
+	 * @param jary(tb_sys_domain)
+	 * @return json형식으로 dhx형식에 맞게
+	 * 2023-02-22 장현석
+	 */
+	public JSONArray get_sub0203(JSONArray jary) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		JSONArray jsonary = new JSONArray();
+		
+		try {
+			strbuf = new StringBuffer();
+			//쿼리입력
+			strbuf.append("SELECT \r\n");
+			strbuf.append("APPDD TR_APPDD \r\n");
+			strbuf.append(",ADD_CASHER ADD_CID \r\n");
+			strbuf.append(",SUM(BC_CNT) BC_CNT \r\n");
+			strbuf.append(",SUM(BCA)-SUM(BCC) BC_AMT \r\n");
+			strbuf.append(",SUM(NH_CNT) NH_CNT \r\n");
+			strbuf.append(",SUM(NHA)-SUM(NHC) NH_AMT \r\n");
+			strbuf.append(",SUM(KB_CNT) KB_CNT \r\n");
+			strbuf.append(",SUM(KBA)-SUM(KBC) KB_AMT \r\n");
+			strbuf.append(",SUM(SS_CNT) SS_CNT \r\n");
+			strbuf.append(",SUM(SSA)-SUM(SSC) SS_AMT \r\n");
+			strbuf.append(",SUM(HN_CNT) HN_CNT \r\n");
+			strbuf.append(",SUM(HNA)-SUM(HNC) HN_AMT \r\n");
+			strbuf.append(",SUM(LO_CNT) LO_CNT \r\n");
+			strbuf.append(",SUM(LOA)-SUM(LOC) LO_AMT \r\n");
+			strbuf.append(",SUM(HD_CNT) HD_CNT \r\n");
+			strbuf.append(",SUM(HDA)-SUM(HDC) HD_AMT \r\n");
+			strbuf.append(",SUM(SI_CNT) SI_CNT \r\n");
+			strbuf.append(",SUM(SIA)-SUM(SIC) SI_AMT \r\n");
+			strbuf.append(",SUM(GD_CNT) JH_CNT \r\n");
+			strbuf.append(",SUM(GDA)-SUM(GDC) JH_AMT \r\n");
+			strbuf.append(",SUM(BC_CNT)+SUM(NH_CNT)+SUM(KB_CNT)+SUM(SS_CNT)+SUM(HN_CNT)+SUM(LO_CNT)+SUM(HD_CNT)+SUM(SI_CNT)+SUM(GD_CNT) TOTCNT \r\n");
+			strbuf.append(",SUM(BCA)-SUM(BCC)+SUM(NHA)-SUM(NHC)+SUM(KBA)-SUM(KBC)+SUM(SSA)-SUM(SSC)+SUM(HNA)-SUM(HNC)+SUM(LOA)-SUM(LOC)+SUM(HDA)-SUM(HDC)+SUM(SIA)-SUM(SIC)+SUM(GDA)-SUM(GDC) TOTAMT \r\n");
+			strbuf.append("FROM( \r\n");
+			strbuf.append("SELECT  \r\n");
+			strbuf.append("ADD_CASHER \r\n");
+			strbuf.append(",APPDD \r\n");
+			strbuf.append(",CASE WHEN APPGB='A' AND ACQ_CD IN ('1106', '026') THEN SUM(AMOUNT) ELSE 0 END BCA \r\n");
+			strbuf.append(",CASE WHEN APPGB='A' AND ACQ_CD IN ('2211', '018') THEN SUM(AMOUNT) ELSE 0 END NHA \r\n");
+			strbuf.append(",CASE WHEN APPGB='A' AND ACQ_CD IN ('1101', '016') THEN SUM(AMOUNT) ELSE 0 END KBA \r\n");
+			strbuf.append(",CASE WHEN APPGB='A' AND ACQ_CD IN ('1104', '031') THEN SUM(AMOUNT) ELSE 0 END SSA \r\n");
+			strbuf.append(",CASE WHEN APPGB='A' AND ACQ_CD IN ('1105', '008') THEN SUM(AMOUNT) ELSE 0 END HNA \r\n");
+			strbuf.append(",CASE WHEN APPGB='A' AND ACQ_CD IN ('1103', '047') THEN SUM(AMOUNT) ELSE 0 END LOA \r\n");
+			strbuf.append(",CASE WHEN APPGB='A' AND ACQ_CD IN ('1102', '027') THEN SUM(AMOUNT) ELSE 0 END HDA \r\n");
+			strbuf.append(",CASE WHEN APPGB='A' AND ACQ_CD IN ('1107', '029') THEN SUM(AMOUNT) ELSE 0 END SIA \r\n");
+			strbuf.append(",CASE WHEN APPGB='A' AND ACQ_CD IN ('1113', '021') THEN SUM(AMOUNT) ELSE 0 END GDA \r\n");
+			strbuf.append(",CASE WHEN APPGB='C' AND ACQ_CD IN ('1106', '026') THEN SUM(AMOUNT) ELSE 0 END BCC \r\n");
+			strbuf.append(",CASE WHEN APPGB='C' AND ACQ_CD IN ('2211', '018') THEN SUM(AMOUNT) ELSE 0 END NHC \r\n");
+			strbuf.append(",CASE WHEN APPGB='C' AND ACQ_CD IN ('1101', '016') THEN SUM(AMOUNT) ELSE 0 END KBC \r\n");
+			strbuf.append(",CASE WHEN APPGB='C' AND ACQ_CD IN ('1104', '031') THEN SUM(AMOUNT) ELSE 0 END SSC \r\n");
+			strbuf.append(",CASE WHEN APPGB='C' AND ACQ_CD IN ('1105', '008') THEN SUM(AMOUNT) ELSE 0 END HNC \r\n");
+			strbuf.append(",CASE WHEN APPGB='C' AND ACQ_CD IN ('1103', '047') THEN SUM(AMOUNT) ELSE 0 END LOC \r\n");
+			strbuf.append(",CASE WHEN APPGB='C' AND ACQ_CD IN ('1102', '027') THEN SUM(AMOUNT) ELSE 0 END HDC \r\n");
+			strbuf.append(",CASE WHEN APPGB='C' AND ACQ_CD IN ('1107', '029') THEN SUM(AMOUNT) ELSE 0 END SIC \r\n");
+			strbuf.append(",CASE WHEN APPGB='C' AND ACQ_CD IN ('1113', '021') THEN SUM(AMOUNT) ELSE 0 END GDC \r\n");
+			strbuf.append(",CASE WHEN ACQ_CD IN ('1106', '026') THEN COUNT(1) ELSE 0 END BC_CNT \r\n");
+			strbuf.append(",CASE WHEN ACQ_CD IN ('2211', '018') THEN COUNT(1) ELSE 0 END NH_CNT \r\n");
+			strbuf.append(",CASE WHEN ACQ_CD IN ('1101', '016') THEN COUNT(1) ELSE 0 END KB_CNT \r\n");
+			strbuf.append(",CASE WHEN ACQ_CD IN ('1104', '031') THEN COUNT(1) ELSE 0 END SS_CNT \r\n");
+			strbuf.append(",CASE WHEN ACQ_CD IN ('1105', '008') THEN COUNT(1) ELSE 0 END HN_CNT \r\n");
+			strbuf.append(",CASE WHEN ACQ_CD IN ('1103', '047') THEN COUNT(1) ELSE 0 END LO_CNT \r\n");
+			strbuf.append(",CASE WHEN ACQ_CD IN ('1102', '027') THEN COUNT(1) ELSE 0 END HD_CNT \r\n");
+			strbuf.append(",CASE WHEN ACQ_CD IN ('1107', '029') THEN COUNT(1) ELSE 0 END SI_CNT \r\n");
+			strbuf.append(",CASE WHEN ACQ_CD IN ('1113', '021') THEN COUNT(1) ELSE 0 END GD_CNT \r\n");
+			strbuf.append("FROM  \r\n");
+			strbuf.append("GLOB_MNG_ICVAN \r\n");
+			strbuf.append("WHERE SVCGB IN ('CC', 'CE') AND AUTHCD='0000' AND TID IN (select tid from tb_bas_tidmap  where org_cd='OR032' AND dep_cd='MD1603677890')  AND APPDD>='20230222' AND APPDD<='20230222' \r\n");
+			strbuf.append("GROUP BY  \r\n");
+			strbuf.append("APPGB, APPDD, ADD_CASHER, ACQ_CD \r\n");
+			strbuf.append(") \r\n");
+			strbuf.append("GROUP BY  \r\n");
+			strbuf.append("ADD_CASHER, APPDD \r\n");
+			strbuf.append("ORDER BY  \r\n");
+			strbuf.append("ADD_CASHER ASC, APPDD ASC \r\n");
+
+			
+			//System.lineSeparator()
+			
+			
+			con = getOraConnect();
+			stmt = con.prepareStatement(strbuf.toString());
+			System.out.println(strbuf.toString());	//로그
+			
+			rs = stmt.executeQuery();
+
+			int orn = 1;
+			while(rs.next()) {
+				JSONObject jsonob = new JSONObject();
+				for(int i=0; i<jary.size();i++) {				
+					
+					JSONObject jsonob2 = new JSONObject();
+					jsonob2 = (JSONObject) jary.get(i);	
+					String id = (String)(jsonob2.get("id"));
+					if(!Objects.equals(id, "ORN") && !Objects.equals(id, null)) {
+					System.out.println(id);
+					
+					if(Objects.equals(rs.getString(id), null)) {
+						jsonob.put(id,"");	
+					}else{
+						jsonob.put(id,rs.getString(id));	
+					}
+					System.out.println("성공");
+					}else {
+					jsonob.put("ORN",orn);
+					orn++;
+					}
+					}
+	            
+				jsonary.add(jsonob);				
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			setOraClose(con,stmt,rs);
+		}
+		return jsonary;
+	}
+	
+	/**
+	 * get_sub0203T
+	 * @param jary(tb_sys_domain)
+	 * @return json형식으로 dhx형식에 맞게
+	 * 2023-02-22 장현석
+	 */
+	public JSONArray get_sub0203T(JSONArray jary) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		JSONArray jsonary = new JSONArray();
+		
+		try {
+			strbuf = new StringBuffer();
+			//쿼리입력
+			strbuf.append("SELECT \r\n");
+			strbuf.append("ACNT, CCNT, AAMT, CAMT, ACNT+CCNT TOTCNT, AAMT-CAMT TOTAMT \r\n");
+			strbuf.append("FROM( \r\n");
+			strbuf.append("SELECT \r\n");
+			strbuf.append("SUM(ACNT) ACNT, SUM(CCNT) CCNT, SUM(AAMT) AAMT, SUM(CAMT) CAMT \r\n");
+			strbuf.append("FROM( \r\n");
+			strbuf.append("SELECT \r\n");
+			strbuf.append("CASE WHEN APPGB='A' THEN COUNT(1) ELSE 0 END ACNT, \r\n");
+			strbuf.append("CASE WHEN APPGB='A' THEN SUM(AMOUNT) ELSE 0 END AAMT, \r\n");
+			strbuf.append("CASE WHEN APPGB='C' THEN COUNT(1) ELSE 0 END CCNT, \r\n");
+			strbuf.append("CASE WHEN APPGB='C' THEN SUM(AMOUNT) ELSE 0 END CAMT \r\n");
+			strbuf.append("FROM \r\n");
+			strbuf.append("GLOB_MNG_ICVAN \r\n");
+			strbuf.append("WHERE SVCGB IN ('CC', 'CE') AND AUTHCD='0000' AND TID IN (select tid from tb_bas_tidmap where org_cd='OR032' AND dep_cd='MD1603677890') AND APPDD>='20230222' AND APPDD<='20230222' \r\n");
+			strbuf.append("GROUP BY APPGB \r\n");
+			strbuf.append(") \r\n");
+			strbuf.append(")T1 \r\n");
+
+			
+			//System.lineSeparator()
+			
+			
+			con = getOraConnect();
+			stmt = con.prepareStatement(strbuf.toString());
+			System.out.println(strbuf.toString());	//로그
+			
+			rs = stmt.executeQuery();
+
+			int orn = 1;
+			while(rs.next()) {
+				JSONObject jsonob = new JSONObject();
+				for(int i=0; i<jary.size();i++) {				
+					
+					JSONObject jsonob2 = new JSONObject();
+					jsonob2 = (JSONObject) jary.get(i);	
+					String id = (String)(jsonob2.get("id"));
+					if(!Objects.equals(id, "ORN") && !Objects.equals(id, null)) {
+					System.out.println(id);
+					
+					if(Objects.equals(rs.getString(id), null)) {
+						jsonob.put(id,"");	
+					}else{
+						jsonob.put(id,rs.getString(id));	
+					}
+					System.out.println("성공");
+					}else {
+					jsonob.put("ORN",orn);
+					orn++;
+					}
+					}
+	            
+				jsonary.add(jsonob);				
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			setOraClose(con,stmt,rs);
+		}
+		return jsonary;
+	}
+	
+	/**
+	 * get_sub0204 
+	 * @param jary(tb_sys_domain)
+	 * @return json형식으로 dhx형식에 맞게
+	 * 2023-02-22 장현석
+	 */
+	public JSONArray get_sub0204(JSONArray jary) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		JSONArray jsonary = new JSONArray();
+		
+		try {
+			strbuf = new StringBuffer();
+			//쿼리입력
+			strbuf.append("SELECT \r\n");
+			
+			//System.lineSeparator()
+			
+			
+			con = getOraConnect();
+			stmt = con.prepareStatement(strbuf.toString());
+			System.out.println(strbuf.toString());	//로그
+			
+			rs = stmt.executeQuery();
+
+			int orn = 1;
+			while(rs.next()) {
+				JSONObject jsonob = new JSONObject();
+				for(int i=0; i<jary.size();i++) {				
+					
+					JSONObject jsonob2 = new JSONObject();
+					jsonob2 = (JSONObject) jary.get(i);	
+					String id = (String)(jsonob2.get("id"));
+					if(!Objects.equals(id, "ORN") && !Objects.equals(id, null)) {
+					System.out.println(id);
+					
+					if(Objects.equals(rs.getString(id), null)) {
+						jsonob.put(id,"");	
+					}else{
+						jsonob.put(id,rs.getString(id));	
+					}
+					System.out.println("성공");
+					}else {
+					jsonob.put("ORN",orn);
+					orn++;
+					}
+					}
+	            
+				jsonary.add(jsonob);				
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			setOraClose(con,stmt,rs);
+		}
+		return jsonary;
+	}
+	
+	/**
+	 * get_sub0205 
+	 * @param jary(tb_sys_domain)
+	 * @return json형식으로 dhx형식에 맞게
+	 * 2023-02-22 장현석
+	 */
+	public JSONArray get_sub0205(JSONArray jary) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		JSONArray jsonary = new JSONArray();
+		
+		try {
+			strbuf = new StringBuffer();
+			//쿼리입력
+			strbuf.append("SELECT \r\n");
+			
+			//System.lineSeparator()
+			
+			
+			con = getOraConnect();
+			stmt = con.prepareStatement(strbuf.toString());
+			System.out.println(strbuf.toString());	//로그
+			
+			rs = stmt.executeQuery();
+
+			int orn = 1;
+			while(rs.next()) {
+				JSONObject jsonob = new JSONObject();
+				for(int i=0; i<jary.size();i++) {				
+					
+					JSONObject jsonob2 = new JSONObject();
+					jsonob2 = (JSONObject) jary.get(i);	
+					String id = (String)(jsonob2.get("id"));
+					if(!Objects.equals(id, "ORN") && !Objects.equals(id, null)) {
+					System.out.println(id);
+					
+					if(Objects.equals(rs.getString(id), null)) {
+						jsonob.put(id,"");	
+					}else{
+						jsonob.put(id,rs.getString(id));	
+					}
+					System.out.println("성공");
+					}else {
+					jsonob.put("ORN",orn);
+					orn++;
+					}
+					}
+	            
+				jsonary.add(jsonob);				
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			setOraClose(con,stmt,rs);
+		}
+		return jsonary;
+	}
+	
+	/**
+	 * get_sub0206 
+	 * @param jary(tb_sys_domain)
+	 * @return json형식으로 dhx형식에 맞게
+	 * 2023-02-22 장현석
+	 */
+	public JSONArray get_sub0206(JSONArray jary) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		JSONArray jsonary = new JSONArray();
+		
+		try {
+			strbuf = new StringBuffer();
+			//쿼리입력
+			strbuf.append("SELECT \r\n");
+			
+			//System.lineSeparator()
+			
+			
+			con = getOraConnect();
+			stmt = con.prepareStatement(strbuf.toString());
+			System.out.println(strbuf.toString());	//로그
+			
+			rs = stmt.executeQuery();
+
+			int orn = 1;
+			while(rs.next()) {
+				JSONObject jsonob = new JSONObject();
+				for(int i=0; i<jary.size();i++) {				
+					
+					JSONObject jsonob2 = new JSONObject();
+					jsonob2 = (JSONObject) jary.get(i);	
+					String id = (String)(jsonob2.get("id"));
+					if(!Objects.equals(id, "ORN") && !Objects.equals(id, null)) {
+					System.out.println(id);
+					
+					if(Objects.equals(rs.getString(id), null)) {
+						jsonob.put(id,"");	
+					}else{
+						jsonob.put(id,rs.getString(id));	
+					}
+					System.out.println("성공");
+					}else {
+					jsonob.put("ORN",orn);
+					orn++;
+					}
+					}
+	            
+				jsonary.add(jsonob);				
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			setOraClose(con,stmt,rs);
+		}
+		return jsonary;
+	}
+	
+	/**
+	 * get_sub0206T 
+	 * @param jary(tb_sys_domain)
+	 * @return json형식으로 dhx형식에 맞게
+	 * 2023-02-22 장현석
+	 */
+	public JSONArray get_sub0206T(JSONArray jary) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		JSONArray jsonary = new JSONArray();
+		
+		try {
+			strbuf = new StringBuffer();
+			//쿼리입력
+			strbuf.append("SELECT \r\n");
+			
+			//System.lineSeparator()
+			
+			
+			con = getOraConnect();
+			stmt = con.prepareStatement(strbuf.toString());
+			System.out.println(strbuf.toString());	//로그
+			
+			rs = stmt.executeQuery();
+
+			int orn = 1;
+			while(rs.next()) {
+				JSONObject jsonob = new JSONObject();
+				for(int i=0; i<jary.size();i++) {				
+					
+					JSONObject jsonob2 = new JSONObject();
+					jsonob2 = (JSONObject) jary.get(i);	
+					String id = (String)(jsonob2.get("id"));
+					if(!Objects.equals(id, "ORN") && !Objects.equals(id, null)) {
+					System.out.println(id);
+					
+					if(Objects.equals(rs.getString(id), null)) {
+						jsonob.put(id,"");	
+					}else{
+						jsonob.put(id,rs.getString(id));	
+					}
+					System.out.println("성공");
+					}else {
+					jsonob.put("ORN",orn);
+					orn++;
+					}
+					}
+	            
+				jsonary.add(jsonob);				
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			setOraClose(con,stmt,rs);
+		}
+		return jsonary;
+	}
+	
+	/**
+	 * get_sub0207 
+	 * @param jary(tb_sys_domain)
+	 * @return json형식으로 dhx형식에 맞게
+	 * 2023-02-22 장현석
+	 */
+	public JSONArray get_sub0207(JSONArray jary) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		JSONArray jsonary = new JSONArray();
+		
+		try {
+			strbuf = new StringBuffer();
+			//쿼리입력
+			strbuf.append("SELECT \r\n");
+			
+			//System.lineSeparator()
+			
+			
+			con = getOraConnect();
+			stmt = con.prepareStatement(strbuf.toString());
+			System.out.println(strbuf.toString());	//로그
+			
+			rs = stmt.executeQuery();
+
+			int orn = 1;
+			while(rs.next()) {
+				JSONObject jsonob = new JSONObject();
+				for(int i=0; i<jary.size();i++) {				
+					
+					JSONObject jsonob2 = new JSONObject();
+					jsonob2 = (JSONObject) jary.get(i);	
+					String id = (String)(jsonob2.get("id"));
+					if(!Objects.equals(id, "ORN") && !Objects.equals(id, null)) {
+					System.out.println(id);
+					
+					if(Objects.equals(rs.getString(id), null)) {
+						jsonob.put(id,"");	
+					}else{
+						jsonob.put(id,rs.getString(id));	
+					}
+					System.out.println("성공");
+					}else {
+					jsonob.put("ORN",orn);
+					orn++;
+					}
+					}
+	            
+				jsonary.add(jsonob);				
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			setOraClose(con,stmt,rs);
+		}
+		return jsonary;
+	}
+	
+	/**
+	 * get_sub0207T 
+	 * @param jary(tb_sys_domain)
+	 * @return json형식으로 dhx형식에 맞게
+	 * 2023-02-22 장현석
+	 */
+	public JSONArray get_sub0207T(JSONArray jary) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		JSONArray jsonary = new JSONArray();
+		
+		try {
+			strbuf = new StringBuffer();
+			//쿼리입력
+			strbuf.append("SELECT \r\n");
+			
+			//System.lineSeparator()
+			
+			
+			con = getOraConnect();
+			stmt = con.prepareStatement(strbuf.toString());
+			System.out.println(strbuf.toString());	//로그
+			
+			rs = stmt.executeQuery();
+
+			int orn = 1;
+			while(rs.next()) {
+				JSONObject jsonob = new JSONObject();
+				for(int i=0; i<jary.size();i++) {				
+					
+					JSONObject jsonob2 = new JSONObject();
+					jsonob2 = (JSONObject) jary.get(i);	
+					String id = (String)(jsonob2.get("id"));
+					if(!Objects.equals(id, "ORN") && !Objects.equals(id, null)) {
+					System.out.println(id);
+					
+					if(Objects.equals(rs.getString(id), null)) {
+						jsonob.put(id,"");	
+					}else{
+						jsonob.put(id,rs.getString(id));	
+					}
+					System.out.println("성공");
+					}else {
+					jsonob.put("ORN",orn);
+					orn++;
+					}
+					}
+	            
+				jsonary.add(jsonob);				
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			setOraClose(con,stmt,rs);
+		}
+		return jsonary;
+	}
+	
+	/**
+	 * get_sub0208 
+	 * @param jary(tb_sys_domain)
+	 * @return json형식으로 dhx형식에 맞게
+	 * 2023-02-22 장현석
+	 */
+	public JSONArray get_sub0208(JSONArray jary) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		JSONArray jsonary = new JSONArray();
+		
+		try {
+			strbuf = new StringBuffer();
+			//쿼리입력
+			strbuf.append("SELECT \r\n");
+			
+			//System.lineSeparator()
+			
+			
+			con = getOraConnect();
+			stmt = con.prepareStatement(strbuf.toString());
+			System.out.println(strbuf.toString());	//로그
+			
+			rs = stmt.executeQuery();
+
+			int orn = 1;
+			while(rs.next()) {
+				JSONObject jsonob = new JSONObject();
+				for(int i=0; i<jary.size();i++) {				
+					
+					JSONObject jsonob2 = new JSONObject();
+					jsonob2 = (JSONObject) jary.get(i);	
+					String id = (String)(jsonob2.get("id"));
+					if(!Objects.equals(id, "ORN") && !Objects.equals(id, null)) {
+					System.out.println(id);
+					
+					if(Objects.equals(rs.getString(id), null)) {
+						jsonob.put(id,"");	
+					}else{
+						jsonob.put(id,rs.getString(id));	
+					}
+					System.out.println("성공");
+					}else {
+					jsonob.put("ORN",orn);
+					orn++;
+					}
+					}
+	            
+				jsonary.add(jsonob);				
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			setOraClose(con,stmt,rs);
+		}
+		return jsonary;
+	}
+	
+	/**
+	 * get_sub0209 
+	 * @param jary(tb_sys_domain)
+	 * @return json형식으로 dhx형식에 맞게
+	 * 2023-02-22 장현석
+	 */
+	public JSONArray get_sub0209(JSONArray jary) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		JSONArray jsonary = new JSONArray();
+		
+		try {
+			strbuf = new StringBuffer();
+			//쿼리입력
+			strbuf.append("SELECT \r\n");
+			
+			//System.lineSeparator()
+			
+			
+			con = getOraConnect();
+			stmt = con.prepareStatement(strbuf.toString());
+			System.out.println(strbuf.toString());	//로그
+			
+			rs = stmt.executeQuery();
+
+			int orn = 1;
+			while(rs.next()) {
+				JSONObject jsonob = new JSONObject();
+				for(int i=0; i<jary.size();i++) {				
+					
+					JSONObject jsonob2 = new JSONObject();
+					jsonob2 = (JSONObject) jary.get(i);	
+					String id = (String)(jsonob2.get("id"));
+					if(!Objects.equals(id, "ORN") && !Objects.equals(id, null)) {
+					System.out.println(id);
+					
+					if(Objects.equals(rs.getString(id), null)) {
+						jsonob.put(id,"");	
+					}else{
+						jsonob.put(id,rs.getString(id));	
+					}
+					System.out.println("성공");
+					}else {
+					jsonob.put("ORN",orn);
+					orn++;
+					}
+					}
+	            
+				jsonary.add(jsonob);				
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			setOraClose(con,stmt,rs);
+		}
+	
+		return jsonary;
+	}
+	
+	/**
+	 * get_sub0210 
+	 * @param jary(tb_sys_domain)
+	 * @return json형식으로 dhx형식에 맞게
+	 * 2023-02-22 장현석
+	 */
+	public JSONArray get_sub0210(JSONArray jary) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		JSONArray jsonary = new JSONArray();
+		
+		try {
+			strbuf = new StringBuffer();
+			//쿼리입력
+			strbuf.append("SELECT \r\n");
+			
+			//System.lineSeparator()
+			
+			
+			con = getOraConnect();
+			stmt = con.prepareStatement(strbuf.toString());
+			System.out.println(strbuf.toString());	//로그
+			
+			rs = stmt.executeQuery();
+
+			int orn = 1;
+			while(rs.next()) {
+				JSONObject jsonob = new JSONObject();
+				for(int i=0; i<jary.size();i++) {				
+					
+					JSONObject jsonob2 = new JSONObject();
+					jsonob2 = (JSONObject) jary.get(i);	
+					String id = (String)(jsonob2.get("id"));
+					if(!Objects.equals(id, "ORN") && !Objects.equals(id, null)) {
+					System.out.println(id);
+					
+					if(Objects.equals(rs.getString(id), null)) {
+						jsonob.put(id,"");	
+					}else{
+						jsonob.put(id,rs.getString(id));	
+					}
+					System.out.println("성공");
+					}else {
+					jsonob.put("ORN",orn);
+					orn++;
+					}
+					}
+	            
+				jsonary.add(jsonob);				
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			setOraClose(con,stmt,rs);
+		}
+		return jsonary;
+	}
+	
+	/**
 	 * sub0301 검색 Query
 	 * @param jary(tb_sys_domain)
 	 * @return json형식으로 dhx형식에 맞게
 	 * 2023-02-16 김태균
 	 */
-	public JSONArray select_sub0301(JSONArray jary) {
+	public JSONArray get_sub0301(JSONArray jary) {
 		Connection con = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -718,7 +1565,81 @@ public class trans_ora_manager {
 		try {
 			strbuf = new StringBuffer();
 			
-			strbuf.append("");
+			strbuf.append("SELECT \r\n");
+			strbuf.append("DEP_NM TR_DEPNM, T3.DEP_CD DEP_CD, PUR_NM TR_ACQNM, T1.MID TR_MID, T1.EXP_DD DEP_EXP_DD, T_CNT TOT_CNT \r\n");
+			strbuf.append(", T_BAN TOT_BAN, T_AMT TOT_AMT, T_FEE TOT_FEE, T_EXP TOT_EXP \r\n");
+			strbuf.append(", I_CNT DEP_CNT \r\n");
+			strbuf.append(", I_BAN DEP_BAN \r\n");
+			strbuf.append(", I_AMT DEP_AMT \r\n");
+			strbuf.append(", I_FEE DEP_FEE \r\n");
+			strbuf.append(", I_EXP DEP_EXP \r\n");
+			strbuf.append(", BANK_AMT \r\n");
+			strbuf.append("FROM( \r\n");
+			strbuf.append("SELECT \r\n");
+			strbuf.append("MID, EXP_DD, SUM(TOT_CNT) T_CNT, SUM(TOT_BAN) T_BAN, SUM(TOT_NETAMT) T_AMT \r\n");
+			strbuf.append(", SUM(TOT_INPAMT) T_FEE, SUM(TOT_EXPAMT) T_EXP, SUM(I_CNT) I_CNT, SUM(I_BAN) I_BAN \r\n");
+			strbuf.append(", SUM(I_AMT) I_AMT, SUM(I_FEE) I_FEE, SUM(I_EXP) I_EXP \r\n");
+			strbuf.append("FROM( \r\n");
+			strbuf.append("SELECT \r\n");
+			strbuf.append("MID, EXP_DD, DEP_SEQ,SUM(TOT_CNT) TOT_CNT ,SUM(BAN_CNT) TOT_BAN,(SUM(EXP_AMT)+SUM(INP_AMT)) TOT_NETAMT \r\n");
+			strbuf.append(",SUM(INP_AMT) TOT_INPAMT, SUM(EXP_AMT) TOT_EXPAMT \r\n");
+			strbuf.append("FROM \r\n");
+			strbuf.append("TB_MNG_DEPTOT \r\n");
+			strbuf.append("WHERE MID IN (SELECT MID FROM TB_BAS_MIDMAP where org_cd='OR0015') AND EXP_DD>='20230222' AND EXP_DD<='20230222' \r\n");
+			strbuf.append("GROUP BY MID, EXP_DD, DEP_SEQ \r\n");
+			strbuf.append("ORDER BY EXP_DD DESC \r\n");
+			strbuf.append(")T1 \r\n");
+			strbuf.append("LEFT OUTER JOIN( \r\n");
+			strbuf.append("SELECT \r\n");
+			strbuf.append("DEP_SEQ \r\n");
+			strbuf.append(", (SUM(ITEM_CNT60)+SUM(ITEM_CNT67)) I_CNT \r\n");
+			strbuf.append(", SUM(ITEM_CNTBAN) I_BAN \r\n");
+			strbuf.append(", (SUM(ITEM_AMT60)-SUM(ITEM_AMT67)) I_AMT \r\n");
+			strbuf.append(", (SUM(ITEM_FEE60)-SUM(ITEM_FEE67)) I_FEE \r\n");
+			strbuf.append(", (SUM(ITEM_AMT60)-SUM(ITEM_AMT67))-(SUM(ITEM_FEE60)-SUM(ITEM_FEE67)) I_EXP \r\n");
+			strbuf.append("FROM( \r\n");
+			strbuf.append("SELECT \r\n");
+			strbuf.append("DEP_SEQ \r\n");
+			strbuf.append(",CASE WHEN RTN_CD='60' THEN COUNT(1) ELSE 0 END ITEM_CNT60 \r\n");
+			strbuf.append(",CASE WHEN RTN_CD='67' THEN COUNT(1) ELSE 0 END ITEM_CNT67 \r\n");
+			strbuf.append(",CASE WHEN RTN_CD NOT IN ('60', '67') THEN COUNT(1) ELSE 0 END ITEM_CNTBAN \r\n");
+			strbuf.append(",CASE WHEN RTN_CD='60' THEN SUM(SALE_AMT) ELSE 0 END ITEM_AMT60 \r\n");
+			strbuf.append(",CASE WHEN RTN_CD='67' THEN SUM(SALE_AMT) ELSE 0 END ITEM_AMT67 \r\n");
+			strbuf.append(",CASE WHEN RTN_CD='60' THEN SUM(FEE) ELSE 0 END ITEM_FEE60 \r\n");
+			strbuf.append(",CASE WHEN RTN_CD='67' THEN SUM(FEE) ELSE 0 END ITEM_FEE67 \r\n");
+			strbuf.append("FROM \r\n");
+			strbuf.append("TB_MNG_DEPDATA \r\n");
+			strbuf.append("WHERE MID IN (SELECT MID FROM TB_BAS_MIDMAP where org_cd='OR0015') AND EXP_DD>='20230222' AND EXP_DD<='20230222' \r\n");
+			strbuf.append("GROUP BY DEP_SEQ, RTN_CD \r\n");
+			strbuf.append(") \r\n");
+			strbuf.append("GROUP BY DEP_SEQ \r\n");
+			strbuf.append(")T2 ON(T1.DEP_SEQ=T2.DEP_SEQ) \r\n");
+			strbuf.append("GROUP BY MID, EXP_DD \r\n");
+			strbuf.append(")T1 \r\n");
+			strbuf.append("LEFT OUTER JOIN( \r\n");
+			strbuf.append("SELECT \r\n");
+			strbuf.append("EXP_DD \r\n");
+			strbuf.append(", MID \r\n");
+			strbuf.append(", CASE WHEN SUM(EXP_AMT) IS NULL THEN 0 ELSE SUM(EXP_AMT) END BANK_AMT \r\n");
+			strbuf.append("FROM \r\n");
+			strbuf.append("TB_MNG_BANKDATA \r\n");
+			strbuf.append("GROUP BY EXP_DD, MID \r\n");
+			strbuf.append(")T2 ON(T1.MID=T2.MID AND T1.EXP_DD=T2.EXP_DD) \r\n");
+			strbuf.append("LEFT OUTER JOIN( \r\n");
+			strbuf.append("SELECT ORG_CD, DEP_CD, MER_NO, PUR_CD FROM TB_BAS_MERINFO \r\n");
+			strbuf.append(")T3 ON(T1.MID=T3.MER_NO) \r\n");
+			strbuf.append("LEFT OUTER JOIN( \r\n");
+			strbuf.append("SELECT ORG_CD, ORG_NM FROM TB_BAS_ORG \r\n");
+			strbuf.append(")T4 ON(T3.ORG_CD=T4.ORG_CD) \r\n");
+			strbuf.append("LEFT OUTER JOIN( \r\n");
+			strbuf.append("SELECT DEP_CD, DEP_NM FROM TB_BAS_DEPART \r\n");
+			strbuf.append(")T5 ON(T3.DEP_CD=T5.DEP_CD) \r\n");
+			strbuf.append("LEFT OUTER JOIN( \r\n");
+			strbuf.append("SELECT PUR_CD, PUR_NM, PUR_SORT, PUR_KOCES,PUR_OCD FROM TB_BAS_PURINFO \r\n");
+			strbuf.append(")T6 ON(T3.PUR_CD=T6.PUR_CD) \r\n");
+			strbuf.append(" \r\n");
+			strbuf.append("ORDER BY DEP_NM ASC, PUR_NM ASC, PUR_SORT ASC \r\n");
+
 			//System.lineSeparator()
 			
 			
@@ -766,7 +1687,1091 @@ public class trans_ora_manager {
 		return jsonary;
 	}
 	
+	/**
+	 * get_sub0302 
+	 * @param jary(tb_sys_domain)
+	 * @return json형식으로 dhx형식에 맞게
+	 * 2023-02-22 장현석
+	 */
+	public JSONArray get_sub0302(JSONArray jary) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		JSONArray jsonary = new JSONArray();
+		
+		try {
+			strbuf = new StringBuffer();
+			//쿼리입력
+			strbuf.append("SELECT \r\n");
+			strbuf.append("CONCAT(T1.DEP_SEQ, T1.DEP_CD) SEQNO, \r\n");
+			strbuf.append("T1.DEP_CD, CARD_NO, EXP_DD, MID, REQ_DD, TID, RTN_CD, T1.APP_DD, \r\n");
+			strbuf.append("REG_DD, HALBU, SALE_AMT, RSC_CD, RS_MSG, T1.APP_NO, T2.DEP_CD DPCD, T2.STO_CD, \r\n");
+			strbuf.append("FEE, DEP_NM, STO_NM, PUR_NM, TERM_NM, EXT_FIELD,ADD_CID,ADD_CASHER \r\n");
+			strbuf.append(", CASE \r\n");
+			strbuf.append("WHEN LENGTH(ADD_DATE) = 6 THEN '20'||ADD_DATE \r\n");
+			strbuf.append("END ADD_DATE \r\n");
+			strbuf.append(",TRUNC((FEE/SALE_AMT*100),2)||'%' AS FEEPER \r\n");
+			strbuf.append(",APPTM \r\n");
+			strbuf.append(",OAPPDD \r\n");
+			strbuf.append("FROM \r\n");
+			strbuf.append("TB_MNG_DEPDATA T1 \r\n");
+			strbuf.append("LEFT OUTER JOIN( \r\n");
+			strbuf.append("SELECT ORG_CD, DEP_CD, STO_CD, MER_NO, PUR_CD FROM TB_BAS_MERINFO WHERE ORG_CD='OR0015' \r\n");
+			strbuf.append(")T2 ON(T1.MID=T2.MER_NO) \r\n");
+			strbuf.append("LEFT OUTER JOIN( \r\n");
+			strbuf.append("SELECT TERM_NM, TERM_ID FROM TB_BAS_TIDMST WHERE ORG_CD='OR0015' \r\n");
+			strbuf.append(")T6 ON(T1.TID=T6.TERM_ID) \r\n");
+			strbuf.append("LEFT OUTER JOIN( \r\n");
+			strbuf.append("SELECT DEP_NM, DEP_CD FROM TB_BAS_DEPART WHERE ORG_CD='OR0015' \r\n");
+			strbuf.append(")T3 ON(T2.DEP_CD=T3.DEP_CD) \r\n");
+			strbuf.append("LEFT OUTER JOIN( \r\n");
+			strbuf.append("SELECT STO_NM, STO_CD, DEP_CD, ORG_CD FROM TB_BAS_STORE \r\n");
+			strbuf.append(")T4 ON(T2.STO_CD=T4.STO_CD AND T2.DEP_CD=T4.DEP_CD AND T2.ORG_CD=T4.ORG_CD) \r\n");
+			strbuf.append("LEFT OUTER JOIN( \r\n");
+			strbuf.append("SELECT PUR_CD, PUR_NM FROM TB_BAS_PURINFO \r\n");
+			strbuf.append(")T6 ON(T2.PUR_CD=T6.PUR_CD) \r\n");
+			strbuf.append("LEFT OUTER JOIN( \r\n");
+			strbuf.append("SELECT APPDD, TRANIDX, EXT_FIELD,ADD_CID, ADD_CASHER,ADD_DATE,APPTM,OAPPDD FROM GLOB_MNG_ICVAN \r\n");
+			strbuf.append(")T7 ON(T1.APP_DD=T7.APPDD AND T1.TRANIDX=T7.TRANIDX) \r\n");
+			strbuf.append("WHERE MID IN (SELECT MID FROM TB_BAS_MIDMAP where org_cd='OR0015') AND EXP_DD>='20230222' AND EXP_DD<='20230222' \r\n");
+
+			
+			//System.lineSeparator()
+			
+			
+			con = getOraConnect();
+			stmt = con.prepareStatement(strbuf.toString());
+			System.out.println(strbuf.toString());	//로그
+			
+			rs = stmt.executeQuery();
+
+			int orn = 1;
+			while(rs.next()) {
+				JSONObject jsonob = new JSONObject();
+				for(int i=0; i<jary.size();i++) {				
+					
+					JSONObject jsonob2 = new JSONObject();
+					jsonob2 = (JSONObject) jary.get(i);	
+					String id = (String)(jsonob2.get("id"));
+					if(!Objects.equals(id, "ORN") && !Objects.equals(id, null)) {
+					System.out.println(id);
+					
+					if(Objects.equals(rs.getString(id), null)) {
+						jsonob.put(id,"");	
+					}else{
+						jsonob.put(id,rs.getString(id));	
+					}
+					System.out.println("성공");
+					}else {
+					jsonob.put("ORN",orn);
+					orn++;
+					}
+					}
+	            
+				jsonary.add(jsonob);				
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			setOraClose(con,stmt,rs);
+		}
+		return jsonary;
+	}
 	
+	/**
+	 * get_sub0302T 
+	 * @param jary(tb_sys_domain)
+	 * @return json형식으로 dhx형식에 맞게
+	 * 2023-02-22 장현석
+	 */
+	public JSONArray get_sub0302T(JSONArray jary) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		JSONArray jsonary = new JSONArray();
+		
+		try {
+			strbuf = new StringBuffer();
+			//쿼리입력
+			strbuf.append("SELECT \r\n");
+			strbuf.append("MID TR_TIDNM, DEP_NM TR_DEPNM, PUR_NM TR_ACQNM, PUR_SORT \r\n");
+			strbuf.append(", (SUM(ITEM_CNT60)+SUM(ITEM_CNT67)) I_CNT TOT_CNT \r\n");
+			strbuf.append(", SUM(ITEM_CNTBAN) I_BAN TOT_BAN \r\n");
+			strbuf.append(", (SUM(ITEM_AMT60)-SUM(ITEM_AMT67)) I_AMT TOT_AMT \r\n");
+			strbuf.append(", (SUM(ITEM_FEE60)-SUM(ITEM_FEE67)) I_FEE TOT_FEE \r\n");
+			strbuf.append(", (SUM(ITEM_AMT60)-SUM(ITEM_AMT67))-(SUM(ITEM_FEE60)-SUM(ITEM_FEE67)) I_EXP TOT_EXP \r\n");
+			strbuf.append("FROM( \r\n");
+			strbuf.append("SELECT \r\n");
+			strbuf.append("MID, DEP_NM, PUR_NM, PUR_SORT \r\n");
+			strbuf.append(",CASE WHEN RTN_CD='60' THEN COUNT(1) ELSE 0 END ITEM_CNT60 \r\n");
+			strbuf.append(",CASE WHEN RTN_CD='67' THEN COUNT(1) ELSE 0 END ITEM_CNT67 \r\n");
+			strbuf.append(",CASE WHEN RTN_CD NOT IN ('60', '67') THEN COUNT(1) ELSE 0 END ITEM_CNTBAN \r\n");
+			strbuf.append(",CASE WHEN RTN_CD='60' THEN SUM(SALE_AMT) ELSE 0 END ITEM_AMT60 \r\n");
+			strbuf.append(",CASE WHEN RTN_CD='67' THEN SUM(SALE_AMT) ELSE 0 END ITEM_AMT67 \r\n");
+			strbuf.append(",CASE WHEN RTN_CD='60' THEN SUM(FEE) ELSE 0 END ITEM_FEE60 \r\n");
+			strbuf.append(",CASE WHEN RTN_CD='67' THEN SUM(FEE) ELSE 0 END ITEM_FEE67 \r\n");
+			strbuf.append("FROM( \r\n");
+			strbuf.append("SELECT \r\n");
+			strbuf.append("T1.DEP_CD, CARD_NO, EXP_DD, MID, REQ_DD, TID, RTN_CD, \r\n");
+			strbuf.append("REG_DD, HALBU, SALE_AMT, RSC_CD, RS_MSG, \r\n");
+			strbuf.append("FEE, DEP_NM, PUR_NM, T6.STO_CD PUR_SORT \r\n");
+			strbuf.append("FROM \r\n");
+			strbuf.append("TB_MNG_DEPDATA T1 \r\n");
+			strbuf.append("LEFT OUTER JOIN( \r\n");
+			strbuf.append("SELECT ORG_CD, DEP_CD, STO_CD, MER_NO, PUR_CD FROM TB_BAS_MERINFO where org_cd='OR0015' \r\n");
+			strbuf.append(")T2 ON(T1.MID=T2.MER_NO) \r\n");
+			strbuf.append("LEFT OUTER JOIN( \r\n");
+			strbuf.append("SELECT TERM_NM, TERM_ID FROM TB_BAS_TIDMST where org_cd='OR0015' \r\n");
+			strbuf.append(")T6 ON(T1.TID=T6.TERM_ID) \r\n");
+			strbuf.append("LEFT OUTER JOIN( \r\n");
+			strbuf.append("SELECT DEP_NM, DEP_CD FROM TB_BAS_DEPART where org_cd='OR0015' \r\n");
+			strbuf.append(")T3 ON(T2.DEP_CD=T3.DEP_CD) \r\n");
+			strbuf.append("LEFT OUTER JOIN( \r\n");
+			strbuf.append("SELECT PUR_CD, PUR_NM, STO_CD FROM TB_BAS_PURINFO \r\n");
+			strbuf.append(")T6 ON(T2.PUR_CD=T6.PUR_CD) \r\n");
+			strbuf.append("LEFT OUTER JOIN( \r\n");
+			strbuf.append("SELECT APPDD, TRANIDX, EXT_FIELD,ADD_CID, CHECK_CARD FROM GLOB_MNG_ICVAN \r\n");
+			strbuf.append(")T7 ON(T1.APP_DD=T7.APPDD AND T1.TRANIDX=T7.TRANIDX) \r\n");
+			strbuf.append("WHERE MID IN (SELECT MID FROM TB_BAS_MIDMAP where org_cd='OR0015') AND EXP_DD>='20230222' AND EXP_DD<='20230222' \r\n");
+			strbuf.append(") \r\n");
+			strbuf.append("GROUP BY MID, DEP_NM, PUR_NM, PUR_SORT, RTN_CD \r\n");
+			strbuf.append(") \r\n");
+			strbuf.append("GROUP BY MID, DEP_NM, PUR_NM, PUR_SORT \r\n");
+			strbuf.append("ORDER BY PUR_SORT ASC \r\n");
+
+			
+			//System.lineSeparator()
+			
+			
+			con = getOraConnect();
+			stmt = con.prepareStatement(strbuf.toString());
+			System.out.println(strbuf.toString());	//로그
+			
+			rs = stmt.executeQuery();
+
+			int orn = 1;
+			while(rs.next()) {
+				JSONObject jsonob = new JSONObject();
+				for(int i=0; i<jary.size();i++) {				
+					
+					JSONObject jsonob2 = new JSONObject();
+					jsonob2 = (JSONObject) jary.get(i);	
+					String id = (String)(jsonob2.get("id"));
+					if(!Objects.equals(id, "ORN") && !Objects.equals(id, null)) {
+					System.out.println(id);
+					
+					if(Objects.equals(rs.getString(id), null)) {
+						jsonob.put(id,"");	
+					}else{
+						jsonob.put(id,rs.getString(id));	
+					}
+					System.out.println("성공");
+					}else {
+					jsonob.put("ORN",orn);
+					orn++;
+					}
+					}
+	            
+				jsonary.add(jsonob);				
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			setOraClose(con,stmt,rs);
+		}
+		return jsonary;
+	}
+	
+	/**
+	 * get_sub0303 
+	 * @param jary(tb_sys_domain)
+	 * @return json형식으로 dhx형식에 맞게
+	 * 2023-02-22 장현석
+	 */
+	public JSONArray get_sub0303(JSONArray jary) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		JSONArray jsonary = new JSONArray();
+		
+		try {
+			strbuf = new StringBuffer();
+			//쿼리입력
+			strbuf.append("SELECT \r\n");
+			strbuf.append("T5.DEP_NM TR_DEPNM \r\n");
+			strbuf.append(", T2.TERM_NM TR_TIDNM \r\n");
+			strbuf.append(", T6.PUR_NM TR_ACQNM \r\n");
+			strbuf.append(", APP_DD TR_APPDD \r\n");
+			strbuf.append(", REQ_DD \r\n");
+			strbuf.append(", EXP_DD TR_EXPDD \r\n");
+			strbuf.append(", TID TR_TID \r\n");
+			strbuf.append(", MID TR_MID \r\n");
+			strbuf.append(", ITEM_CNT \r\n");
+			strbuf.append(", ITEM_AMT \r\n");
+			strbuf.append(", ITEM_FEE \r\n");
+			strbuf.append(", ITEM_EXP \r\n");
+			strbuf.append("FROM( \r\n");
+			strbuf.append("SELECT \r\n");
+			strbuf.append("APP_DD \r\n");
+			strbuf.append(", REQ_DD \r\n");
+			strbuf.append(", EXP_DD \r\n");
+			strbuf.append(", TID \r\n");
+			strbuf.append(", MID \r\n");
+			strbuf.append(", SUM(ITEM_CNT60)+SUM(ITEM_CNT67) ITEM_CNT \r\n");
+			strbuf.append(", SUM(ITEM_AMT60)-SUM(ITEM_AMT67) ITEM_AMT \r\n");
+			strbuf.append(", SUM(ITEM_FEE60)-SUM(ITEM_FEE67) ITEM_FEE \r\n");
+			strbuf.append(", (SUM(ITEM_AMT60)-SUM(ITEM_AMT67))-(SUM(ITEM_FEE60)-SUM(ITEM_FEE67)) ITEM_EXP \r\n");
+			strbuf.append("FROM( \r\n");
+			strbuf.append("SELECT \r\n");
+			strbuf.append("APP_DD \r\n");
+			strbuf.append(",REQ_DD \r\n");
+			strbuf.append(",EXP_DD \r\n");
+			strbuf.append(",TID \r\n");
+			strbuf.append(",MID \r\n");
+			strbuf.append(",RTN_CD \r\n");
+			strbuf.append(",CASE WHEN RTN_CD='60' THEN COUNT(1) ELSE 0 END ITEM_CNT60 \r\n");
+			strbuf.append(",CASE WHEN RTN_CD='67' THEN COUNT(1) ELSE 0 END ITEM_CNT67 \r\n");
+			strbuf.append(",CASE WHEN RTN_CD NOT IN ('60', '67') THEN COUNT(1) ELSE 0 END ITEM_CNTBAN \r\n");
+			strbuf.append(",CASE WHEN RTN_CD='60' THEN SUM(SALE_AMT) ELSE 0 END ITEM_AMT60 \r\n");
+			strbuf.append(",CASE WHEN RTN_CD='67' THEN SUM(SALE_AMT) ELSE 0 END ITEM_AMT67 \r\n");
+			strbuf.append(",CASE WHEN RTN_CD='60' THEN SUM(FEE) ELSE 0 END ITEM_FEE60 \r\n");
+			strbuf.append(",CASE WHEN RTN_CD='67' THEN SUM(FEE) ELSE 0 END ITEM_FEE67 \r\n");
+			strbuf.append("FROM \r\n");
+			strbuf.append("TB_MNG_DEPDATA \r\n");
+			strbuf.append("WHERE MID IN (SELECT MID FROM TB_BAS_MIDMAP where org_cd='OR0015') AND APP_DD>='20230220' AND APP_DD<='20230220' \r\n");
+			strbuf.append("GROUP BY APP_DD, REQ_DD, EXP_DD, MID, TID, RTN_CD \r\n");
+			strbuf.append(") \r\n");
+			strbuf.append("GROUP BY APP_DD, REQ_DD, EXP_DD, TID, MID \r\n");
+			strbuf.append(")T1 \r\n");
+			strbuf.append("LEFT OUTER JOIN( \r\n");
+			strbuf.append("SELECT TERM_ID, TERM_NM FROM TB_BAS_TIDMST WHERE ORG_CD='OR0015' \r\n");
+			strbuf.append(")T2 ON(T1.TID=T2.TERM_ID) \r\n");
+			strbuf.append("LEFT OUTER JOIN( \r\n");
+			strbuf.append("SELECT ORG_CD, DEP_CD, MER_NO, PUR_CD FROM TB_BAS_MERINFO WHERE ORG_CD='OR0015' \r\n");
+			strbuf.append(")T3 ON(T1.MID=T3.MER_NO) \r\n");
+			strbuf.append("LEFT OUTER JOIN( \r\n");
+			strbuf.append("SELECT ORG_CD, ORG_NM FROM TB_BAS_ORG \r\n");
+			strbuf.append(")T4 ON(T3.ORG_CD=T4.ORG_CD) \r\n");
+			strbuf.append("LEFT OUTER JOIN( \r\n");
+			strbuf.append("SELECT DEP_CD, DEP_NM FROM TB_BAS_DEPART WHERE ORG_CD='OR0015' \r\n");
+			strbuf.append(")T5 ON(T3.DEP_CD=T5.DEP_CD) \r\n");
+			strbuf.append("LEFT OUTER JOIN( \r\n");
+			strbuf.append("SELECT PUR_CD, PUR_NM, PUR_SORT, PUR_KOCES,PUR_OCD FROM TB_BAS_PURINFO \r\n");
+			strbuf.append(")T6 ON(T3.PUR_CD=T6.PUR_CD) \r\n");
+			strbuf.append("LEFT OUTER JOIN( \r\n");
+			strbuf.append("SELECT ORG_CD, USER_PUR_CD, USER_PURSORT FROM TB_BAS_USERPURINFO WHERE ORG_CD='OR0015' \r\n");
+			strbuf.append(")S3 ON(T6.PUR_CD=S3.USER_PUR_CD) \r\n");
+			strbuf.append("WHERE ITEM_CNT>0 \r\n");
+			strbuf.append("ORDER BY T3.DEP_CD ASC, T1.APP_DD ASC, T6.PUR_NM ASC, T1.REQ_DD ASC, T1.EXP_DD ASC \r\n");
+
+			
+			//System.lineSeparator()
+			
+			
+			con = getOraConnect();
+			stmt = con.prepareStatement(strbuf.toString());
+			System.out.println(strbuf.toString());	//로그
+			
+			rs = stmt.executeQuery();
+
+			int orn = 1;
+			while(rs.next()) {
+				JSONObject jsonob = new JSONObject();
+				for(int i=0; i<jary.size();i++) {				
+					
+					JSONObject jsonob2 = new JSONObject();
+					jsonob2 = (JSONObject) jary.get(i);	
+					String id = (String)(jsonob2.get("id"));
+					if(!Objects.equals(id, "ORN") && !Objects.equals(id, null)) {
+					System.out.println(id);
+					
+					if(Objects.equals(rs.getString(id), null)) {
+						jsonob.put(id,"");	
+					}else{
+						jsonob.put(id,rs.getString(id));	
+					}
+					System.out.println("성공");
+					}else {
+					jsonob.put("ORN",orn);
+					orn++;
+					}
+					}
+	            
+				jsonary.add(jsonob);				
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			setOraClose(con,stmt,rs);
+		}
+		return jsonary;
+	}
+	
+	/**
+	 * get_sub0303T 
+	 * @param jary(tb_sys_domain)
+	 * @return json형식으로 dhx형식에 맞게
+	 * 2023-02-22 장현석
+	 */
+	public JSONArray get_sub0303T(JSONArray jary) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		JSONArray jsonary = new JSONArray();
+		
+		try {
+			strbuf = new StringBuffer();
+			//쿼리입력
+			strbuf.append("SELECT \r\n");
+			strbuf.append("T2.TERM_NM TR_TIDNM \r\n");
+			strbuf.append(",TID TR_TID \r\n");
+			strbuf.append(",BC \r\n");
+			strbuf.append(",NH \r\n");
+			strbuf.append(",KB \r\n");
+			strbuf.append(",SS \r\n");
+			strbuf.append(",HN \r\n");
+			strbuf.append(",LO \r\n");
+			strbuf.append(",HD \r\n");
+			strbuf.append(",SI \r\n");
+			strbuf.append(" \r\n");
+			strbuf.append(",BCF \r\n");
+			strbuf.append(",NHF \r\n");
+			strbuf.append(",KBF \r\n");
+			strbuf.append(",SSF \r\n");
+			strbuf.append(",HNF \r\n");
+			strbuf.append(",LOF \r\n");
+			strbuf.append(",HDF \r\n");
+			strbuf.append(",SIF \r\n");
+			strbuf.append("FROM( \r\n");
+			strbuf.append("SELECT \r\n");
+			strbuf.append("TID \r\n");
+			strbuf.append(",SUM(BCA)-SUM(BCC) BC \r\n");
+			strbuf.append(",SUM(NHA)-SUM(NHC) NH \r\n");
+			strbuf.append(",SUM(KBA)-SUM(KBC) KB \r\n");
+			strbuf.append(",SUM(SSA)-SUM(SSC) SS \r\n");
+			strbuf.append(",SUM(HNA)-SUM(HNC) HN \r\n");
+			strbuf.append(",SUM(LOA)-SUM(LOC) LO \r\n");
+			strbuf.append(",SUM(HDA)-SUM(HDC) HD \r\n");
+			strbuf.append(",SUM(SIA)-SUM(SIC) SI \r\n");
+			strbuf.append(" \r\n");
+			strbuf.append(",SUM(BCAF)-SUM(BCCF) BCF \r\n");
+			strbuf.append(",SUM(NHAF)-SUM(NHCF) NHF \r\n");
+			strbuf.append(",SUM(KBAF)-SUM(KBCF) KBF \r\n");
+			strbuf.append(",SUM(SSAF)-SUM(SSCF) SSF \r\n");
+			strbuf.append(",SUM(HNAF)-SUM(HNCF) HNF \r\n");
+			strbuf.append(",SUM(LOAF)-SUM(LOCF) LOF \r\n");
+			strbuf.append(",SUM(HDAF)-SUM(HDCF) HDF \r\n");
+			strbuf.append(",SUM(SIAF)-SUM(SICF) SIF \r\n");
+			strbuf.append("FROM( \r\n");
+			strbuf.append("SELECT \r\n");
+			strbuf.append("TID \r\n");
+			strbuf.append(",CASE WHEN ACQ_CD IN ('VC0006', '026', '1106','01') AND RTN_CD='60' THEN SUM(SALE_AMT) ELSE 0 END BCA \r\n");
+			strbuf.append(",CASE WHEN ACQ_CD IN ('VC0030', '018', '2211','11') AND RTN_CD='60' THEN SUM(SALE_AMT) ELSE 0 END NHA \r\n");
+			strbuf.append(",CASE WHEN ACQ_CD IN ('VC0001', '016', '1101','02') AND RTN_CD='60' THEN SUM(SALE_AMT) ELSE 0 END KBA \r\n");
+			strbuf.append(",CASE WHEN ACQ_CD IN ('VC0004', '031', '1104','06') AND RTN_CD='60' THEN SUM(SALE_AMT) ELSE 0 END SSA \r\n");
+			strbuf.append(",CASE WHEN ACQ_CD IN ('VC0005', '008', '1105','03') AND RTN_CD='60' THEN SUM(SALE_AMT) ELSE 0 END HNA \r\n");
+			strbuf.append(",CASE WHEN ACQ_CD IN ('VC0003', '047', '1103','33') AND RTN_CD='60' THEN SUM(SALE_AMT) ELSE 0 END LOA \r\n");
+			strbuf.append(",CASE WHEN ACQ_CD IN ('VC0002', '027', '1102','08') AND RTN_CD='60' THEN SUM(SALE_AMT) ELSE 0 END HDA \r\n");
+			strbuf.append(",CASE WHEN ACQ_CD IN ('VC0007', '029', '1107','07') AND RTN_CD='60' THEN SUM(SALE_AMT) ELSE 0 END SIA \r\n");
+			strbuf.append(",CASE WHEN ACQ_CD IN ('VC0006', '026', '1106','01') AND RTN_CD='67' THEN SUM(SALE_AMT) ELSE 0 END BCC \r\n");
+			strbuf.append(",CASE WHEN ACQ_CD IN ('VC0030', '018', '2211','11') AND RTN_CD='67' THEN SUM(SALE_AMT) ELSE 0 END NHC \r\n");
+			strbuf.append(",CASE WHEN ACQ_CD IN ('VC0001', '016', '1101','02') AND RTN_CD='67' THEN SUM(SALE_AMT) ELSE 0 END KBC \r\n");
+			strbuf.append(",CASE WHEN ACQ_CD IN ('VC0004', '031', '1104','06') AND RTN_CD='67' THEN SUM(SALE_AMT) ELSE 0 END SSC \r\n");
+			strbuf.append(",CASE WHEN ACQ_CD IN ('VC0005', '008', '1105','03') AND RTN_CD='67' THEN SUM(SALE_AMT) ELSE 0 END HNC \r\n");
+			strbuf.append(",CASE WHEN ACQ_CD IN ('VC0003', '047', '1103','33') AND RTN_CD='67' THEN SUM(SALE_AMT) ELSE 0 END LOC \r\n");
+			strbuf.append(",CASE WHEN ACQ_CD IN ('VC0002', '027', '1102','08') AND RTN_CD='67' THEN SUM(SALE_AMT) ELSE 0 END HDC \r\n");
+			strbuf.append(",CASE WHEN ACQ_CD IN ('VC0007', '029', '1107','07') AND RTN_CD='67' THEN SUM(SALE_AMT) ELSE 0 END SIC \r\n");
+			strbuf.append(" \r\n");
+			strbuf.append(",CASE WHEN ACQ_CD IN ('VC0006', '026', '1106','01') AND RTN_CD='60' THEN SUM(FEE) ELSE 0 END BCAF \r\n");
+			strbuf.append(",CASE WHEN ACQ_CD IN ('VC0030', '018', '2211','11') AND RTN_CD='60' THEN SUM(FEE) ELSE 0 END NHAF \r\n");
+			strbuf.append(",CASE WHEN ACQ_CD IN ('VC0001', '016', '1101','02') AND RTN_CD='60' THEN SUM(FEE) ELSE 0 END KBAF \r\n");
+			strbuf.append(",CASE WHEN ACQ_CD IN ('VC0004', '031', '1104','06') AND RTN_CD='60' THEN SUM(FEE) ELSE 0 END SSAF \r\n");
+			strbuf.append(",CASE WHEN ACQ_CD IN ('VC0005', '008', '1105','03') AND RTN_CD='60' THEN SUM(FEE) ELSE 0 END HNAF \r\n");
+			strbuf.append(",CASE WHEN ACQ_CD IN ('VC0003', '047', '1103','33') AND RTN_CD='60' THEN SUM(FEE) ELSE 0 END LOAF \r\n");
+			strbuf.append(",CASE WHEN ACQ_CD IN ('VC0002', '027', '1102','08') AND RTN_CD='60' THEN SUM(FEE) ELSE 0 END HDAF \r\n");
+			strbuf.append(",CASE WHEN ACQ_CD IN ('VC0007', '029', '1107','07') AND RTN_CD='60' THEN SUM(FEE) ELSE 0 END SIAF \r\n");
+			strbuf.append(",CASE WHEN ACQ_CD IN ('VC0006', '026', '1106','01') AND RTN_CD='67' THEN SUM(FEE) ELSE 0 END BCCF \r\n");
+			strbuf.append(",CASE WHEN ACQ_CD IN ('VC0030', '018', '2211','11') AND RTN_CD='67' THEN SUM(FEE) ELSE 0 END NHCF \r\n");
+			strbuf.append(",CASE WHEN ACQ_CD IN ('VC0001', '016', '1101','02') AND RTN_CD='67' THEN SUM(FEE) ELSE 0 END KBCF \r\n");
+			strbuf.append(",CASE WHEN ACQ_CD IN ('VC0004', '031', '1104','06') AND RTN_CD='67' THEN SUM(FEE) ELSE 0 END SSCF \r\n");
+			strbuf.append(",CASE WHEN ACQ_CD IN ('VC0005', '008', '1105','03') AND RTN_CD='67' THEN SUM(FEE) ELSE 0 END HNCF \r\n");
+			strbuf.append(",CASE WHEN ACQ_CD IN ('VC0003', '047', '1103','33') AND RTN_CD='67' THEN SUM(FEE) ELSE 0 END LOCF \r\n");
+			strbuf.append(",CASE WHEN ACQ_CD IN ('VC0002', '027', '1102','08') AND RTN_CD='67' THEN SUM(FEE) ELSE 0 END HDCF \r\n");
+			strbuf.append(",CASE WHEN ACQ_CD IN ('VC0007', '029', '1107','07') AND RTN_CD='67' THEN SUM(FEE) ELSE 0 END SICF \r\n");
+			strbuf.append("FROM \r\n");
+			strbuf.append("TB_MNG_DEPDATA \r\n");
+			strbuf.append("WHERE MID IN (SELECT MID FROM TB_BAS_MIDMAP where org_cd='OR0015') AND APP_DD>='20230220' AND APP_DD<='20230220' \r\n");
+			strbuf.append("GROUP BY \r\n");
+			strbuf.append("TID, ACQ_CD, RTN_CD \r\n");
+			strbuf.append(") GROUP BY TID \r\n");
+			strbuf.append(") T1 \r\n");
+			strbuf.append("LEFT OUTER JOIN( \r\n");
+			strbuf.append("SELECT TERM_NM, TERM_ID FROM TB_BAS_TIDMST \r\n");
+			strbuf.append(")T2 ON(T1.TID=T2.TERM_ID) \r\n");
+
+			
+			//System.lineSeparator()
+			
+			
+			con = getOraConnect();
+			stmt = con.prepareStatement(strbuf.toString());
+			System.out.println(strbuf.toString());	//로그
+			
+			rs = stmt.executeQuery();
+
+			int orn = 1;
+			while(rs.next()) {
+				JSONObject jsonob = new JSONObject();
+				for(int i=0; i<jary.size();i++) {				
+					
+					JSONObject jsonob2 = new JSONObject();
+					jsonob2 = (JSONObject) jary.get(i);	
+					String id = (String)(jsonob2.get("id"));
+					if(!Objects.equals(id, "ORN") && !Objects.equals(id, null)) {
+					System.out.println(id);
+					
+					if(Objects.equals(rs.getString(id), null)) {
+						jsonob.put(id,"");	
+					}else{
+						jsonob.put(id,rs.getString(id));	
+					}
+					System.out.println("성공");
+					}else {
+					jsonob.put("ORN",orn);
+					orn++;
+					}
+					}
+	            
+				jsonary.add(jsonob);				
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			setOraClose(con,stmt,rs);
+		}
+		return jsonary;
+	}
+	
+	/**
+	 * get_sub0304 
+	 * @param jary(tb_sys_domain)
+	 * @return json형식으로 dhx형식에 맞게
+	 * 2023-02-22 장현석
+	 */
+	public JSONArray get_sub0304(JSONArray jary) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		JSONArray jsonary = new JSONArray();
+		
+		try {
+			strbuf = new StringBuffer();
+			//쿼리입력
+			strbuf.append("SELECT \r\n");
+			
+			//System.lineSeparator()
+			
+			
+			con = getOraConnect();
+			stmt = con.prepareStatement(strbuf.toString());
+			System.out.println(strbuf.toString());	//로그
+			
+			rs = stmt.executeQuery();
+
+			int orn = 1;
+			while(rs.next()) {
+				JSONObject jsonob = new JSONObject();
+				for(int i=0; i<jary.size();i++) {				
+					
+					JSONObject jsonob2 = new JSONObject();
+					jsonob2 = (JSONObject) jary.get(i);	
+					String id = (String)(jsonob2.get("id"));
+					if(!Objects.equals(id, "ORN") && !Objects.equals(id, null)) {
+					System.out.println(id);
+					
+					if(Objects.equals(rs.getString(id), null)) {
+						jsonob.put(id,"");	
+					}else{
+						jsonob.put(id,rs.getString(id));	
+					}
+					System.out.println("성공");
+					}else {
+					jsonob.put("ORN",orn);
+					orn++;
+					}
+					}
+	            
+				jsonary.add(jsonob);				
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			setOraClose(con,stmt,rs);
+		}
+		return jsonary;
+	}
+	
+	
+	/**
+	 * get_sub0304T 
+	 * @param jary(tb_sys_domain)
+	 * @return json형식으로 dhx형식에 맞게
+	 * 2023-02-22 장현석
+	 */
+	public JSONArray get_sub0304T(JSONArray jary) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		JSONArray jsonary = new JSONArray();
+		
+		try {
+			strbuf = new StringBuffer();
+			//쿼리입력
+			strbuf.append("SELECT \r\n");
+			
+			//System.lineSeparator()
+			
+			
+			con = getOraConnect();
+			stmt = con.prepareStatement(strbuf.toString());
+			System.out.println(strbuf.toString());	//로그
+			
+			rs = stmt.executeQuery();
+
+			int orn = 1;
+			while(rs.next()) {
+				JSONObject jsonob = new JSONObject();
+				for(int i=0; i<jary.size();i++) {				
+					
+					JSONObject jsonob2 = new JSONObject();
+					jsonob2 = (JSONObject) jary.get(i);	
+					String id = (String)(jsonob2.get("id"));
+					if(!Objects.equals(id, "ORN") && !Objects.equals(id, null)) {
+					System.out.println(id);
+					
+					if(Objects.equals(rs.getString(id), null)) {
+						jsonob.put(id,"");	
+					}else{
+						jsonob.put(id,rs.getString(id));	
+					}
+					System.out.println("성공");
+					}else {
+					jsonob.put("ORN",orn);
+					orn++;
+					}
+					}
+	            
+				jsonary.add(jsonob);				
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			setOraClose(con,stmt,rs);
+		}
+		return jsonary;
+	}
+	
+	/**
+	 * get_sub0305
+	 * @param jary(tb_sys_domain)
+	 * @return json형식으로 dhx형식에 맞게
+	 * 2023-02-22 장현석
+	 */
+	public JSONArray get_sub0305(JSONArray jary) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		JSONArray jsonary = new JSONArray();
+		
+		try {
+			strbuf = new StringBuffer();
+			//쿼리입력
+			strbuf.append("SELECT \r\n");
+			
+			//System.lineSeparator()
+			
+			
+			con = getOraConnect();
+			stmt = con.prepareStatement(strbuf.toString());
+			System.out.println(strbuf.toString());	//로그
+			
+			rs = stmt.executeQuery();
+
+			int orn = 1;
+			while(rs.next()) {
+				JSONObject jsonob = new JSONObject();
+				for(int i=0; i<jary.size();i++) {				
+					
+					JSONObject jsonob2 = new JSONObject();
+					jsonob2 = (JSONObject) jary.get(i);	
+					String id = (String)(jsonob2.get("id"));
+					if(!Objects.equals(id, "ORN") && !Objects.equals(id, null)) {
+					System.out.println(id);
+					
+					if(Objects.equals(rs.getString(id), null)) {
+						jsonob.put(id,"");	
+					}else{
+						jsonob.put(id,rs.getString(id));	
+					}
+					System.out.println("성공");
+					}else {
+					jsonob.put("ORN",orn);
+					orn++;
+					}
+					}
+	            
+				jsonary.add(jsonob);				
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			setOraClose(con,stmt,rs);
+		}
+		return jsonary;
+	}
+	
+	/**
+	 * get_sub0305T 
+	 * @param jary(tb_sys_domain)
+	 * @return json형식으로 dhx형식에 맞게
+	 * 2023-02-22 장현석
+	 */
+	public JSONArray get_sub0305T(JSONArray jary) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		JSONArray jsonary = new JSONArray();
+		
+		try {
+			strbuf = new StringBuffer();
+			//쿼리입력
+			strbuf.append("SELECT \r\n");
+			
+			//System.lineSeparator()
+			
+			
+			con = getOraConnect();
+			stmt = con.prepareStatement(strbuf.toString());
+			System.out.println(strbuf.toString());	//로그
+			
+			rs = stmt.executeQuery();
+
+			int orn = 1;
+			while(rs.next()) {
+				JSONObject jsonob = new JSONObject();
+				for(int i=0; i<jary.size();i++) {				
+					
+					JSONObject jsonob2 = new JSONObject();
+					jsonob2 = (JSONObject) jary.get(i);	
+					String id = (String)(jsonob2.get("id"));
+					if(!Objects.equals(id, "ORN") && !Objects.equals(id, null)) {
+					System.out.println(id);
+					
+					if(Objects.equals(rs.getString(id), null)) {
+						jsonob.put(id,"");	
+					}else{
+						jsonob.put(id,rs.getString(id));	
+					}
+					System.out.println("성공");
+					}else {
+					jsonob.put("ORN",orn);
+					orn++;
+					}
+					}
+	            
+				jsonary.add(jsonob);				
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			setOraClose(con,stmt,rs);
+		}
+		return jsonary;
+	}
+	
+	
+	/**
+	 * get_sub0306 
+	 * @param jary(tb_sys_domain)
+	 * @return json형식으로 dhx형식에 맞게
+	 * 2023-02-22 장현석
+	 */
+	public JSONArray get_sub0306(JSONArray jary) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		JSONArray jsonary = new JSONArray();
+		
+		try {
+			strbuf = new StringBuffer();
+			//쿼리입력
+			strbuf.append("SELECT \r\n");
+			
+			//System.lineSeparator()
+			
+			
+			con = getOraConnect();
+			stmt = con.prepareStatement(strbuf.toString());
+			System.out.println(strbuf.toString());	//로그
+			
+			rs = stmt.executeQuery();
+
+			int orn = 1;
+			while(rs.next()) {
+				JSONObject jsonob = new JSONObject();
+				for(int i=0; i<jary.size();i++) {				
+					
+					JSONObject jsonob2 = new JSONObject();
+					jsonob2 = (JSONObject) jary.get(i);	
+					String id = (String)(jsonob2.get("id"));
+					if(!Objects.equals(id, "ORN") && !Objects.equals(id, null)) {
+					System.out.println(id);
+					
+					if(Objects.equals(rs.getString(id), null)) {
+						jsonob.put(id,"");	
+					}else{
+						jsonob.put(id,rs.getString(id));	
+					}
+					System.out.println("성공");
+					}else {
+					jsonob.put("ORN",orn);
+					orn++;
+					}
+					}
+	            
+				jsonary.add(jsonob);				
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			setOraClose(con,stmt,rs);
+		}
+		return jsonary;
+	}
+	
+	/**
+	 * get_sub0307
+	 * @param jary(tb_sys_domain)
+	 * @return json형식으로 dhx형식에 맞게
+	 * 2023-02-22 장현석
+	 */
+	public JSONArray get_sub0307(JSONArray jary) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		JSONArray jsonary = new JSONArray();
+		
+		try {
+			strbuf = new StringBuffer();
+			//쿼리입력
+			strbuf.append("SELECT \r\n");
+			
+			//System.lineSeparator()
+			
+			
+			con = getOraConnect();
+			stmt = con.prepareStatement(strbuf.toString());
+			System.out.println(strbuf.toString());	//로그
+			
+			rs = stmt.executeQuery();
+
+			int orn = 1;
+			while(rs.next()) {
+				JSONObject jsonob = new JSONObject();
+				for(int i=0; i<jary.size();i++) {				
+					
+					JSONObject jsonob2 = new JSONObject();
+					jsonob2 = (JSONObject) jary.get(i);	
+					String id = (String)(jsonob2.get("id"));
+					if(!Objects.equals(id, "ORN") && !Objects.equals(id, null)) {
+					System.out.println(id);
+					
+					if(Objects.equals(rs.getString(id), null)) {
+						jsonob.put(id,"");	
+					}else{
+						jsonob.put(id,rs.getString(id));	
+					}
+					System.out.println("성공");
+					}else {
+					jsonob.put("ORN",orn);
+					orn++;
+					}
+					}
+	            
+				jsonary.add(jsonob);				
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			setOraClose(con,stmt,rs);
+		}
+		return jsonary;
+	}
+	
+	/**
+	 * get_sub0307T 
+	 * @param jary(tb_sys_domain)
+	 * @return json형식으로 dhx형식에 맞게
+	 * 2023-02-22 장현석
+	 */
+	public JSONArray get_sub0307T(JSONArray jary) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		JSONArray jsonary = new JSONArray();
+		
+		try {
+			strbuf = new StringBuffer();
+			//쿼리입력
+			strbuf.append("SELECT \r\n");
+			
+			//System.lineSeparator()
+			
+			
+			con = getOraConnect();
+			stmt = con.prepareStatement(strbuf.toString());
+			System.out.println(strbuf.toString());	//로그
+			
+			rs = stmt.executeQuery();
+
+			int orn = 1;
+			while(rs.next()) {
+				JSONObject jsonob = new JSONObject();
+				for(int i=0; i<jary.size();i++) {				
+					
+					JSONObject jsonob2 = new JSONObject();
+					jsonob2 = (JSONObject) jary.get(i);	
+					String id = (String)(jsonob2.get("id"));
+					if(!Objects.equals(id, "ORN") && !Objects.equals(id, null)) {
+					System.out.println(id);
+					
+					if(Objects.equals(rs.getString(id), null)) {
+						jsonob.put(id,"");	
+					}else{
+						jsonob.put(id,rs.getString(id));	
+					}
+					System.out.println("성공");
+					}else {
+					jsonob.put("ORN",orn);
+					orn++;
+					}
+					}
+	            
+				jsonary.add(jsonob);				
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			setOraClose(con,stmt,rs);
+		}
+		return jsonary;
+	}
+	
+	/**
+	 * get_sub0308 
+	 * @param jary(tb_sys_domain)
+	 * @return json형식으로 dhx형식에 맞게
+	 * 2023-02-22 장현석
+	 */
+	public JSONArray get_sub0308(JSONArray jary) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		JSONArray jsonary = new JSONArray();
+		
+		try {
+			strbuf = new StringBuffer();
+			//쿼리입력
+			strbuf.append("SELECT \r\n");
+			
+			//System.lineSeparator()
+			
+			
+			con = getOraConnect();
+			stmt = con.prepareStatement(strbuf.toString());
+			System.out.println(strbuf.toString());	//로그
+			
+			rs = stmt.executeQuery();
+
+			int orn = 1;
+			while(rs.next()) {
+				JSONObject jsonob = new JSONObject();
+				for(int i=0; i<jary.size();i++) {				
+					
+					JSONObject jsonob2 = new JSONObject();
+					jsonob2 = (JSONObject) jary.get(i);	
+					String id = (String)(jsonob2.get("id"));
+					if(!Objects.equals(id, "ORN") && !Objects.equals(id, null)) {
+					System.out.println(id);
+					
+					if(Objects.equals(rs.getString(id), null)) {
+						jsonob.put(id,"");	
+					}else{
+						jsonob.put(id,rs.getString(id));	
+					}
+					System.out.println("성공");
+					}else {
+					jsonob.put("ORN",orn);
+					orn++;
+					}
+					}
+	            
+				jsonary.add(jsonob);				
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			setOraClose(con,stmt,rs);
+		}
+		return jsonary;
+	}
+	
+	
+	/**
+	 * get_sub0308T 
+	 * @param jary(tb_sys_domain)
+	 * @return json형식으로 dhx형식에 맞게
+	 * 2023-02-22 장현석
+	 */
+	public JSONArray get_sub0308T(JSONArray jary) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		JSONArray jsonary = new JSONArray();
+		
+		try {
+			strbuf = new StringBuffer();
+			//쿼리입력
+			strbuf.append("SELECT \r\n");
+			
+			//System.lineSeparator()
+			
+			
+			con = getOraConnect();
+			stmt = con.prepareStatement(strbuf.toString());
+			System.out.println(strbuf.toString());	//로그
+			
+			rs = stmt.executeQuery();
+
+			int orn = 1;
+			while(rs.next()) {
+				JSONObject jsonob = new JSONObject();
+				for(int i=0; i<jary.size();i++) {				
+					
+					JSONObject jsonob2 = new JSONObject();
+					jsonob2 = (JSONObject) jary.get(i);	
+					String id = (String)(jsonob2.get("id"));
+					if(!Objects.equals(id, "ORN") && !Objects.equals(id, null)) {
+					System.out.println(id);
+					
+					if(Objects.equals(rs.getString(id), null)) {
+						jsonob.put(id,"");	
+					}else{
+						jsonob.put(id,rs.getString(id));	
+					}
+					System.out.println("성공");
+					}else {
+					jsonob.put("ORN",orn);
+					orn++;
+					}
+					}
+	            
+				jsonary.add(jsonob);				
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			setOraClose(con,stmt,rs);
+		}
+		return jsonary;
+	}
+	
+	/**
+	 * get_sub0309 
+	 * @param jary(tb_sys_domain)
+	 * @return json형식으로 dhx형식에 맞게
+	 * 2023-02-22 장현석
+	 */
+	public JSONArray get_sub0309(JSONArray jary) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		JSONArray jsonary = new JSONArray();
+		
+		try {
+			strbuf = new StringBuffer();
+			//쿼리입력
+			strbuf.append("SELECT \r\n");
+			
+			//System.lineSeparator()
+			
+			
+			con = getOraConnect();
+			stmt = con.prepareStatement(strbuf.toString());
+			System.out.println(strbuf.toString());	//로그
+			
+			rs = stmt.executeQuery();
+
+			int orn = 1;
+			while(rs.next()) {
+				JSONObject jsonob = new JSONObject();
+				for(int i=0; i<jary.size();i++) {				
+					
+					JSONObject jsonob2 = new JSONObject();
+					jsonob2 = (JSONObject) jary.get(i);	
+					String id = (String)(jsonob2.get("id"));
+					if(!Objects.equals(id, "ORN") && !Objects.equals(id, null)) {
+					System.out.println(id);
+					
+					if(Objects.equals(rs.getString(id), null)) {
+						jsonob.put(id,"");	
+					}else{
+						jsonob.put(id,rs.getString(id));	
+					}
+					System.out.println("성공");
+					}else {
+					jsonob.put("ORN",orn);
+					orn++;
+					}
+					}
+	            
+				jsonary.add(jsonob);				
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			setOraClose(con,stmt,rs);
+		}
+		return jsonary;
+	}
 	
 	
 	
