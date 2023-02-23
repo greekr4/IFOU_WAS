@@ -1585,7 +1585,7 @@ public class trans_ora_manager {
 			strbuf.append(",SUM(INP_AMT) TOT_INPAMT, SUM(EXP_AMT) TOT_EXPAMT \r\n");
 			strbuf.append("FROM \r\n");
 			strbuf.append("TB_MNG_DEPTOT \r\n");
-			strbuf.append("WHERE MID IN (SELECT MID FROM TB_BAS_MIDMAP where org_cd='OR0015') AND EXP_DD>='20230222' AND EXP_DD<='20230222' \r\n");
+			strbuf.append("WHERE MID IN (SELECT MID FROM TB_BAS_MIDMAP where org_cd='OR026') AND EXP_DD>='20230222' AND EXP_DD<='20230222' \r\n");
 			strbuf.append("GROUP BY MID, EXP_DD, DEP_SEQ \r\n");
 			strbuf.append("ORDER BY EXP_DD DESC \r\n");
 			strbuf.append(")T1 \r\n");
@@ -1609,7 +1609,7 @@ public class trans_ora_manager {
 			strbuf.append(",CASE WHEN RTN_CD='67' THEN SUM(FEE) ELSE 0 END ITEM_FEE67 \r\n");
 			strbuf.append("FROM \r\n");
 			strbuf.append("TB_MNG_DEPDATA \r\n");
-			strbuf.append("WHERE MID IN (SELECT MID FROM TB_BAS_MIDMAP where org_cd='OR0015') AND EXP_DD>='20230222' AND EXP_DD<='20230222' \r\n");
+			strbuf.append("WHERE MID IN (SELECT MID FROM TB_BAS_MIDMAP where org_cd='OR026') AND EXP_DD>='20230222' AND EXP_DD<='20230222' \r\n");
 			strbuf.append("GROUP BY DEP_SEQ, RTN_CD \r\n");
 			strbuf.append(") \r\n");
 			strbuf.append("GROUP BY DEP_SEQ \r\n");
