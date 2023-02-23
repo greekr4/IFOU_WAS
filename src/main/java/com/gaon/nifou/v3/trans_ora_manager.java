@@ -1088,6 +1088,35 @@ public class trans_ora_manager {
 			strbuf = new StringBuffer();
 			//쿼리입력
 			strbuf.append("SELECT \r\n");
+			strbuf.append("DEP_NM, TID, TERM_NM, PUR_NM TR_ACQNM, MID TR_MID, ACQ_CD, ACNT, CCNT, AAMT, CAMT, ACNT+CCNT TOTCNT, AAMT-CAMT TOTAMT \r\n");
+			strbuf.append("FROM( \r\n");
+			strbuf.append("SELECT \r\n");
+			strbuf.append("TID, MID, ACQ_CD, SUM(ACNT) ACNT, SUM(CCNT) CCNT, SUM(AAMT) AAMT, SUM(CAMT) CAMT \r\n");
+			strbuf.append("FROM( \r\n");
+			strbuf.append("SELECT \r\n");
+			strbuf.append("TID, \r\n");
+			strbuf.append("MID, \r\n");
+			strbuf.append("ACQ_CD, \r\n");
+			strbuf.append("CASE WHEN APPGB='A' THEN COUNT(1) ELSE 0 END ACNT, \r\n");
+			strbuf.append("CASE WHEN APPGB='A' THEN SUM(AMOUNT) ELSE 0 END AAMT, \r\n");
+			strbuf.append("CASE WHEN APPGB='C' THEN COUNT(1) ELSE 0 END CCNT, \r\n");
+			strbuf.append("CASE WHEN APPGB='C' THEN SUM(AMOUNT) ELSE 0 END CAMT \r\n");
+			strbuf.append("FROM \r\n");
+			strbuf.append("GLOB_MNG_ICVAN \r\n");
+			strbuf.append("WHERE SVCGB IN ('CC', 'CE') AND AUTHCD IN ('0000', '6666') AND TID IN (select tid from tb_bas_tidmap where org_cd='OR0015') AND APPDD>='20230223' AND APPDD<='20230223' \r\n");
+			strbuf.append("GROUP BY TID, MID, ACQ_CD, APPGB \r\n");
+			strbuf.append(") \r\n");
+			strbuf.append("GROUP BY TID, MID, ACQ_CD \r\n");
+			strbuf.append(")T1 \r\n");
+			strbuf.append("LEFT OUTER JOIN( SELECT PUR_NM, PUR_KOCES, PUR_OCD, PUR_SORT FROM TB_BAS_PURINFO )T2 ON(T1.ACQ_CD=T2.PUR_OCD OR T1.ACQ_CD=T2.PUR_KOCES ) \r\n");
+			strbuf.append("LEFT OUTER JOIN( \r\n");
+			strbuf.append("SELECT DEP_CD, TERM_NM, TERM_ID FROM TB_BAS_TIDMST WHERE ORG_CD='OR0015' \r\n");
+			strbuf.append(")T3 ON(T1.TID=T3.TERM_ID) \r\n");
+			strbuf.append("LEFT OUTER JOIN( \r\n");
+			strbuf.append("SELECT DEP_NM, DEP_CD FROM TB_BAS_DEPART WHERE ORG_CD='OR0015' \r\n");
+			strbuf.append(")T4 ON(T3.DEP_CD=T4.DEP_CD) \r\n");
+			strbuf.append("ORDER BY TID, PUR_NM ASC \r\n");
+
 			
 			//System.lineSeparator()
 			
@@ -1149,6 +1178,37 @@ public class trans_ora_manager {
 			strbuf = new StringBuffer();
 			//쿼리입력
 			strbuf.append("SELECT \r\n");
+			strbuf.append("    T3.DEP_CD, DEP_NM, TID TR_TID, TERM_NM TR_TIDNM, SUM(ACNT) ACNT, SUM(CCNT) CCNT, SUM(AAMT) AAMT, SUM(CAMT) CAMT, ACNT+CCNT TOTNCT, AAMT-CAMT TOTAMT \r\n");
+			strbuf.append("FROM( \r\n");
+			strbuf.append("    SELECT \r\n");
+			strbuf.append("TID, \r\n");
+			strbuf.append("        CASE \r\n");
+			strbuf.append("            WHEN APPGB='A' THEN COUNT(1) ELSE 0  \r\n");
+			strbuf.append("        END ACNT, \r\n");
+			strbuf.append("        CASE \r\n");
+			strbuf.append("            WHEN APPGB='A' THEN SUM(AMOUNT) ELSE 0 \r\n");
+			strbuf.append("        END AAMT, \r\n");
+			strbuf.append("        CASE \r\n");
+			strbuf.append("            WHEN APPGB='C' THEN COUNT(1) ELSE 0 \r\n");
+			strbuf.append("        END CCNT, \r\n");
+			strbuf.append("        CASE \r\n");
+			strbuf.append("            WHEN APPGB='C' THEN SUM(AMOUNT) ELSE 0 \r\n");
+			strbuf.append("        END CAMT \r\n");
+			strbuf.append("    FROM  \r\n");
+			strbuf.append("        $UserExpAuth[5] \r\n");
+			strbuf.append("$SET_WHERE \r\n");
+			strbuf.append("    GROUP BY TID, APPGB \r\n");
+			strbuf.append(")T1 \r\n");
+			strbuf.append("LEFT OUTER JOIN( \r\n");
+			strbuf.append("SELECT TERM_ID, TERM_NM, DEP_CD FROM TB_BAS_TIDMST $ORG_WH \r\n");
+			strbuf.append(")T3 ON(T3.TERM_ID=T1.TID) \r\n");
+			strbuf.append("LEFT OUTER JOIN( \r\n");
+			strbuf.append("    SELECT DEP_CD, DEP_NM FROM TB_BAS_DEPART $ORG_WH \r\n");
+			strbuf.append(")T2 ON(T3.DEP_CD=T2.DEP_CD) \r\n");
+			strbuf.append("GROUP BY T3.DEP_CD, DEP_NM, TID, TERM_NM \r\n");
+			strbuf.append("ORDER BY T3.DEP_CD, TERM_NM \r\n");
+			strbuf.append("); \r\n");
+
 			
 			//System.lineSeparator()
 			
@@ -1210,6 +1270,108 @@ public class trans_ora_manager {
 			strbuf = new StringBuffer();
 			//쿼리입력
 			strbuf.append("SELECT \r\n");
+			strbuf.append("SEQNO, \r\n");
+			strbuf.append("APPGB, \r\n");
+			strbuf.append("TSTAT, \r\n");
+			strbuf.append("DEP_NM TR_DEPNM, \r\n");
+			strbuf.append("TERM_NM TR_TIDNM, \r\n");
+			strbuf.append("TID TR_TID, \r\n");
+			strbuf.append("MID TR_MID, \r\n");
+			strbuf.append("PUR_NM TR_ACQNM, \r\n");
+			strbuf.append("TSTAT_TXT TR_AUTHSTAT, \r\n");
+			strbuf.append("APPDD TR_APPDD, \r\n");
+			strbuf.append("APPTM TR_APPTM, \r\n");
+			strbuf.append("TSTAT TR_CANDD, \r\n");
+			strbuf.append("OAPPDD TR_OAPPDD, \r\n");
+			strbuf.append("APPNO TR_APPNO, \r\n");
+			strbuf.append("APPGB_TXT TR_AUTHTXT, \r\n");
+			strbuf.append("CARDNO TR_CASH_ID, \r\n");
+			strbuf.append("AMOUNT TR_AMT, \r\n");
+			strbuf.append("AUTHCD TR_RST_CD, \r\n");
+			strbuf.append("TRANTYPE CASH_TP, \r\n");
+			strbuf.append("CANTYPE CANTYPE, \r\n");
+			strbuf.append("ADD_CID ADD_PID, \r\n");
+			strbuf.append("ADD_GB ADD_PGB, \r\n");
+			strbuf.append("ADD_CASHER ADD_CID, \r\n");
+			strbuf.append("ADD_CD ADD_RHK, \r\n");
+			strbuf.append("ADD_RECP ADD_PGB, \r\n");
+			strbuf.append("CASE \r\n");
+			strbuf.append("WHEN LENGTH(ADD_DATE) = 6 THEN '20'||ADD_DATE \r\n");
+			strbuf.append("END ADD_DATE, \r\n");
+			strbuf.append("TRANIDX TR_SEQNO, \r\n");
+			strbuf.append("AUTHMSG APP_MSG, \r\n");
+			strbuf.append("OAPP_AMT \r\n");
+			strbuf.append("FROM( \r\n");
+			strbuf.append("SELECT \r\n");
+			strbuf.append("SEQNO, DEP_NM, TERM_NM, TID, MID, PUR_NM, TSTAT, \r\n");
+			strbuf.append("CASE \r\n");
+			strbuf.append("--정상거래 \r\n");
+			strbuf.append("WHEN APPGB='A' AND OAPP_AMT IS NULL THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR0015' AND SCD_CD='SCD0011') \r\n");
+			strbuf.append("--당일취소 \r\n");
+			strbuf.append("WHEN APPGB='A' AND OAPP_AMT=APPDD THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR0015' AND SCD_CD='SCD0012') \r\n");
+			strbuf.append("--당일취소 \r\n");
+			strbuf.append("WHEN APPGB='C' AND APPDD=OAPPDD THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR0015' AND SCD_CD='SCD0012') \r\n");
+			strbuf.append("--전일취소 \r\n");
+			strbuf.append("WHEN APPGB='C' AND APPDD<>OAPPDD THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR0015' AND SCD_CD='SCD0013') \r\n");
+			strbuf.append("--전일취소 \r\n");
+			strbuf.append("WHEN APPGB='A' AND APPDD<>OAPP_AMT AND OAPP_AMT IS NOT NULL THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR0015' AND SCD_CD='SCD0013') \r\n");
+			strbuf.append("END TSTAT_TXT, \r\n");
+			strbuf.append("APPDD, APPTM, TSTAT CANDATE, OAPPDD, APPNO, APPGB, \r\n");
+			strbuf.append("CASE \r\n");
+			strbuf.append("--승인거래 \r\n");
+			strbuf.append("WHEN APPGB='A' THEN '승인' \r\n");
+			strbuf.append("--취소거래 \r\n");
+			strbuf.append("WHEN APPGB='C' THEN '취소' \r\n");
+			strbuf.append("END APPGB_TXT, \r\n");
+			strbuf.append("CARDNO, AMOUNT, \r\n");
+			strbuf.append("AUTHCD, \r\n");
+			strbuf.append("CASE \r\n");
+			strbuf.append("WHEN DDCGB='0' THEN '소득공제' \r\n");
+			strbuf.append("WHEN DDCGB='1' THEN '지출증빙' \r\n");
+			strbuf.append("END TRANTYPE, \r\n");
+			strbuf.append("CASE \r\n");
+			strbuf.append("WHEN OVSEA_CARD='1' THEN '거래취소' \r\n");
+			strbuf.append("WHEN OVSEA_CARD='2' THEN '오류발급' \r\n");
+			strbuf.append("WHEN OVSEA_CARD='3' THEN '기타' \r\n");
+			strbuf.append("END CANTYPE, \r\n");
+			strbuf.append("EXT_FIELD, TRANIDX, AUTHMSG \r\n");
+			strbuf.append(",CASE WHEN TLINEGB IS NOT NULL THEN (SELECT CODE_VAL FROM TB_BAS_CODE WHERE TRIM(CODE_NO)=TRIM(TLINEGB)) END TLINEGBTXT \r\n");
+			strbuf.append(",CASE \r\n");
+			strbuf.append("WHEN ADD_GB IN ('1', 'O') THEN '외래' \r\n");
+			strbuf.append("WHEN ADD_GB IN ('2', 'E') THEN '응급' \r\n");
+			strbuf.append("WHEN ADD_GB IN ('3', 'I') THEN '입원' \r\n");
+			strbuf.append("WHEN ADD_GB IN ('4', 'G') THEN '종합검진' \r\n");
+			strbuf.append("WHEN ADD_GB='5' THEN '일반검진' \r\n");
+			strbuf.append("WHEN ADD_GB='6' THEN '장례식장' \r\n");
+			strbuf.append("ELSE '' \r\n");
+			strbuf.append("END ADD_GB \r\n");
+			strbuf.append(", ADD_CID, ADD_CD, ADD_RECP, ADD_CNT, ADD_CASHER, ADD_DATE, DEPO_DD, OAPP_AMT \r\n");
+			strbuf.append("FROM( \r\n");
+			strbuf.append("SELECT \r\n");
+			strbuf.append("SEQNO, BIZNO, TID, MID, VANGB, MDATE, SVCGB, T1.TRANIDX, T1.APPGB, ENTRYMD, \r\n");
+			strbuf.append("T1.APPDD, APPTM, T1.APPNO, T1.CARDNO, HALBU, CURRENCY, T1.AMOUNT, AMT_UNIT, AMT_TIP, AMT_TAX, \r\n");
+			strbuf.append("ISS_CD, ISS_NM, ACQ_CD, ACQ_NM, AUTHCD, AUTHMSG, CARD_CODE, CHECK_CARD, OVSEA_CARD, TLINEGB, \r\n");
+			strbuf.append("SIGNCHK, DDCGB, EXT_FIELD, OAPPNO, OAPPDD, OAPPTM, OAPP_AMT, ADD_GB, ADD_CID, ADD_CD, \r\n");
+			strbuf.append("ADD_RECP, ADD_CNT, ADD_CASHER, ADD_DATE, SECTION_NO, PUR_NM, DEP_NM, TERM_NM, \r\n");
+			strbuf.append("DEPOREQDD DEPO_DD, \r\n");
+			strbuf.append("CASE \r\n");
+			strbuf.append("WHEN APPGB='C' THEN '' \r\n");
+			strbuf.append("WHEN APPGB='A' THEN (SELECT C1.APPDD FROM GLOB_MNG_ICVAN C1 WHERE C1.APPGB='C' AND T1.APPDD=C1.OAPPDD AND T1.APPNO=C1.APPNO AND T1.AMOUNT=C1.AMOUNT AND T1.CARDNO=C1.CARDNO) \r\n");
+			strbuf.append("END TSTAT \r\n");
+			strbuf.append("FROM \r\n");
+			strbuf.append("GLOB_MNG_ICVAN T1 \r\n");
+			strbuf.append("LEFT OUTER JOIN( \r\n");
+			strbuf.append("SELECT DEP_CD, TERM_NM, TERM_ID FROM TB_BAS_TIDMST WHERE ORG_CD='OR0015' \r\n");
+			strbuf.append(")T3 ON(T1.TID=T3.TERM_ID) \r\n");
+			strbuf.append("LEFT OUTER JOIN( \r\n");
+			strbuf.append("SELECT DEP_NM, DEP_CD FROM TB_BAS_DEPART WHERE ORG_CD='OR0015' \r\n");
+			strbuf.append(")T4 ON(T3.DEP_CD=T4.DEP_CD) \r\n");
+			strbuf.append("LEFT OUTER JOIN( SELECT PUR_NM, PUR_OCD, PUR_KOCES, PUR_CD FROM TB_BAS_PURINFO)T5 ON (T1.ACQ_CD=T5.PUR_OCD OR T1.ACQ_CD=T5.PUR_KOCES OR T1.ACQ_CD=T5.PUR_CD) \r\n");
+			strbuf.append("WHERE SVCGB IN ('CB') AND AUTHCD='0000' AND TID IN (select tid from tb_bas_tidmap where org_cd='OR0015') AND T1.APPDD>='20230223' AND (T1.APPDD<='20230223') \r\n");
+			strbuf.append("order by appdd desc, apptm desc \r\n");
+			strbuf.append(") \r\n");
+			strbuf.append(") \r\n");
+
 			
 			//System.lineSeparator()
 			
