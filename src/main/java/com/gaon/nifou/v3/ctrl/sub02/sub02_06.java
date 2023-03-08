@@ -27,8 +27,9 @@ public class sub02_06 extends HttpServlet {
 
 		String orgcd = request.getParameter("orgcd");
 		String pages = request.getParameter("pages");
+		String DEBUG = request.getParameter("DEBUG");
 
-		out.print(oram.get_sub0206(oram.get_tb_sys_domain(orgcd, pages)));
+		out.print(oram.get_sub0206(oram.get_tb_sys_domain(orgcd, pages),DEBUG));
 
 	}
 }

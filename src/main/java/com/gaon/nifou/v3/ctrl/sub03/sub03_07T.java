@@ -29,8 +29,8 @@ public class sub03_07T extends HttpServlet {
 
 		String orgcd = request.getParameter("orgcd");
 		String pages = request.getParameter("pages");
-
-		out.print(oram.get_sub0307T(oram.get_tb_sys_domain(orgcd, pages)));
+		String DEBUG = request.getParameter("DEBUG");
+		out.print(oram.get_sub0307T(oram.get_tb_sys_domain(orgcd, pages),DEBUG));
 
 	}
 

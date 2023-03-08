@@ -1,6 +1,5 @@
 package com.gaon.nifou.v3;
 
-import java.beans.Statement;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -391,7 +390,7 @@ public class trans_ora_manager {
 	 * @return json형식으로 dhx형식에 맞게
 	 * 2023-02-01 김태균
 	 */
-	public JSONArray get_sub0201(JSONArray jary) {
+	public JSONArray get_sub0201(JSONArray jary,String DEBUG) {
 		Connection con = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -495,10 +494,22 @@ public class trans_ora_manager {
 			strbuf.append(")\r\n");
 			//System.lineSeparator()
 			
+			/**
+			 * ----------디버그---------------
+			 */
+			System.out.println(strbuf.toString());	//로그
+			if(DEBUG.equals("Y")) {
+				JSONObject debugqry = new JSONObject();
+				String qry = "<br><br>" + strbuf.toString().replace("\r\n", "<br>").replace("\t","") + "<br>";
+				debugqry.put("qry", qry);
+				jsonary.add(debugqry);
+				return jsonary;
+			}
+			
 			
 			con = getOraConnect();
 			stmt = con.prepareStatement(strbuf.toString());
-			System.out.println(strbuf.toString());	//로그
+
 			
 			rs = stmt.executeQuery();
 
@@ -547,7 +558,7 @@ public class trans_ora_manager {
 	 * @return json형식으로 dhx형식에 맞게
 	 * 2023-02-01 김태균
 	 */
-	public JSONArray get_sub0201T(JSONArray jary) {
+	public JSONArray get_sub0201T(JSONArray jary,String DEBUG) {
 		Connection con = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -696,11 +707,22 @@ public class trans_ora_manager {
 					+ "LEFT OUTER JOIN( SELECT DEP_CD, TERM_NM, TERM_ID FROM TB_BAS_TIDMST WHERE ORG_CD='OR008')T3 ON(T2.TID=T3.TERM_ID)\r\n"
 					+ "LEFT OUTER JOIN( SELECT DEP_NM, DEP_CD FROM TB_BAS_DEPART WHERE ORG_CD='OR008')T4 ON(T3.DEP_CD=T4.DEP_CD)");
 			//System.lineSeparator()
-			
+		
+			/**
+			 * ----------디버그---------------
+			 */
+			System.out.println(strbuf.toString());	//로그
+			if(DEBUG.equals("Y")) {
+				JSONObject debugqry = new JSONObject();
+				String qry = "<br><br>" + strbuf.toString().replace("\r\n", "<br>").replace("\t","") + "<br>";
+				debugqry.put("qry", qry);
+				jsonary.add(debugqry);
+				return jsonary;
+			}
 			
 			con = getOraConnect();
 			stmt = con.prepareStatement(strbuf.toString());
-			System.out.println(strbuf.toString());	//로그
+
 			
 			rs = stmt.executeQuery();
 			
@@ -749,7 +771,7 @@ public class trans_ora_manager {
 	 * @return json형식으로 dhx형식에 맞게
 	 * 2023-02-22 장현석
 	 */
-	public JSONArray get_sub0202(JSONArray jary) {
+	public JSONArray get_sub0202(JSONArray jary,String DEBUG) {
 		Connection con = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -796,10 +818,20 @@ public class trans_ora_manager {
 			
 			//System.lineSeparator()
 			
+			/**
+			 * ----------디버그---------------
+			 */
+			System.out.println(strbuf.toString());	//로그
+			if(DEBUG.equals("Y")) {
+				JSONObject debugqry = new JSONObject();
+				String qry = "<br><br>" + strbuf.toString().replace("\r\n", "<br>").replace("\t","") + "<br>";
+				debugqry.put("qry", qry);
+				jsonary.add(debugqry);
+				return jsonary;
+			}
 			
 			con = getOraConnect();
 			stmt = con.prepareStatement(strbuf.toString());
-			System.out.println(strbuf.toString());	//로그
 			
 			rs = stmt.executeQuery();
 
@@ -843,7 +875,7 @@ public class trans_ora_manager {
 	 * @return json형식으로 dhx형식에 맞게
 	 * 2023-02-22 장현석
 	 */
-	public JSONArray get_sub0203(JSONArray jary) {
+	public JSONArray get_sub0203(JSONArray jary, String DEBUG) {
 		Connection con = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -952,10 +984,22 @@ public class trans_ora_manager {
 			
 			//System.lineSeparator()
 			
+			/**
+			 * ----------디버그---------------
+			 */
+			System.out.println(strbuf.toString());	//로그
+			if(DEBUG.equals("Y")) {
+				JSONObject debugqry = new JSONObject();
+				String qry = "<br><br>" + strbuf.toString().replace("\r\n", "<br>").replace("\t","") + "<br>";
+				debugqry.put("qry", qry);
+				jsonary.add(debugqry);
+				return jsonary;
+			}
+
 			
 			con = getOraConnect();
 			stmt = con.prepareStatement(strbuf.toString());
-			System.out.println(strbuf.toString());	//로그
+
 			
 			rs = stmt.executeQuery();
 
@@ -999,7 +1043,7 @@ public class trans_ora_manager {
 	 * @return json형식으로 dhx형식에 맞게
 	 * 2023-02-22 장현석
 	 */
-	public JSONArray get_sub0203T(JSONArray jary) {
+	public JSONArray get_sub0203T(JSONArray jary,String DEBUG) {
 		Connection con = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -1026,14 +1070,27 @@ public class trans_ora_manager {
 			strbuf.append("GROUP BY APPGB \r\n");
 			strbuf.append(") \r\n");
 			strbuf.append(")T1 \r\n");
-
+			
+			
+			/**
+			 * ----------디버그---------------
+			 */
+			System.out.println(strbuf.toString());	//로그
+			if(DEBUG.equals("Y")) {
+				JSONObject debugqry = new JSONObject();
+				String qry = "<br><br>" + strbuf.toString().replace("\r\n", "<br>").replace("\t","") + "<br>";
+				debugqry.put("qry", qry);
+				jsonary.add(debugqry);
+				return jsonary;
+			}
+			
 			
 			//System.lineSeparator()
 			
 			
 			con = getOraConnect();
 			stmt = con.prepareStatement(strbuf.toString());
-			System.out.println(strbuf.toString());	//로그
+			
 			
 			rs = stmt.executeQuery();
 
@@ -1077,7 +1134,7 @@ public class trans_ora_manager {
 	 * @return json형식으로 dhx형식에 맞게
 	 * 2023-02-22 장현석
 	 */
-	public JSONArray get_sub0204(JSONArray jary) {
+	public JSONArray get_sub0204(JSONArray jary, String DEBUG) {
 		Connection con = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -1120,10 +1177,22 @@ public class trans_ora_manager {
 			
 			//System.lineSeparator()
 			
+			/**
+			 * ----------디버그---------------
+			 */
+			System.out.println(strbuf.toString());	//로그
+			if(DEBUG.equals("Y")) {
+				JSONObject debugqry = new JSONObject();
+				String qry = "<br><br>" + strbuf.toString().replace("\r\n", "<br>").replace("\t","") + "<br>";
+				debugqry.put("qry", qry);
+				jsonary.add(debugqry);
+				return jsonary;
+			}
+			
 			
 			con = getOraConnect();
 			stmt = con.prepareStatement(strbuf.toString());
-			System.out.println(strbuf.toString());	//로그
+
 			
 			rs = stmt.executeQuery();
 
@@ -1167,7 +1236,7 @@ public class trans_ora_manager {
 	 * @return json형식으로 dhx형식에 맞게
 	 * 2023-02-22 장현석
 	 */
-	public JSONArray get_sub0205(JSONArray jary) {
+	public JSONArray get_sub0205(JSONArray jary,String DEBUG) {
 		Connection con = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -1212,10 +1281,22 @@ public class trans_ora_manager {
 			
 			//System.lineSeparator()
 			
+			/**
+			 * ----------디버그---------------
+			 */
+			System.out.println(strbuf.toString());	//로그
+			if(DEBUG.equals("Y")) {
+				JSONObject debugqry = new JSONObject();
+				String qry = "<br><br>" + strbuf.toString().replace("\r\n", "<br>").replace("\t","") + "<br>";
+				debugqry.put("qry", qry);
+				jsonary.add(debugqry);
+				return jsonary;
+			}
+
 			
 			con = getOraConnect();
 			stmt = con.prepareStatement(strbuf.toString());
-			System.out.println(strbuf.toString());	//로그
+
 			
 			rs = stmt.executeQuery();
 
@@ -1259,7 +1340,7 @@ public class trans_ora_manager {
 	 * @return json형식으로 dhx형식에 맞게
 	 * 2023-02-22 장현석
 	 */
-	public JSONArray get_sub0206(JSONArray jary) {
+	public JSONArray get_sub0206(JSONArray jary,String DEBUG) {
 		Connection con = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -1374,11 +1455,20 @@ public class trans_ora_manager {
 
 			
 			//System.lineSeparator()
-			
+			/**
+			 * ----------디버그---------------
+			 */
+			System.out.println(strbuf.toString());	//로그
+			if(DEBUG.equals("Y")) {
+				JSONObject debugqry = new JSONObject();
+				String qry = "<br><br>" + strbuf.toString().replace("\r\n", "<br>").replace("\t","") + "<br>";
+				debugqry.put("qry", qry);
+				jsonary.add(debugqry);
+				return jsonary;
+			}
 			
 			con = getOraConnect();
 			stmt = con.prepareStatement(strbuf.toString());
-			System.out.println(strbuf.toString());	//로그
 			
 			rs = stmt.executeQuery();
 
@@ -1422,7 +1512,7 @@ public class trans_ora_manager {
 	 * @return json형식으로 dhx형식에 맞게
 	 * 2023-02-22 장현석
 	 */
-	public JSONArray get_sub0206T(JSONArray jary) {
+	public JSONArray get_sub0206T(JSONArray jary,String DEBUG) {
 		Connection con = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -1559,11 +1649,22 @@ public class trans_ora_manager {
 
 			
 			//System.lineSeparator()
-			
+			/**
+			 * ----------디버그---------------
+			 */
+			System.out.println(strbuf.toString());	//로그
+			if(DEBUG.equals("Y")) {
+				JSONObject debugqry = new JSONObject();
+				String qry = "<br><br>" + strbuf.toString().replace("\r\n", "<br>").replace("\t","") + "<br>";
+				debugqry.put("qry", qry);
+				jsonary.add(debugqry);
+				return jsonary;
+			}
+
 			
 			con = getOraConnect();
 			stmt = con.prepareStatement(strbuf.toString());
-			System.out.println(strbuf.toString());	//로그
+
 			
 			rs = stmt.executeQuery();
 
@@ -1607,7 +1708,7 @@ public class trans_ora_manager {
 	 * @return json형식으로 dhx형식에 맞게
 	 * 2023-02-22 장현석
 	 */
-	public JSONArray get_sub0207(JSONArray jary) {
+	public JSONArray get_sub0207(JSONArray jary,String DEBUG) {
 		Connection con = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -1744,11 +1845,21 @@ public class trans_ora_manager {
 
 			
 			//System.lineSeparator()
-			
+			/**
+			 * ----------디버그---------------
+			 */
+			System.out.println(strbuf.toString());	//로그
+			if(DEBUG.equals("Y")) {
+				JSONObject debugqry = new JSONObject();
+				String qry = "<br><br>" + strbuf.toString().replace("\r\n", "<br>").replace("\t","") + "<br>";
+				debugqry.put("qry", qry);
+				jsonary.add(debugqry);
+				return jsonary;
+			}
+
 			
 			con = getOraConnect();
 			stmt = con.prepareStatement(strbuf.toString());
-			System.out.println(strbuf.toString());	//로그
 			
 			rs = stmt.executeQuery();
 
@@ -1792,7 +1903,7 @@ public class trans_ora_manager {
 	 * @return json형식으로 dhx형식에 맞게
 	 * 2023-02-22 장현석
 	 */
-	public JSONArray get_sub0207T(JSONArray jary) {
+	public JSONArray get_sub0207T(JSONArray jary,String DEBUG) {
 		Connection con = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -1896,13 +2007,24 @@ public class trans_ora_manager {
 			strbuf.append("LEFT OUTER JOIN( SELECT DEP_CD, TERM_NM, TERM_ID FROM TB_BAS_TIDMST WHERE ORG_CD='OR0015')T3 ON(T2.TID=T3.TERM_ID) \r\n");
 			strbuf.append("LEFT OUTER JOIN( SELECT DEP_NM, DEP_CD FROM TB_BAS_DEPART WHERE ORG_CD='OR0015')T4 ON(T3.DEP_CD=T4.DEP_CD) \r\n");
 
-			
+			/**
+			 * ----------디버그---------------
+			 */
+			System.out.println(strbuf.toString());	//로그
+			if(DEBUG.equals("Y")) {
+				JSONObject debugqry = new JSONObject();
+				String qry = "<br><br>" + strbuf.toString().replace("\r\n", "<br>").replace("\t","") + "<br>";
+				debugqry.put("qry", qry);
+				jsonary.add(debugqry);
+				return jsonary;
+			}
+
 			//System.lineSeparator()
 			
 			
 			con = getOraConnect();
 			stmt = con.prepareStatement(strbuf.toString());
-			System.out.println(strbuf.toString());	//로그
+
 			
 			rs = stmt.executeQuery();
 
@@ -1946,7 +2068,7 @@ public class trans_ora_manager {
 	 * @return json형식으로 dhx형식에 맞게
 	 * 2023-02-22 장현석
 	 */
-	public JSONArray get_sub0208(JSONArray jary) {
+	public JSONArray get_sub0208(JSONArray jary,String DEBUG) {
 		Connection con = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -1996,11 +2118,21 @@ public class trans_ora_manager {
 
 			
 			//System.lineSeparator()
-			
+			/**
+			 * ----------디버그---------------
+			 */
+			System.out.println(strbuf.toString());	//로그
+			if(DEBUG.equals("Y")) {
+				JSONObject debugqry = new JSONObject();
+				String qry = "<br><br>" + strbuf.toString().replace("\r\n", "<br>").replace("\t","") + "<br>";
+				debugqry.put("qry", qry);
+				jsonary.add(debugqry);
+				return jsonary;
+			}
+
 			
 			con = getOraConnect();
 			stmt = con.prepareStatement(strbuf.toString());
-			System.out.println(strbuf.toString());	//로그
 			
 			rs = stmt.executeQuery();
 
@@ -2044,7 +2176,7 @@ public class trans_ora_manager {
 	 * @return json형식으로 dhx형식에 맞게
 	 * 2023-02-22 장현석
 	 */
-	public JSONArray get_sub0209(JSONArray jary) {
+	public JSONArray get_sub0209(JSONArray jary,String DEBUG) {
 		Connection con = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -2126,11 +2258,22 @@ public class trans_ora_manager {
 
 			
 			//System.lineSeparator()
-			
+			/**
+			 * ----------디버그---------------
+			 */
+			System.out.println(strbuf.toString());	//로그
+			if(DEBUG.equals("Y")) {
+				JSONObject debugqry = new JSONObject();
+				String qry = "<br><br>" + strbuf.toString().replace("\r\n", "<br>").replace("\t","") + "<br>";
+				debugqry.put("qry", qry);
+				jsonary.add(debugqry);
+				return jsonary;
+			}
+
 			
 			con = getOraConnect();
 			stmt = con.prepareStatement(strbuf.toString());
-			System.out.println(strbuf.toString());	//로그
+
 			
 			rs = stmt.executeQuery();
 
@@ -2175,7 +2318,7 @@ public class trans_ora_manager {
 	 * @return json형식으로 dhx형식에 맞게
 	 * 2023-02-22 장현석
 	 */
-	public JSONArray get_sub0210(JSONArray jary) {
+	public JSONArray get_sub0210(JSONArray jary,String DEBUG) {
 		Connection con = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -2200,11 +2343,21 @@ public class trans_ora_manager {
 			
 			
 			//System.lineSeparator()
-			
+			/**
+			 * ----------디버그---------------
+			 */
+			System.out.println(strbuf.toString());	//로그
+			if(DEBUG.equals("Y")) {
+				JSONObject debugqry = new JSONObject();
+				String qry = "<br><br>" + strbuf.toString().replace("\r\n", "<br>").replace("\t","") + "<br>";
+				debugqry.put("qry", qry);
+				jsonary.add(debugqry);
+				return jsonary;
+			}
+
 			
 			con = getOraConnect();
 			stmt = con.prepareStatement(strbuf.toString());
-			System.out.println(strbuf.toString());	//로그
 			
 			rs = stmt.executeQuery();
 
@@ -2248,7 +2401,7 @@ public class trans_ora_manager {
 	 * @return json형식으로 dhx형식에 맞게
 	 * 2023-02-16 김태균
 	 */
-	public JSONArray get_sub0301(JSONArray jary) {
+	public JSONArray get_sub0301(JSONArray jary,String DEBUG) {
 		Connection con = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -2336,11 +2489,22 @@ public class trans_ora_manager {
 			strbuf.append("ORDER BY DEP_NM ASC, PUR_NM ASC, PUR_SORT ASC \r\n");
 
 			//System.lineSeparator()
-			
+			/**
+			 * ----------디버그---------------
+			 */
+			System.out.println(strbuf.toString());	//로그
+			if(DEBUG.equals("Y")) {
+				JSONObject debugqry = new JSONObject();
+				String qry = "<br><br>" + strbuf.toString().replace("\r\n", "<br>").replace("\t","") + "<br>";
+				debugqry.put("qry", qry);
+				jsonary.add(debugqry);
+				return jsonary;
+			}
+
 			
 			con = getOraConnect();
 			stmt = con.prepareStatement(strbuf.toString());
-			System.out.println(strbuf.toString());	//로그
+
 			
 			rs = stmt.executeQuery();
 			
@@ -2386,7 +2550,7 @@ public class trans_ora_manager {
 	 * @return json형식으로 dhx형식에 맞게
 	 * 2023-02-22 장현석
 	 */
-	public JSONArray get_sub0302(JSONArray jary) {
+	public JSONArray get_sub0302(JSONArray jary,String DEBUG) {
 		Connection con = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -2435,11 +2599,22 @@ public class trans_ora_manager {
 
 			
 			//System.lineSeparator()
-			
+			/**
+			 * ----------디버그---------------
+			 */
+			System.out.println(strbuf.toString());	//로그
+			if(DEBUG.equals("Y")) {
+				JSONObject debugqry = new JSONObject();
+				String qry = "<br><br>" + strbuf.toString().replace("\r\n", "<br>").replace("\t","") + "<br>";
+				debugqry.put("qry", qry);
+				jsonary.add(debugqry);
+				return jsonary;
+			}
+
 			
 			con = getOraConnect();
 			stmt = con.prepareStatement(strbuf.toString());
-			System.out.println(strbuf.toString());	//로그
+
 			
 			rs = stmt.executeQuery();
 
@@ -2483,7 +2658,7 @@ public class trans_ora_manager {
 	 * @return json형식으로 dhx형식에 맞게
 	 * 2023-02-22 장현석
 	 */
-	public JSONArray get_sub0302T(JSONArray jary) {
+	public JSONArray get_sub0302T(JSONArray jary,String DEBUG) {
 		Connection con = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -2541,11 +2716,22 @@ public class trans_ora_manager {
 
 			
 			//System.lineSeparator()
-			
+			/**
+			 * ----------디버그---------------
+			 */
+			System.out.println(strbuf.toString());	//로그
+			if(DEBUG.equals("Y")) {
+				JSONObject debugqry = new JSONObject();
+				String qry = "<br><br>" + strbuf.toString().replace("\r\n", "<br>").replace("\t","") + "<br>";
+				debugqry.put("qry", qry);
+				jsonary.add(debugqry);
+				return jsonary;
+			}
+
 			
 			con = getOraConnect();
 			stmt = con.prepareStatement(strbuf.toString());
-			System.out.println(strbuf.toString());	//로그
+
 			
 			rs = stmt.executeQuery();
 
@@ -2589,7 +2775,7 @@ public class trans_ora_manager {
 	 * @return json형식으로 dhx형식에 맞게
 	 * 2023-02-22 장현석
 	 */
-	public JSONArray get_sub0303(JSONArray jary) {
+	public JSONArray get_sub0303(JSONArray jary,String DEBUG) {
 		Connection con = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -2677,11 +2863,22 @@ public class trans_ora_manager {
 
 			
 			//System.lineSeparator()
-			
+			/**
+			 * ----------디버그---------------
+			 */
+			System.out.println(strbuf.toString());	//로그
+			if(DEBUG.equals("Y")) {
+				JSONObject debugqry = new JSONObject();
+				String qry = "<br><br>" + strbuf.toString().replace("\r\n", "<br>").replace("\t","") + "<br>";
+				debugqry.put("qry", qry);
+				jsonary.add(debugqry);
+				return jsonary;
+			}
+
 			
 			con = getOraConnect();
 			stmt = con.prepareStatement(strbuf.toString());
-			System.out.println(strbuf.toString());	//로그
+
 			
 			rs = stmt.executeQuery();
 
@@ -2725,7 +2922,7 @@ public class trans_ora_manager {
 	 * @return json형식으로 dhx형식에 맞게
 	 * 2023-02-22 장현석
 	 */
-	public JSONArray get_sub0303T(JSONArray jary) {
+	public JSONArray get_sub0303T(JSONArray jary,String DEBUG) {
 		Connection con = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -2862,11 +3059,22 @@ public class trans_ora_manager {
 
 			
 			//System.lineSeparator()
-			
+			/**
+			 * ----------디버그---------------
+			 */
+			System.out.println(strbuf.toString());	//로그
+			if(DEBUG.equals("Y")) {
+				JSONObject debugqry = new JSONObject();
+				String qry = "<br><br>" + strbuf.toString().replace("\r\n", "<br>").replace("\t","") + "<br>";
+				debugqry.put("qry", qry);
+				jsonary.add(debugqry);
+				return jsonary;
+			}
+
 			
 			con = getOraConnect();
 			stmt = con.prepareStatement(strbuf.toString());
-			System.out.println(strbuf.toString());	//로그
+
 			
 			rs = stmt.executeQuery();
 
@@ -2910,7 +3118,7 @@ public class trans_ora_manager {
 	 * @return json형식으로 dhx형식에 맞게
 	 * 2023-02-22 장현석
 	 */
-	public JSONArray get_sub0304(JSONArray jary) {
+	public JSONArray get_sub0304(JSONArray jary,String DEBUG) {
 		Connection con = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -2965,10 +3173,22 @@ public class trans_ora_manager {
 			
 			//System.lineSeparator()
 			
+			/**
+			 * ----------디버그---------------
+			 */
+			System.out.println(strbuf.toString());	//로그
+			if(DEBUG.equals("Y")) {
+				JSONObject debugqry = new JSONObject();
+				String qry = "<br><br>" + strbuf.toString().replace("\r\n", "<br>").replace("\t","") + "<br>";
+				debugqry.put("qry", qry);
+				jsonary.add(debugqry);
+				return jsonary;
+			}
+
 			
 			con = getOraConnect();
 			stmt = con.prepareStatement(strbuf.toString());
-			System.out.println(strbuf.toString());	//로그
+			
 			
 			rs = stmt.executeQuery();
 
@@ -3013,7 +3233,7 @@ public class trans_ora_manager {
 	 * @return json형식으로 dhx형식에 맞게
 	 * 2023-02-22 장현석
 	 */
-	public JSONArray get_sub0304T(JSONArray jary) {
+	public JSONArray get_sub0304T(JSONArray jary,String DEBUG) {
 		Connection con = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -3078,10 +3298,21 @@ public class trans_ora_manager {
 			
 			//System.lineSeparator()
 			
-			
+			/**
+			 * ----------디버그---------------
+			 */
+			System.out.println(strbuf.toString());	//로그
+			if(DEBUG.equals("Y")) {
+				JSONObject debugqry = new JSONObject();
+				String qry = "<br><br>" + strbuf.toString().replace("\r\n", "<br>").replace("\t","") + "<br>";
+				debugqry.put("qry", qry);
+				jsonary.add(debugqry);
+				return jsonary;
+			}
+
 			con = getOraConnect();
 			stmt = con.prepareStatement(strbuf.toString());
-			System.out.println(strbuf.toString());	//로그
+			
 			
 			rs = stmt.executeQuery();
 
@@ -3125,7 +3356,7 @@ public class trans_ora_manager {
 	 * @return json형식으로 dhx형식에 맞게
 	 * 2023-02-22 장현석
 	 */
-	public JSONArray get_sub0305(JSONArray jary) {
+	public JSONArray get_sub0305(JSONArray jary,String DEBUG) {
 		Connection con = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -3230,11 +3461,22 @@ public class trans_ora_manager {
 
 			
 			//System.lineSeparator()
-			
+			/**
+			 * ----------디버그---------------
+			 */
+			System.out.println(strbuf.toString());	//로그
+			if(DEBUG.equals("Y")) {
+				JSONObject debugqry = new JSONObject();
+				String qry = "<br><br>" + strbuf.toString().replace("\r\n", "<br>").replace("\t","") + "<br>";
+				debugqry.put("qry", qry);
+				jsonary.add(debugqry);
+				return jsonary;
+			}
+
 			
 			con = getOraConnect();
 			stmt = con.prepareStatement(strbuf.toString());
-			System.out.println(strbuf.toString());	//로그
+			
 			
 			rs = stmt.executeQuery();
 
@@ -3278,7 +3520,7 @@ public class trans_ora_manager {
 	 * @return json형식으로 dhx형식에 맞게
 	 * 2023-02-22 장현석
 	 */
-	public JSONArray get_sub0305T(JSONArray jary) {
+	public JSONArray get_sub0305T(JSONArray jary,String DEBUG) {
 		Connection con = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -3351,10 +3593,21 @@ public class trans_ora_manager {
 			
 			//System.lineSeparator()
 			
-			
+			/**
+			 * ----------디버그---------------
+			 */
+			System.out.println(strbuf.toString());	//로그
+			if(DEBUG.equals("Y")) {
+				JSONObject debugqry = new JSONObject();
+				String qry = "<br><br>" + strbuf.toString().replace("\r\n", "<br>").replace("\t","") + "<br>";
+				debugqry.put("qry", qry);
+				jsonary.add(debugqry);
+				return jsonary;
+			}
+
 			con = getOraConnect();
 			stmt = con.prepareStatement(strbuf.toString());
-			System.out.println(strbuf.toString());	//로그
+			
 			
 			rs = stmt.executeQuery();
 
@@ -3399,7 +3652,7 @@ public class trans_ora_manager {
 	 * @return json형식으로 dhx형식에 맞게
 	 * 2023-02-22 장현석
 	 */
-	public JSONArray get_sub0306(JSONArray jary) {
+	public JSONArray get_sub0306(JSONArray jary,String DEBUG) {
 		Connection con = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -3425,10 +3678,21 @@ public class trans_ora_manager {
 			
 			//System.lineSeparator()
 			
-			
+			/**
+			 * ----------디버그---------------
+			 */
+			System.out.println(strbuf.toString());	//로그
+			if(DEBUG.equals("Y")) {
+				JSONObject debugqry = new JSONObject();
+				String qry = "<br><br>" + strbuf.toString().replace("\r\n", "<br>").replace("\t","") + "<br>";
+				debugqry.put("qry", qry);
+				jsonary.add(debugqry);
+				return jsonary;
+			}
+
 			con = getOraConnect();
 			stmt = con.prepareStatement(strbuf.toString());
-			System.out.println(strbuf.toString());	//로그
+			
 			
 			rs = stmt.executeQuery();
 
@@ -3472,7 +3736,7 @@ public class trans_ora_manager {
 	 * @return json형식으로 dhx형식에 맞게
 	 * 2023-02-22 장현석
 	 */
-	public JSONArray get_sub0307(JSONArray jary) {
+	public JSONArray get_sub0307(JSONArray jary,String DEBUG) {
 		Connection con = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -3613,10 +3877,21 @@ public class trans_ora_manager {
 			
 			//System.lineSeparator()
 			
-			
+			/**
+			 * ----------디버그---------------
+			 */
+			System.out.println(strbuf.toString());	//로그
+			if(DEBUG.equals("Y")) {
+				JSONObject debugqry = new JSONObject();
+				String qry = "<br><br>" + strbuf.toString().replace("\r\n", "<br>").replace("\t","") + "<br>";
+				debugqry.put("qry", qry);
+				jsonary.add(debugqry);
+				return jsonary;
+			}
+
 			con = getOraConnect();
 			stmt = con.prepareStatement(strbuf.toString());
-			System.out.println(strbuf.toString());	//로그
+			
 			
 			rs = stmt.executeQuery();
 
@@ -3660,7 +3935,7 @@ public class trans_ora_manager {
 	 * @return json형식으로 dhx형식에 맞게
 	 * 2023-02-22 장현석
 	 */
-	public JSONArray get_sub0307T(JSONArray jary) {
+	public JSONArray get_sub0307T(JSONArray jary,String DEBUG) {
 		Connection con = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -3794,11 +4069,22 @@ public class trans_ora_manager {
 
 			
 			//System.lineSeparator()
-			
+			/**
+			 * ----------디버그---------------
+			 */
+			System.out.println(strbuf.toString());	//로그
+			if(DEBUG.equals("Y")) {
+				JSONObject debugqry = new JSONObject();
+				String qry = "<br><br>" + strbuf.toString().replace("\r\n", "<br>").replace("\t","") + "<br>";
+				debugqry.put("qry", qry);
+				jsonary.add(debugqry);
+				return jsonary;
+			}
+
 			
 			con = getOraConnect();
 			stmt = con.prepareStatement(strbuf.toString());
-			System.out.println(strbuf.toString());	//로그
+			
 			
 			rs = stmt.executeQuery();
 
@@ -3842,7 +4128,7 @@ public class trans_ora_manager {
 	 * @return json형식으로 dhx형식에 맞게
 	 * 2023-02-22 장현석
 	 */
-	public JSONArray get_sub0308(JSONArray jary) {
+	public JSONArray get_sub0308(JSONArray jary,String DEBUG) {
 		Connection con = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -3856,10 +4142,21 @@ public class trans_ora_manager {
 			
 			//System.lineSeparator()
 			
-			
+			/**
+			 * ----------디버그---------------
+			 */
+			System.out.println(strbuf.toString());	//로그
+			if(DEBUG.equals("Y")) {
+				JSONObject debugqry = new JSONObject();
+				String qry = "<br><br>" + strbuf.toString().replace("\r\n", "<br>").replace("\t","") + "<br>";
+				debugqry.put("qry", qry);
+				jsonary.add(debugqry);
+				return jsonary;
+			}
+
 			con = getOraConnect();
 			stmt = con.prepareStatement(strbuf.toString());
-			System.out.println(strbuf.toString());	//로그
+			
 			
 			rs = stmt.executeQuery();
 
@@ -3904,7 +4201,7 @@ public class trans_ora_manager {
 	 * @return json형식으로 dhx형식에 맞게
 	 * 2023-02-22 장현석
 	 */
-	public JSONArray get_sub0308T(JSONArray jary) {
+	public JSONArray get_sub0308T(JSONArray jary,String DEBUG) {
 		Connection con = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -4028,10 +4325,21 @@ public class trans_ora_manager {
 			
 			//System.lineSeparator()
 			
-			
+			/**
+			 * ----------디버그---------------
+			 */
+			System.out.println(strbuf.toString());	//로그
+			if(DEBUG.equals("Y")) {
+				JSONObject debugqry = new JSONObject();
+				String qry = "<br><br>" + strbuf.toString().replace("\r\n", "<br>").replace("\t","") + "<br>";
+				debugqry.put("qry", qry);
+				jsonary.add(debugqry);
+				return jsonary;
+			}
+
 			con = getOraConnect();
 			stmt = con.prepareStatement(strbuf.toString());
-			System.out.println(strbuf.toString());	//로그
+			
 			
 			rs = stmt.executeQuery();
 
@@ -4075,7 +4383,7 @@ public class trans_ora_manager {
 	 * @return json형식으로 dhx형식에 맞게
 	 * 2023-02-22 장현석
 	 */
-	public JSONArray get_sub0309(JSONArray jary) {
+	public JSONArray get_sub0309(JSONArray jary,String DEBUG) {
 		Connection con = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -4088,11 +4396,22 @@ public class trans_ora_manager {
 			strbuf.append("SELECT \r\n");
 			
 			//System.lineSeparator()
-			
+			/**
+			 * ----------디버그---------------
+			 */
+			System.out.println(strbuf.toString());	//로그
+			if(DEBUG.equals("Y")) {
+				JSONObject debugqry = new JSONObject();
+				String qry = "<br><br>" + strbuf.toString().replace("\r\n", "<br>").replace("\t","") + "<br>";
+				debugqry.put("qry", qry);
+				jsonary.add(debugqry);
+				return jsonary;
+			}
+
 			
 			con = getOraConnect();
 			stmt = con.prepareStatement(strbuf.toString());
-			System.out.println(strbuf.toString());	//로그
+			
 			
 			rs = stmt.executeQuery();
 
@@ -4242,6 +4561,44 @@ public class trans_ora_manager {
 				JSONObject jsonob = new JSONObject();
 	            jsonob.put("tid_cd",rs.getString("TERM_ID"));
 	            jsonob.put("tid_nm",rs.getString("TERM_NM"));
+				jsonary.add(jsonob);
+				
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			setOraClose(con,stmt,rs);
+		}
+		return jsonary;
+	}
+	
+	/**
+	 * midcd 컬럼 Select Query
+	 * @param orgcd
+	 * @return json
+	 * 2023-02-13 장현석
+	 */
+	public JSONArray get_midcd(String orgcd) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		JSONArray jsonary = new JSONArray();
+		
+		try {
+			strbuf = new StringBuffer();
+			strbuf.append("SELECT MID FROM TB_BAS_MIDMAP WHERE ORG_CD = ?");
+			con = getOraConnect();
+			stmt = con.prepareStatement(strbuf.toString());
+			System.out.println(strbuf.toString());	//로그
+			stmt.setString(1, orgcd); //유저 ID
+			
+			rs = stmt.executeQuery();
+			
+			while(rs.next()) {
+				JSONObject jsonob = new JSONObject();
+	            jsonob.put("MID",rs.getString("MID"));
 				jsonary.add(jsonob);
 				
 			}
