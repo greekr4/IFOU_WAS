@@ -4852,6 +4852,71 @@ public class trans_ora_manager {
 		return 0;
 	}
 	
+	/**
+	 * 메인화면 일자별로 뽑아오는 쿼리
+	 * @param orgcd, appdd (ex : 202302)
+	 * @return SVCGB(신용,현금,현금IC) , APPDD(20230222), AMT(금액)
+	 * 2023-03-08 김태균
+	 */
+	public JSONObject get_main_amt(String orgcd, String appdd) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		JSONArray jsonary = new JSONArray();
+		JSONObject jsonob = new JSONObject();
+		try {
+			strbuf = new StringBuffer();
+			strbuf.append("SELECT \r\n ");
+			strbuf.append("SVCGB,APPDD, TO_CHAR((AAMT-CAMT),'999,999,999,999,999,999') AMT\r\n ");
+			strbuf.append("FROM(\r\n ");
+			strbuf.append("SELECT\r\n ");
+			strbuf.append("CASE\r\n ");
+			strbuf.append("WHEN SVCGB ='CC' THEN '신용'\r\n ");
+			strbuf.append("WHEN SVCGB ='CB' THEN '현금'\r\n ");
+			strbuf.append("WHEN SVCGB ='IC' THEN '현금IC'\r\n ");
+			strbuf.append("END SVCGB\r\n ");
+			strbuf.append(",APPDD,SUM(AAMT) AAMT,SUM(CAMT) CAMT\r\n ");
+			strbuf.append("FROM(\r\n ");
+			strbuf.append("SELECT\r\n ");
+			strbuf.append("SVCGB,\r\n ");
+			strbuf.append("APPDD,\r\n ");
+			strbuf.append("CASE\r\n ");
+			strbuf.append("WHEN APPGB='A' THEN SUM(AMOUNT) ELSE 0\r\n ");
+			strbuf.append("END AAMT,\r\n ");
+			strbuf.append("CASE\r\n ");
+			strbuf.append("WHEN APPGB='C' THEN SUM(AMOUNT) ELSE 0\r\n ");
+			strbuf.append("END CAMT\r\n ");
+			strbuf.append("FROM \r\n ");
+			strbuf.append("GLOB_MNG_ICVAN\r\n ");
+			strbuf.append("WHERE AUTHCD='0000' AND TID IN (select tid from tb_bas_tidmap  where org_cd=?)  AND SUBSTR(APPDD,0,6)=?\r\n ");
+			strbuf.append("GROUP BY APPDD, APPGB,SVCGB\r\n ");
+			strbuf.append(")\r\n ");
+			strbuf.append("GROUP BY APPDD,SVCGB\r\n ");
+			strbuf.append(")\r\n ");
+
+			con = getOraConnect();
+			stmt = con.prepareStatement(strbuf.toString());
+			System.out.println(strbuf.toString());	//로그
+			stmt.setString(1, orgcd); //orgcd
+			stmt.setString(2, appdd); //orgcd
+				
+			
+			rs = stmt.executeQuery();
+			
+			while(rs.next()) {
+	            jsonob.put(rs.getString("SVCGB")+rs.getString("APPDD"),rs.getString("SVCGB")+ " " + rs.getString("AMT"));
+				jsonary.add(jsonob);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			setOraClose(con,stmt,rs);
+		}
+		return jsonob;
+	}
+	
 	
 	
 }//end class
