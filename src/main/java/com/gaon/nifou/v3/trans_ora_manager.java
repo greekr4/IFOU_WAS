@@ -498,7 +498,8 @@ public class trans_ora_manager {
 			 * ----------디버그---------------
 			 */
 			System.out.println(strbuf.toString());	//로그
-			if(DEBUG.equals("Y")) {
+			//if(Objects.equals(DEBUG,"Y")) {
+			if(Objects.equals(DEBUG, "Y")) {
 				JSONObject debugqry = new JSONObject();
 				String qry = "<br><br>" + strbuf.toString().replace("\r\n", "<br>").replace("\t","") + "<br>";
 				debugqry.put("qry", qry);
@@ -712,7 +713,7 @@ public class trans_ora_manager {
 			 * ----------디버그---------------
 			 */
 			System.out.println(strbuf.toString());	//로그
-			if(DEBUG.equals("Y")) {
+			if(Objects.equals(DEBUG,"Y")) {
 				JSONObject debugqry = new JSONObject();
 				String qry = "<br><br>" + strbuf.toString().replace("\r\n", "<br>").replace("\t","") + "<br>";
 				debugqry.put("qry", qry);
@@ -822,7 +823,7 @@ public class trans_ora_manager {
 			 * ----------디버그---------------
 			 */
 			System.out.println(strbuf.toString());	//로그
-			if(DEBUG.equals("Y")) {
+			if(Objects.equals(DEBUG,"Y")) {
 				JSONObject debugqry = new JSONObject();
 				String qry = "<br><br>" + strbuf.toString().replace("\r\n", "<br>").replace("\t","") + "<br>";
 				debugqry.put("qry", qry);
@@ -988,7 +989,7 @@ public class trans_ora_manager {
 			 * ----------디버그---------------
 			 */
 			System.out.println(strbuf.toString());	//로그
-			if(DEBUG.equals("Y")) {
+			if(Objects.equals(DEBUG,"Y")) {
 				JSONObject debugqry = new JSONObject();
 				String qry = "<br><br>" + strbuf.toString().replace("\r\n", "<br>").replace("\t","") + "<br>";
 				debugqry.put("qry", qry);
@@ -1076,7 +1077,7 @@ public class trans_ora_manager {
 			 * ----------디버그---------------
 			 */
 			System.out.println(strbuf.toString());	//로그
-			if(DEBUG.equals("Y")) {
+			if(Objects.equals(DEBUG,"Y")) {
 				JSONObject debugqry = new JSONObject();
 				String qry = "<br><br>" + strbuf.toString().replace("\r\n", "<br>").replace("\t","") + "<br>";
 				debugqry.put("qry", qry);
@@ -1181,7 +1182,7 @@ public class trans_ora_manager {
 			 * ----------디버그---------------
 			 */
 			System.out.println(strbuf.toString());	//로그
-			if(DEBUG.equals("Y")) {
+			if(Objects.equals(DEBUG,"Y")) {
 				JSONObject debugqry = new JSONObject();
 				String qry = "<br><br>" + strbuf.toString().replace("\r\n", "<br>").replace("\t","") + "<br>";
 				debugqry.put("qry", qry);
@@ -1246,37 +1247,37 @@ public class trans_ora_manager {
 		try {
 			strbuf = new StringBuffer();
 			//쿼리입력
-			strbuf.append("SELECT \r\n");
-			strbuf.append("    T3.DEP_CD, DEP_NM, TID TR_TID, TERM_NM TR_TIDNM, SUM(ACNT) ACNT, SUM(CCNT) CCNT, SUM(AAMT) AAMT, SUM(CAMT) CAMT, ACNT+CCNT TOTNCT, AAMT-CAMT TOTAMT \r\n");
-			strbuf.append("FROM( \r\n");
-			strbuf.append("    SELECT \r\n");
-			strbuf.append("TID, \r\n");
-			strbuf.append("        CASE \r\n");
-			strbuf.append("            WHEN APPGB='A' THEN COUNT(1) ELSE 0  \r\n");
-			strbuf.append("        END ACNT, \r\n");
-			strbuf.append("        CASE \r\n");
-			strbuf.append("            WHEN APPGB='A' THEN SUM(AMOUNT) ELSE 0 \r\n");
-			strbuf.append("        END AAMT, \r\n");
-			strbuf.append("        CASE \r\n");
-			strbuf.append("            WHEN APPGB='C' THEN COUNT(1) ELSE 0 \r\n");
-			strbuf.append("        END CCNT, \r\n");
-			strbuf.append("        CASE \r\n");
-			strbuf.append("            WHEN APPGB='C' THEN SUM(AMOUNT) ELSE 0 \r\n");
-			strbuf.append("        END CAMT \r\n");
-			strbuf.append("    FROM  \r\n");
-			strbuf.append("        $UserExpAuth[5] \r\n");
-			strbuf.append("$SET_WHERE \r\n");
-			strbuf.append("    GROUP BY TID, APPGB \r\n");
-			strbuf.append(")T1 \r\n");
-			strbuf.append("LEFT OUTER JOIN( \r\n");
-			strbuf.append("SELECT TERM_ID, TERM_NM, DEP_CD FROM TB_BAS_TIDMST $ORG_WH \r\n");
-			strbuf.append(")T3 ON(T3.TERM_ID=T1.TID) \r\n");
-			strbuf.append("LEFT OUTER JOIN( \r\n");
-			strbuf.append("    SELECT DEP_CD, DEP_NM FROM TB_BAS_DEPART $ORG_WH \r\n");
-			strbuf.append(")T2 ON(T3.DEP_CD=T2.DEP_CD) \r\n");
-			strbuf.append("GROUP BY T3.DEP_CD, DEP_NM, TID, TERM_NM \r\n");
-			strbuf.append("ORDER BY T3.DEP_CD, TERM_NM \r\n");
-			strbuf.append("); \r\n");
+			strbuf.append("SELECT ");
+			strbuf.append("    T3.DEP_CD, DEP_NM, TID TR_TID, TERM_NM TR_TIDNM, SUM(ACNT) ACNT, SUM(CCNT) CCNT, SUM(AAMT) AAMT, SUM(CAMT) CAMT ,SUM(ACNT+CCNT) TOTCNT, SUM(AAMT - CAMT) TOTAMT ");
+			strbuf.append("FROM( ");
+			strbuf.append("    SELECT ");
+			strbuf.append("TID, ");
+			strbuf.append("        CASE ");
+			strbuf.append("            WHEN APPGB='A' THEN COUNT(1) ELSE 0  ");
+			strbuf.append("        END ACNT, ");
+			strbuf.append("        CASE ");
+			strbuf.append("            WHEN APPGB='A' THEN SUM(AMOUNT) ELSE 0 ");
+			strbuf.append("        END AAMT, ");
+			strbuf.append("        CASE ");
+			strbuf.append("            WHEN APPGB='C' THEN COUNT(1) ELSE 0 ");
+			strbuf.append("        END CCNT, ");
+			strbuf.append("        CASE ");
+			strbuf.append("            WHEN APPGB='C' THEN SUM(AMOUNT) ELSE 0 ");
+			strbuf.append("        END CAMT ");
+			strbuf.append("    FROM  ");
+			strbuf.append("        GLOB_MNG_ICVAN");
+			strbuf.append("        WHERE TID IN (SELECT TID FROM TB_BAS_TIDMAP WHERE ORG_CD = 'OR026') AND APPDD = '20230222'");
+			strbuf.append("    GROUP BY TID, APPGB ");
+			strbuf.append(")T1 ");
+			strbuf.append("LEFT OUTER JOIN( ");
+			strbuf.append("SELECT TERM_ID, TERM_NM, DEP_CD FROM TB_BAS_TIDMST WHERE ORG_CD ='OR026'");
+			strbuf.append(")T3 ON(T3.TERM_ID=T1.TID) ");
+			strbuf.append("LEFT OUTER JOIN( ");
+			strbuf.append("    SELECT DEP_CD, DEP_NM FROM TB_BAS_DEPART WHERE ORG_CD ='OR026'");
+			strbuf.append(")T2 ON(T3.DEP_CD=T2.DEP_CD) ");
+			strbuf.append("GROUP BY T3.DEP_CD, DEP_NM, TID, TERM_NM ");
+			strbuf.append("ORDER BY T3.DEP_CD, TERM_NM ");
+
 
 			
 			//System.lineSeparator()
@@ -1285,7 +1286,7 @@ public class trans_ora_manager {
 			 * ----------디버그---------------
 			 */
 			System.out.println(strbuf.toString());	//로그
-			if(DEBUG.equals("Y")) {
+			if(Objects.equals(DEBUG,"Y")) {
 				JSONObject debugqry = new JSONObject();
 				String qry = "<br><br>" + strbuf.toString().replace("\r\n", "<br>").replace("\t","") + "<br>";
 				debugqry.put("qry", qry);
@@ -1459,7 +1460,7 @@ public class trans_ora_manager {
 			 * ----------디버그---------------
 			 */
 			System.out.println(strbuf.toString());	//로그
-			if(DEBUG.equals("Y")) {
+			if(Objects.equals(DEBUG,"Y")) {
 				JSONObject debugqry = new JSONObject();
 				String qry = "<br><br>" + strbuf.toString().replace("\r\n", "<br>").replace("\t","") + "<br>";
 				debugqry.put("qry", qry);
@@ -1653,7 +1654,7 @@ public class trans_ora_manager {
 			 * ----------디버그---------------
 			 */
 			System.out.println(strbuf.toString());	//로그
-			if(DEBUG.equals("Y")) {
+			if(Objects.equals(DEBUG,"Y")) {
 				JSONObject debugqry = new JSONObject();
 				String qry = "<br><br>" + strbuf.toString().replace("\r\n", "<br>").replace("\t","") + "<br>";
 				debugqry.put("qry", qry);
@@ -1849,7 +1850,7 @@ public class trans_ora_manager {
 			 * ----------디버그---------------
 			 */
 			System.out.println(strbuf.toString());	//로그
-			if(DEBUG.equals("Y")) {
+			if(Objects.equals(DEBUG,"Y")) {
 				JSONObject debugqry = new JSONObject();
 				String qry = "<br><br>" + strbuf.toString().replace("\r\n", "<br>").replace("\t","") + "<br>";
 				debugqry.put("qry", qry);
@@ -2011,7 +2012,7 @@ public class trans_ora_manager {
 			 * ----------디버그---------------
 			 */
 			System.out.println(strbuf.toString());	//로그
-			if(DEBUG.equals("Y")) {
+			if(Objects.equals(DEBUG,"Y")) {
 				JSONObject debugqry = new JSONObject();
 				String qry = "<br><br>" + strbuf.toString().replace("\r\n", "<br>").replace("\t","") + "<br>";
 				debugqry.put("qry", qry);
@@ -2122,7 +2123,7 @@ public class trans_ora_manager {
 			 * ----------디버그---------------
 			 */
 			System.out.println(strbuf.toString());	//로그
-			if(DEBUG.equals("Y")) {
+			if(Objects.equals(DEBUG,"Y")) {
 				JSONObject debugqry = new JSONObject();
 				String qry = "<br><br>" + strbuf.toString().replace("\r\n", "<br>").replace("\t","") + "<br>";
 				debugqry.put("qry", qry);
@@ -2262,7 +2263,7 @@ public class trans_ora_manager {
 			 * ----------디버그---------------
 			 */
 			System.out.println(strbuf.toString());	//로그
-			if(DEBUG.equals("Y")) {
+			if(Objects.equals(DEBUG,"Y")) {
 				JSONObject debugqry = new JSONObject();
 				String qry = "<br><br>" + strbuf.toString().replace("\r\n", "<br>").replace("\t","") + "<br>";
 				debugqry.put("qry", qry);
@@ -2347,7 +2348,7 @@ public class trans_ora_manager {
 			 * ----------디버그---------------
 			 */
 			System.out.println(strbuf.toString());	//로그
-			if(DEBUG.equals("Y")) {
+			if(Objects.equals(DEBUG,"Y")) {
 				JSONObject debugqry = new JSONObject();
 				String qry = "<br><br>" + strbuf.toString().replace("\r\n", "<br>").replace("\t","") + "<br>";
 				debugqry.put("qry", qry);
@@ -2434,7 +2435,7 @@ public class trans_ora_manager {
 			strbuf.append(",SUM(INP_AMT) TOT_INPAMT, SUM(EXP_AMT) TOT_EXPAMT \r\n");
 			strbuf.append("FROM \r\n");
 			strbuf.append("TB_MNG_DEPTOT \r\n");
-			strbuf.append("WHERE MID IN (SELECT MID FROM TB_BAS_MIDMAP where ORG_CD='OR026') AND EXP_DD>='20230224' AND EXP_DD<='20230224' \r\n");
+			strbuf.append("WHERE MID IN (SELECT MID FROM TB_BAS_MIDMAP where ORG_CD='OR026') AND EXP_DD>='20230222' AND EXP_DD<='20230222' \r\n");
 			strbuf.append("GROUP BY MID, EXP_DD, DEP_SEQ \r\n");
 			strbuf.append("ORDER BY EXP_DD DESC \r\n");
 			strbuf.append(")T1 \r\n");
@@ -2458,7 +2459,7 @@ public class trans_ora_manager {
 			strbuf.append(",CASE WHEN RTN_CD='67' THEN SUM(FEE) ELSE 0 END ITEM_FEE67 \r\n");
 			strbuf.append("FROM \r\n");
 			strbuf.append("TB_MNG_DEPDATA \r\n");
-			strbuf.append("WHERE MID IN (SELECT MID FROM TB_BAS_MIDMAP where ORG_CD='OR026') AND EXP_DD>='20230224' AND EXP_DD<='20230224' \r\n");
+			strbuf.append("WHERE MID IN (SELECT MID FROM TB_BAS_MIDMAP where ORG_CD='OR026') AND EXP_DD>='20230222' AND EXP_DD<='20230222' \r\n");
 			strbuf.append("GROUP BY DEP_SEQ, RTN_CD \r\n");
 			strbuf.append(") \r\n");
 			strbuf.append("GROUP BY DEP_SEQ \r\n");
@@ -2493,7 +2494,7 @@ public class trans_ora_manager {
 			 * ----------디버그---------------
 			 */
 			System.out.println(strbuf.toString());	//로그
-			if(DEBUG.equals("Y")) {
+			if(Objects.equals(DEBUG,"Y")) {
 				JSONObject debugqry = new JSONObject();
 				String qry = "<br><br>" + strbuf.toString().replace("\r\n", "<br>").replace("\t","") + "<br>";
 				debugqry.put("qry", qry);
@@ -2603,7 +2604,7 @@ public class trans_ora_manager {
 			 * ----------디버그---------------
 			 */
 			System.out.println(strbuf.toString());	//로그
-			if(DEBUG.equals("Y")) {
+			if(Objects.equals(DEBUG,"Y")) {
 				JSONObject debugqry = new JSONObject();
 				String qry = "<br><br>" + strbuf.toString().replace("\r\n", "<br>").replace("\t","") + "<br>";
 				debugqry.put("qry", qry);
@@ -2720,7 +2721,7 @@ public class trans_ora_manager {
 			 * ----------디버그---------------
 			 */
 			System.out.println(strbuf.toString());	//로그
-			if(DEBUG.equals("Y")) {
+			if(Objects.equals(DEBUG,"Y")) {
 				JSONObject debugqry = new JSONObject();
 				String qry = "<br><br>" + strbuf.toString().replace("\r\n", "<br>").replace("\t","") + "<br>";
 				debugqry.put("qry", qry);
@@ -2867,7 +2868,7 @@ public class trans_ora_manager {
 			 * ----------디버그---------------
 			 */
 			System.out.println(strbuf.toString());	//로그
-			if(DEBUG.equals("Y")) {
+			if(Objects.equals(DEBUG,"Y")) {
 				JSONObject debugqry = new JSONObject();
 				String qry = "<br><br>" + strbuf.toString().replace("\r\n", "<br>").replace("\t","") + "<br>";
 				debugqry.put("qry", qry);
@@ -3063,7 +3064,7 @@ public class trans_ora_manager {
 			 * ----------디버그---------------
 			 */
 			System.out.println(strbuf.toString());	//로그
-			if(DEBUG.equals("Y")) {
+			if(Objects.equals(DEBUG,"Y")) {
 				JSONObject debugqry = new JSONObject();
 				String qry = "<br><br>" + strbuf.toString().replace("\r\n", "<br>").replace("\t","") + "<br>";
 				debugqry.put("qry", qry);
@@ -3151,6 +3152,10 @@ public class trans_ora_manager {
 			strbuf.append(",RTN_CD \r\n");
 			strbuf.append(",EXP_DD DP_EXP_DD \r\n");
 			strbuf.append(",RS_MSG DP_RST_TXT \r\n");
+			strbuf.append(",'신용' TR_CARDTP\r\n"); //태균_수정
+			strbuf.append(",'국내' OVERSEA_CARD\r\n"); //태균_수정
+			strbuf.append(",'환자번호' ADD_PID\r\n"); //태균_수정
+			strbuf.append(",'매입코드' DP_DEPO\r\n"); //태균_수정
 			strbuf.append("FROM \r\n");
 			strbuf.append("TB_MNG_DEPDATA T1 \r\n");
 			strbuf.append("LEFT OUTER JOIN( \r\n");
@@ -3168,7 +3173,7 @@ public class trans_ora_manager {
 			strbuf.append("LEFT OUTER JOIN( \r\n");
 			strbuf.append("SELECT PUR_CD, PUR_NM FROM TB_BAS_PURINFO \r\n");
 			strbuf.append(")T6 ON(T2.PUR_CD=T6.PUR_CD) \r\n");
-			strbuf.append("WHERE MID IN (SELECT MID FROM TB_BAS_MIDMAP where ORG_CD='OR026') AND APP_DD>='20230222' AND APP_DD<='20230222' AND REQ_DD>='20230223' AND REQ_DD<='20230223' AND EXP_DD>='20230224' AND EXP_DD<='20230224' AND TID='6009802001' AND MID='00095773826' \r\n");
+			strbuf.append("WHERE MID IN (SELECT MID FROM TB_BAS_MIDMAP where ORG_CD='OR026') AND APP_DD>='20230222' AND APP_DD<='20230222' AND EXP_DD>='20230224' AND EXP_DD<='20230224' \r\n");
 
 			
 			//System.lineSeparator()
@@ -3177,7 +3182,7 @@ public class trans_ora_manager {
 			 * ----------디버그---------------
 			 */
 			System.out.println(strbuf.toString());	//로그
-			if(DEBUG.equals("Y")) {
+			if(Objects.equals(DEBUG,"Y")) {
 				JSONObject debugqry = new JSONObject();
 				String qry = "<br><br>" + strbuf.toString().replace("\r\n", "<br>").replace("\t","") + "<br>";
 				debugqry.put("qry", qry);
@@ -3254,6 +3259,18 @@ public class trans_ora_manager {
 			strbuf.append(",LO \r\n");
 			strbuf.append(",HD \r\n");
 			strbuf.append(",SI \r\n");
+			//////////////////////////////
+			strbuf.append(",JH \r\n");
+			strbuf.append(",AP \r\n");
+			strbuf.append(",WP \r\n");
+			strbuf.append(",ZERO \r\n");
+			strbuf.append(",KAKAO \r\n");
+			strbuf.append(",JHF \r\n");
+			strbuf.append(",APF \r\n");
+			strbuf.append(",WPF \r\n");
+			strbuf.append(",ZEROF \r\n");
+			strbuf.append(",KAKAOF \r\n");
+			/////////////////////////////
 			strbuf.append("FROM( \r\n");
 			strbuf.append("SELECT \r\n");
 			strbuf.append("TID \r\n");
@@ -3265,6 +3282,18 @@ public class trans_ora_manager {
 			strbuf.append(",SUM(LOA)-SUM(LOC) LO \r\n");
 			strbuf.append(",SUM(HDA)-SUM(HDC) HD \r\n");
 			strbuf.append(",SUM(SIA)-SUM(SIC) SI \r\n");
+			////////////////////////////////////////
+			strbuf.append(",SUM(JHA)-SUM(JHC) JH \r\n");
+			strbuf.append(",SUM(APA)-SUM(APC) AP \r\n");
+			strbuf.append(",SUM(WPA)-SUM(WPC) WP \r\n");
+			strbuf.append(",SUM(ZEROA)-SUM(ZEROC) ZERO \r\n");
+			strbuf.append(",SUM(KAKAOA)-SUM(KAKAOC) KAKAO \r\n");
+			strbuf.append(",SUM(JHAF)-SUM(JHCF) JHF  \r\n");
+			strbuf.append(",SUM(APAF)-SUM(APCF) APF \r\n");
+			strbuf.append(",SUM(WPAF)-SUM(WPCF) WPF  \r\n");
+			strbuf.append(",SUM(ZEROAF)-SUM(ZEROCF) ZEROF  \r\n");
+			strbuf.append(",SUM(KAKAOAF)-SUM(KAKAOCF) KAKAOF  \r\n");
+			/////////////////////////////////////
 			strbuf.append("FROM( \r\n");
 			strbuf.append("SELECT \r\n");
 			strbuf.append("TID \r\n");
@@ -3284,9 +3313,30 @@ public class trans_ora_manager {
 			strbuf.append(",CASE WHEN ACQ_CD IN ('VC0003', '047', '1103','33') AND RTN_CD='67' THEN SUM(SALE_AMT) ELSE 0 END LOC \r\n");
 			strbuf.append(",CASE WHEN ACQ_CD IN ('VC0002', '027', '1102','08') AND RTN_CD='67' THEN SUM(SALE_AMT) ELSE 0 END HDC \r\n");
 			strbuf.append(",CASE WHEN ACQ_CD IN ('VC0007', '029', '1107','07') AND RTN_CD='67' THEN SUM(SALE_AMT) ELSE 0 END SIC \r\n");
+//////////////////////////////////////////////////////////
+			strbuf.append(",CASE WHEN ACQ_CD IN ('VC9999', '999', '9999','99') AND RTN_CD='60' THEN SUM(SALE_AMT) ELSE 0 END JHA  \r\n");
+			strbuf.append(",CASE WHEN ACQ_CD IN ('VC9999', '999', '9999','99') AND RTN_CD='67' THEN SUM(SALE_AMT) ELSE 0 END JHC  \r\n");
+			strbuf.append(",CASE WHEN ACQ_CD IN ('VC9999', '999', '9999','99') AND RTN_CD='60' THEN SUM(FEE) ELSE 0 END JHAF  \r\n");
+			strbuf.append(",CASE WHEN ACQ_CD IN ('VC9999', '999', '9999','99') AND RTN_CD='67' THEN SUM(FEE) ELSE 0 END JHCF  \r\n");
+			strbuf.append(",CASE WHEN ACQ_CD IN ('VC9998', '998', '9998','98') AND RTN_CD='60' THEN SUM(SALE_AMT) ELSE 0 END APA  \r\n");
+			strbuf.append(",CASE WHEN ACQ_CD IN ('VC9998', '998', '9998','98') AND RTN_CD='67' THEN SUM(SALE_AMT) ELSE 0 END APC  \r\n");
+			strbuf.append(",CASE WHEN ACQ_CD IN ('VC9998', '998', '9998','98') AND RTN_CD='60' THEN SUM(FEE) ELSE 0 END APAF  \r\n");
+			strbuf.append(",CASE WHEN ACQ_CD IN ('VC9998', '998', '9998','98') AND RTN_CD='67' THEN SUM(FEE) ELSE 0 END APCF  \r\n");
+			strbuf.append(",CASE WHEN ACQ_CD IN ('VC9997', '997', '9997','97') AND RTN_CD='60' THEN SUM(SALE_AMT) ELSE 0 END WPA  \r\n");
+			strbuf.append(",CASE WHEN ACQ_CD IN ('VC9997', '997', '9997','97') AND RTN_CD='67' THEN SUM(SALE_AMT) ELSE 0 END WPC  \r\n");
+			strbuf.append(",CASE WHEN ACQ_CD IN ('VC9997', '997', '9997','97') AND RTN_CD='60' THEN SUM(FEE) ELSE 0 END WPAF  \r\n");
+			strbuf.append(",CASE WHEN ACQ_CD IN ('VC9997', '997', '9997','97') AND RTN_CD='67' THEN SUM(FEE) ELSE 0 END WPCF  \r\n");
+			strbuf.append(",CASE WHEN ACQ_CD IN ('VC9996', '996', '9996','96') AND RTN_CD='60' THEN SUM(SALE_AMT) ELSE 0 END ZEROA  \r\n");
+			strbuf.append(",CASE WHEN ACQ_CD IN ('VC9996', '996', '9996','96') AND RTN_CD='67' THEN SUM(SALE_AMT) ELSE 0 END ZEROC  \r\n");
+			strbuf.append(",CASE WHEN ACQ_CD IN ('VC9996', '996', '9996','96') AND RTN_CD='60' THEN SUM(FEE) ELSE 0 END ZEROAF  \r\n");
+			strbuf.append(",CASE WHEN ACQ_CD IN ('VC9996', '996', '9996','96') AND RTN_CD='67' THEN SUM(FEE) ELSE 0 END ZEROCF  \r\n");
+			strbuf.append(",CASE WHEN ACQ_CD IN ('VC9995', '995', '9995','95') AND RTN_CD='60' THEN SUM(SALE_AMT) ELSE 0 END KAKAOA  \r\n");
+			strbuf.append(",CASE WHEN ACQ_CD IN ('VC9995', '995', '9995','95') AND RTN_CD='67' THEN SUM(SALE_AMT) ELSE 0 END KAKAOC  \r\n");
+			strbuf.append(",CASE WHEN ACQ_CD IN ('VC9995', '995', '9995','95') AND RTN_CD='60' THEN SUM(FEE) ELSE 0 END KAKAOAF  \r\n");
+			strbuf.append(",CASE WHEN ACQ_CD IN ('VC9995', '995', '9995','95') AND RTN_CD='67' THEN SUM(FEE) ELSE 0 END KAKAOCF  \r\n");
 			strbuf.append("FROM \r\n");
 			strbuf.append("TB_MNG_DEPDATA \r\n");
-			strbuf.append("WHERE MID IN (SELECT MID FROM TB_BAS_MIDMAP where ORG_CD='OR026') AND APP_DD>='20230222' AND APP_DD<='20230222' AND REQ_DD>='20230223' AND REQ_DD<='20230223' AND EXP_DD>='20230224' AND EXP_DD<='20230224' \r\n");
+			strbuf.append("WHERE MID IN (SELECT MID FROM TB_BAS_MIDMAP where ORG_CD='OR026') AND APP_DD>='20230222' AND APP_DD<='20230222' AND EXP_DD>='20230224' AND EXP_DD<='20230224' \r\n");
 			strbuf.append("GROUP BY \r\n");
 			strbuf.append("TID, ACQ_CD, RTN_CD \r\n");
 			strbuf.append(") GROUP BY TID \r\n");
@@ -3302,7 +3352,7 @@ public class trans_ora_manager {
 			 * ----------디버그---------------
 			 */
 			System.out.println(strbuf.toString());	//로그
-			if(DEBUG.equals("Y")) {
+			if(Objects.equals(DEBUG,"Y")) {
 				JSONObject debugqry = new JSONObject();
 				String qry = "<br><br>" + strbuf.toString().replace("\r\n", "<br>").replace("\t","") + "<br>";
 				debugqry.put("qry", qry);
@@ -3465,7 +3515,7 @@ public class trans_ora_manager {
 			 * ----------디버그---------------
 			 */
 			System.out.println(strbuf.toString());	//로그
-			if(DEBUG.equals("Y")) {
+			if(Objects.equals(DEBUG,"Y")) {
 				JSONObject debugqry = new JSONObject();
 				String qry = "<br><br>" + strbuf.toString().replace("\r\n", "<br>").replace("\t","") + "<br>";
 				debugqry.put("qry", qry);
@@ -3597,7 +3647,7 @@ public class trans_ora_manager {
 			 * ----------디버그---------------
 			 */
 			System.out.println(strbuf.toString());	//로그
-			if(DEBUG.equals("Y")) {
+			if(Objects.equals(DEBUG,"Y")) {
 				JSONObject debugqry = new JSONObject();
 				String qry = "<br><br>" + strbuf.toString().replace("\r\n", "<br>").replace("\t","") + "<br>";
 				debugqry.put("qry", qry);
@@ -3682,7 +3732,7 @@ public class trans_ora_manager {
 			 * ----------디버그---------------
 			 */
 			System.out.println(strbuf.toString());	//로그
-			if(DEBUG.equals("Y")) {
+			if(Objects.equals(DEBUG,"Y")) {
 				JSONObject debugqry = new JSONObject();
 				String qry = "<br><br>" + strbuf.toString().replace("\r\n", "<br>").replace("\t","") + "<br>";
 				debugqry.put("qry", qry);
@@ -3881,7 +3931,7 @@ public class trans_ora_manager {
 			 * ----------디버그---------------
 			 */
 			System.out.println(strbuf.toString());	//로그
-			if(DEBUG.equals("Y")) {
+			if(Objects.equals(DEBUG,"Y")) {
 				JSONObject debugqry = new JSONObject();
 				String qry = "<br><br>" + strbuf.toString().replace("\r\n", "<br>").replace("\t","") + "<br>";
 				debugqry.put("qry", qry);
@@ -4073,7 +4123,7 @@ public class trans_ora_manager {
 			 * ----------디버그---------------
 			 */
 			System.out.println(strbuf.toString());	//로그
-			if(DEBUG.equals("Y")) {
+			if(Objects.equals(DEBUG,"Y")) {
 				JSONObject debugqry = new JSONObject();
 				String qry = "<br><br>" + strbuf.toString().replace("\r\n", "<br>").replace("\t","") + "<br>";
 				debugqry.put("qry", qry);
@@ -4146,7 +4196,7 @@ public class trans_ora_manager {
 			 * ----------디버그---------------
 			 */
 			System.out.println(strbuf.toString());	//로그
-			if(DEBUG.equals("Y")) {
+			if(Objects.equals(DEBUG,"Y")) {
 				JSONObject debugqry = new JSONObject();
 				String qry = "<br><br>" + strbuf.toString().replace("\r\n", "<br>").replace("\t","") + "<br>";
 				debugqry.put("qry", qry);
@@ -4329,7 +4379,7 @@ public class trans_ora_manager {
 			 * ----------디버그---------------
 			 */
 			System.out.println(strbuf.toString());	//로그
-			if(DEBUG.equals("Y")) {
+			if(Objects.equals(DEBUG,"Y")) {
 				JSONObject debugqry = new JSONObject();
 				String qry = "<br><br>" + strbuf.toString().replace("\r\n", "<br>").replace("\t","") + "<br>";
 				debugqry.put("qry", qry);
@@ -4400,7 +4450,7 @@ public class trans_ora_manager {
 			 * ----------디버그---------------
 			 */
 			System.out.println(strbuf.toString());	//로그
-			if(DEBUG.equals("Y")) {
+			if(Objects.equals(DEBUG,"Y")) {
 				JSONObject debugqry = new JSONObject();
 				String qry = "<br><br>" + strbuf.toString().replace("\r\n", "<br>").replace("\t","") + "<br>";
 				debugqry.put("qry", qry);
