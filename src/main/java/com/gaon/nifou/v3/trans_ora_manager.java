@@ -441,29 +441,29 @@ public class trans_ora_manager {
 			strbuf.append("		APPDD, APPTM,  OAPPDD, APPNO, OAPP_AMT,APPGB,\r\n");
 			strbuf.append("		CASE \r\n");
 			strbuf.append("			--승인거래\r\n");
-			strbuf.append("			WHEN APPGB='A' THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR008' AND SCD_CD='SCD0015')\r\n");
+			strbuf.append("			WHEN APPGB='A' THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR026' AND SCD_CD='SCD0015')\r\n");
 			strbuf.append("			--취소거래\r\n");
-			strbuf.append("			WHEN APPGB='C' THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR008' AND SCD_CD='SCD0016')\r\n");
+			strbuf.append("			WHEN APPGB='C' THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR026' AND SCD_CD='SCD0016')\r\n");
 			strbuf.append("		END APPGB_TXT,\r\n");
 			strbuf.append("		CARDNO,	AMOUNT,	HALBU,\r\n");
 			strbuf.append("		CASE \r\n");
 			strbuf.append("			--체크카드\r\n");
-			strbuf.append("			WHEN CHECK_CARD='Y' THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR008' AND SCD_CD='SCD0019') \r\n");
+			strbuf.append("			WHEN CHECK_CARD='Y' THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR026' AND SCD_CD='SCD0019') \r\n");
 			strbuf.append("			--신용카드\r\n");
-			strbuf.append("			ELSE (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR008' AND SCD_CD='SCD0018') END CARDTP_TXT,\r\n");
+			strbuf.append("			ELSE (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR026' AND SCD_CD='SCD0018') END CARDTP_TXT,\r\n");
 			strbuf.append("		CASE\r\n");
 			strbuf.append("			--전자서명\r\n");
-			strbuf.append("			WHEN SIGNCHK='1' THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR008' AND SCD_CD='SCD0021') \r\n");
+			strbuf.append("			WHEN SIGNCHK='1' THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR026' AND SCD_CD='SCD0021') \r\n");
 			strbuf.append("			--무서명\r\n");
-			strbuf.append("			ELSE (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR008' AND SCD_CD='SCD0022') END SIGNCHK_TXT,\r\n");
+			strbuf.append("			ELSE (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR026' AND SCD_CD='SCD0022') END SIGNCHK_TXT,\r\n");
 			strbuf.append("		REQ_DD,	AUTHCD,	REG_DD,	RTN_CD,\r\n");
 			strbuf.append("		CASE\r\n");
 			strbuf.append("			--결과없음\r\n");
-			strbuf.append("			WHEN RTN_CD IS NULL THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR008' AND SCD_CD='SCD0024') \r\n");
+			strbuf.append("			WHEN RTN_CD IS NULL THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR026' AND SCD_CD='SCD0024') \r\n");
 			strbuf.append("			--정상매입\r\n");
-			strbuf.append("			WHEN RTN_CD IN('60', '67') THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR008' AND SCD_CD='SCD0025')\r\n");
+			strbuf.append("			WHEN RTN_CD IN('60', '67') THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR026' AND SCD_CD='SCD0025')\r\n");
 			strbuf.append("			--매입반송\r\n");
-			strbuf.append("			WHEN RTN_CD IN('61', '64') THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR008' AND SCD_CD='SCD0026') \r\n");
+			strbuf.append("			WHEN RTN_CD IN('61', '64') THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR026' AND SCD_CD='SCD0026') \r\n");
 			strbuf.append("		END RTN_TXT,\r\n");
 			strbuf.append("		EXP_DD,	EXT_FIELD,	TRANIDX, AUTHMSG\r\n");
 			strbuf.append("		,CASE WHEN TLINEGB IS NOT NULL THEN (SELECT CODE_VAL FROM TB_BAS_CODE WHERE TRIM(CODE_NO)=TRIM(TLINEGB)) END TLINEGBTXT\r\n");
@@ -482,14 +482,14 @@ public class trans_ora_manager {
 			strbuf.append("			SELECT EXP_DD, REQ_DD, REG_DD, APP_DD, TRANIDX, RSC_CD, RTN_CD FROM TB_MNG_DEPDATA\r\n");
 			strbuf.append("		)T2 ON(T1.APPDD=T2.APP_DD AND T1.TRANIDX=T2.TRANIDX)\r\n");
 			strbuf.append("		LEFT OUTER JOIN( \r\n");
-			strbuf.append("			SELECT DEP_CD, TERM_NM, TERM_ID FROM TB_BAS_TIDMST WHERE ORG_CD='OR008'\r\n");
+			strbuf.append("			SELECT DEP_CD, TERM_NM, TERM_ID FROM TB_BAS_TIDMST WHERE ORG_CD='OR026'\r\n");
 			strbuf.append("		)T3 ON(T1.TID=T3.TERM_ID)\r\n");
 			strbuf.append("		LEFT OUTER JOIN( \r\n");
-			strbuf.append("			SELECT DEP_NM, DEP_CD FROM TB_BAS_DEPART WHERE ORG_CD='OR008'\r\n");
+			strbuf.append("			SELECT DEP_NM, DEP_CD FROM TB_BAS_DEPART WHERE ORG_CD='OR026'\r\n");
 			strbuf.append("		)T4 ON(T3.DEP_CD=T4.DEP_CD)\r\n");
 			strbuf.append("		LEFT OUTER JOIN( SELECT PUR_NM, PUR_OCD, PUR_CD FROM TB_BAS_PURINFO)T5 ON (T1.ACQ_CD=T5.PUR_OCD OR T1.ACQ_CD=T5.PUR_CD)\r\n");
-			strbuf.append("		WHERE SVCGB IN ('CC', 'CE')  AND AUTHCD='0000' AND TID IN (select tid from tb_bas_tidmap  where org_cd='OR008' AND dep_cd='DP30101')   AND T1.APPDD>='20230203' and T1.APPDD<='20230203'\r\n");
-			strbuf.append("		order by appdd desc, apptm desc\r\n");
+			strbuf.append("		WHERE SVCGB IN ('CC', 'CE')  AND AUTHCD='0000' AND TID IN (select tid from tb_bas_tidmap  where ORG_CD='OR026' AND dep_cd='DP30101')   AND T1.APPDD>='20230222' and T1.APPDD<='20230222'\r\n");
+			strbuf.append("		order by APPDD desc, apptm desc\r\n");
 			strbuf.append("	)\r\n");
 			strbuf.append(")\r\n");
 			//System.lineSeparator()
@@ -644,38 +644,38 @@ public class trans_ora_manager {
 					+ "					RNUM, SEQNO, DEP_NM, TERM_NM, TID, MID, PUR_NM, APPGB,\r\n"
 					+ "					CASE \r\n"
 					+ "					--정상거래\r\n"
-					+ "					WHEN APPGB='A' THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR008' AND SCD_CD='SCD0011')\r\n"
+					+ "					WHEN APPGB='A' THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR026' AND SCD_CD='SCD0011')\r\n"
 					+ "					--취소거래\r\n"
-					+ "					WHEN APPGB='C' THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR008' AND SCD_CD='SCD0012')\r\n"
+					+ "					WHEN APPGB='C' THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR026' AND SCD_CD='SCD0012')\r\n"
 					+ "				END APPGB_TXT,\r\n"
 					+ "				APPDD, APPTM, OAPPDD, APPNO, ACQ_CD,\r\n"
 					+ "				CASE \r\n"
 					+ "					--승인거래\r\n"
-					+ "					WHEN APPGB='A' THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR008' AND SCD_CD='SCD0015')\r\n"
+					+ "					WHEN APPGB='A' THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR026' AND SCD_CD='SCD0015')\r\n"
 					+ "					--취소거래\r\n"
-					+ "					WHEN APPGB='C' THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR008' AND SCD_CD='SCD0016')\r\n"
+					+ "					WHEN APPGB='C' THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR026' AND SCD_CD='SCD0016')\r\n"
 					+ "				END TR_AUTHSTAT,\r\n"
 					+ "				CARDNO,	AMOUNT,	HALBU,\r\n"
 					+ "				CASE \r\n"
 					+ "					--체크카드\r\n"
-					+ "					WHEN CHECK_CARD='Y' THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR008' AND SCD_CD='SCD0019') \r\n"
+					+ "					WHEN CHECK_CARD='Y' THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR026' AND SCD_CD='SCD0019') \r\n"
 					+ "					--신용카드\r\n"
-					+ "					ELSE (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR008' AND SCD_CD='SCD0018') \r\n"
+					+ "					ELSE (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR026' AND SCD_CD='SCD0018') \r\n"
 					+ "				END CARDTP_TXT,\r\n"
 					+ "				CASE\r\n"
 					+ "					--전자서명\r\n"
-					+ "					WHEN SIGNCHK='1' THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR008' AND SCD_CD='SCD0021') \r\n"
+					+ "					WHEN SIGNCHK='1' THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR026' AND SCD_CD='SCD0021') \r\n"
 					+ "					--무서명\r\n"
-					+ "					ELSE (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR008' AND SCD_CD='SCD0022') \r\n"
+					+ "					ELSE (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR026' AND SCD_CD='SCD0022') \r\n"
 					+ "				END SIGNCHK_TXT,\r\n"
 					+ "				REQ_DD,	AUTHCD,	REG_DD,	RTN_CD,\r\n"
 					+ "				CASE\r\n"
 					+ "					--결과없음\r\n"
-					+ "					WHEN RTN_CD IS NULL THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR008' AND SCD_CD='SCD0024') \r\n"
+					+ "					WHEN RTN_CD IS NULL THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR026' AND SCD_CD='SCD0024') \r\n"
 					+ "					--정상매입\r\n"
-					+ "					WHEN RTN_CD IN('60', '67') THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR008' AND SCD_CD='SCD0025')\r\n"
+					+ "					WHEN RTN_CD IN('60', '67') THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR026' AND SCD_CD='SCD0025')\r\n"
 					+ "					--매입반송\r\n"
-					+ "					WHEN RTN_CD IN('61', '64') THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR008' AND SCD_CD='SCD0026') \r\n"
+					+ "					WHEN RTN_CD IN('61', '64') THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR026' AND SCD_CD='SCD0026') \r\n"
 					+ "				END RTN_TXT,\r\n"
 					+ "					EXP_DD,	EXT_FIELD,	TRANIDX, AUTHMSG\r\n"
 					+ "				FROM(\r\n"
@@ -691,11 +691,11 @@ public class trans_ora_manager {
 					+ "					LEFT OUTER JOIN(\r\n"
 					+ "						SELECT EXP_DD, REQ_DD, REG_DD, APP_DD, TRANIDX, RSC_CD, RTN_CD FROM TB_MNG_DEPDATA\r\n"
 					+ "					)T2 ON(T1.APPDD=T2.APP_DD AND T1.TRANIDX=T2.TRANIDX)\r\n"
-					+ "					LEFT OUTER JOIN( SELECT DEP_CD, TERM_NM, TERM_ID FROM TB_BAS_TIDMST WHERE ORG_CD='OR008')T3 ON(T1.TID=T3.TERM_ID)\r\n"
-					+ "					LEFT OUTER JOIN( SELECT DEP_NM, DEP_CD FROM TB_BAS_DEPART WHERE ORG_CD='OR008')T4 ON(T3.DEP_CD=T4.DEP_CD)\r\n"
+					+ "					LEFT OUTER JOIN( SELECT DEP_CD, TERM_NM, TERM_ID FROM TB_BAS_TIDMST WHERE ORG_CD='OR026')T3 ON(T1.TID=T3.TERM_ID)\r\n"
+					+ "					LEFT OUTER JOIN( SELECT DEP_NM, DEP_CD FROM TB_BAS_DEPART WHERE ORG_CD='OR026')T4 ON(T3.DEP_CD=T4.DEP_CD)\r\n"
 					+ "					LEFT OUTER JOIN( SELECT PUR_NM, PUR_OCD, PUR_KOCES FROM TB_BAS_PURINFO)T5 ON (T1.ACQ_CD=T5.PUR_OCD OR T1.ACQ_CD=T5.PUR_KOCES)\r\n"
-					+ "					WHERE SVCGB IN ('CC', 'CE')  AND AUTHCD='0000' AND TID IN (select tid from tb_bas_tidmap  where org_cd='OR008' AND dep_cd='DP30101')   AND T1.APPDD>='20220203' and T1.APPDD<='20230203' AND ROWNUM <= (200*1)\r\n"
-					+ "					order by appdd desc, apptm desc\r\n"
+					+ "					WHERE SVCGB IN ('CC', 'CE')  AND AUTHCD='0000' AND TID IN (select tid from tb_bas_tidmap  where ORG_CD='OR026' AND dep_cd='DP30101')   AND T1.APPDD>='20230222' and T1.APPDD<='20230222' AND ROWNUM <= (200*1)\r\n"
+					+ "					order by APPDD desc, apptm desc\r\n"
 					+ "				)  WHERE RNUM >= (200*(1-1)+1) \r\n"
 					+ "			)\r\n"
 					+ "			\r\n"
@@ -704,8 +704,8 @@ public class trans_ora_manager {
 					+ "    )\r\n"
 					+ "    GROUP BY TID        \r\n"
 					+ ")T2\r\n"
-					+ "LEFT OUTER JOIN( SELECT DEP_CD, TERM_NM, TERM_ID FROM TB_BAS_TIDMST WHERE ORG_CD='OR008')T3 ON(T2.TID=T3.TERM_ID)\r\n"
-					+ "LEFT OUTER JOIN( SELECT DEP_NM, DEP_CD FROM TB_BAS_DEPART WHERE ORG_CD='OR008')T4 ON(T3.DEP_CD=T4.DEP_CD)");
+					+ "LEFT OUTER JOIN( SELECT DEP_CD, TERM_NM, TERM_ID FROM TB_BAS_TIDMST WHERE ORG_CD='OR026')T3 ON(T2.TID=T3.TERM_ID)\r\n"
+					+ "LEFT OUTER JOIN( SELECT DEP_NM, DEP_CD FROM TB_BAS_DEPART WHERE ORG_CD='OR026')T4 ON(T3.DEP_CD=T4.DEP_CD)");
 			//System.lineSeparator()
 		
 			/**
@@ -798,7 +798,7 @@ public class trans_ora_manager {
 			strbuf.append("					CASE WHEN APPGB='C' THEN SUM(AMOUNT) ELSE 0 END CAMT  \r\n");
 			strbuf.append("				FROM  \r\n");
 			strbuf.append("					GLOB_MNG_ICVAN \r\n");
-			strbuf.append("				WHERE SVCGB IN ('CC', 'CE') AND AUTHCD='0000' AND TID IN (select tid from tb_bas_tidmap where org_cd='OR026') AND APPDD LIKE '202302%' \r\n");
+			strbuf.append("				WHERE SVCGB IN ('CC', 'CE') AND AUTHCD='0000' AND TID IN (select tid from tb_bas_tidmap where ORG_CD='OR026') AND APPDD LIKE '202302%' \r\n");
 			strbuf.append("				GROUP BY MID, ACQ_CD, APPDD, APPGB \r\n");
 			strbuf.append("				)T1 \r\n");
 			strbuf.append("			GROUP BY MID, ACQ_CD, APPDD \r\n");
@@ -971,7 +971,7 @@ public class trans_ora_manager {
 			strbuf.append(",CASE WHEN ACQ_CD IN ('9994', '994') THEN COUNT(1) ELSE 0 END CASH_IC_CNT \r\n");
 			strbuf.append("FROM   \r\n");
 			strbuf.append("GLOB_MNG_ICVAN  \r\n");
-			strbuf.append("WHERE SVCGB IN ('CC', 'CE') AND AUTHCD='0000' AND TID IN (select tid from tb_bas_tidmap  where org_cd='OR026')  AND APPDD>='20230222' AND APPDD<='20230222'  \r\n");
+			strbuf.append("WHERE SVCGB IN ('CC', 'CE') AND AUTHCD='0000' AND TID IN (select tid from tb_bas_tidmap  where ORG_CD='OR026')  AND APPDD>='20230222' AND APPDD<='20230222'  \r\n");
 			strbuf.append("GROUP BY   \r\n");
 			strbuf.append("APPGB, APPDD, ADD_CASHER, ACQ_CD  \r\n");
 			strbuf.append(")  \r\n");
@@ -1066,7 +1066,7 @@ public class trans_ora_manager {
 			strbuf.append("CASE WHEN APPGB='C' THEN SUM(AMOUNT) ELSE 0 END CAMT \r\n");
 			strbuf.append("FROM \r\n");
 			strbuf.append("GLOB_MNG_ICVAN \r\n");
-			strbuf.append("WHERE SVCGB IN ('CC', 'CE') AND AUTHCD='0000' AND TID IN (select tid from tb_bas_tidmap where org_cd='OR026') AND APPDD>='20230222' AND APPDD<='20230222' \r\n");
+			strbuf.append("WHERE SVCGB IN ('CC', 'CE') AND AUTHCD='0000' AND TID IN (select tid from tb_bas_tidmap where ORG_CD='OR026') AND APPDD>='20230222' AND APPDD<='20230222' \r\n");
 			strbuf.append("GROUP BY APPGB \r\n");
 			strbuf.append(") \r\n");
 			strbuf.append(")T1 \r\n");
@@ -1160,17 +1160,17 @@ public class trans_ora_manager {
 			strbuf.append("CASE WHEN APPGB='C' THEN SUM(AMOUNT) ELSE 0 END CAMT \r\n");
 			strbuf.append("FROM \r\n");
 			strbuf.append("GLOB_MNG_ICVAN \r\n");
-			strbuf.append("WHERE SVCGB IN ('CC', 'CE') AND AUTHCD IN ('0000', '6666') AND TID IN (select tid from tb_bas_tidmap where org_cd='OR0015') AND APPDD>='20230223' AND APPDD<='20230223' \r\n");
+			strbuf.append("WHERE SVCGB IN ('CC', 'CE') AND AUTHCD IN ('0000', '6666') AND TID IN (select tid from tb_bas_tidmap where ORG_CD='OR026') AND APPDD>='20230222' AND APPDD<='20230222' \r\n");
 			strbuf.append("GROUP BY TID, MID, ACQ_CD, APPGB \r\n");
 			strbuf.append(") \r\n");
 			strbuf.append("GROUP BY TID, MID, ACQ_CD \r\n");
 			strbuf.append(")T1 \r\n");
 			strbuf.append("LEFT OUTER JOIN( SELECT PUR_NM, PUR_KOCES, PUR_OCD, PUR_SORT FROM TB_BAS_PURINFO )T2 ON(T1.ACQ_CD=T2.PUR_OCD OR T1.ACQ_CD=T2.PUR_KOCES ) \r\n");
 			strbuf.append("LEFT OUTER JOIN( \r\n");
-			strbuf.append("SELECT DEP_CD, TERM_NM, TERM_ID FROM TB_BAS_TIDMST WHERE ORG_CD='OR0015' \r\n");
+			strbuf.append("SELECT DEP_CD, TERM_NM, TERM_ID FROM TB_BAS_TIDMST WHERE ORG_CD='OR026' \r\n");
 			strbuf.append(")T3 ON(T1.TID=T3.TERM_ID) \r\n");
 			strbuf.append("LEFT OUTER JOIN( \r\n");
-			strbuf.append("SELECT DEP_NM, DEP_CD FROM TB_BAS_DEPART WHERE ORG_CD='OR0015' \r\n");
+			strbuf.append("SELECT DEP_NM, DEP_CD FROM TB_BAS_DEPART WHERE ORG_CD='OR026' \r\n");
 			strbuf.append(")T4 ON(T3.DEP_CD=T4.DEP_CD) \r\n");
 			strbuf.append("ORDER BY TID, PUR_NM ASC \r\n");
 
@@ -1387,15 +1387,15 @@ public class trans_ora_manager {
 			strbuf.append("SEQNO, DEP_NM, TERM_NM, TID, MID, PUR_NM, TSTAT, \r\n");
 			strbuf.append("CASE \r\n");
 			strbuf.append("--정상거래 \r\n");
-			strbuf.append("WHEN APPGB='A' AND OAPP_AMT IS NULL THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR0015' AND SCD_CD='SCD0011') \r\n");
+			strbuf.append("WHEN APPGB='A' AND OAPP_AMT IS NULL THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR026' AND SCD_CD='SCD0011') \r\n");
 			strbuf.append("--당일취소 \r\n");
-			strbuf.append("WHEN APPGB='A' AND OAPP_AMT=APPDD THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR0015' AND SCD_CD='SCD0012') \r\n");
+			strbuf.append("WHEN APPGB='A' AND OAPP_AMT=APPDD THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR026' AND SCD_CD='SCD0012') \r\n");
 			strbuf.append("--당일취소 \r\n");
-			strbuf.append("WHEN APPGB='C' AND APPDD=OAPPDD THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR0015' AND SCD_CD='SCD0012') \r\n");
+			strbuf.append("WHEN APPGB='C' AND APPDD=OAPPDD THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR026' AND SCD_CD='SCD0012') \r\n");
 			strbuf.append("--전일취소 \r\n");
-			strbuf.append("WHEN APPGB='C' AND APPDD<>OAPPDD THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR0015' AND SCD_CD='SCD0013') \r\n");
+			strbuf.append("WHEN APPGB='C' AND APPDD<>OAPPDD THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR026' AND SCD_CD='SCD0013') \r\n");
 			strbuf.append("--전일취소 \r\n");
-			strbuf.append("WHEN APPGB='A' AND APPDD<>OAPP_AMT AND OAPP_AMT IS NOT NULL THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR0015' AND SCD_CD='SCD0013') \r\n");
+			strbuf.append("WHEN APPGB='A' AND APPDD<>OAPP_AMT AND OAPP_AMT IS NOT NULL THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR026' AND SCD_CD='SCD0013') \r\n");
 			strbuf.append("END TSTAT_TXT, \r\n");
 			strbuf.append("APPDD, APPTM, TSTAT CANDATE, OAPPDD, APPNO, APPGB, \r\n");
 			strbuf.append("CASE \r\n");
@@ -1442,14 +1442,14 @@ public class trans_ora_manager {
 			strbuf.append("FROM \r\n");
 			strbuf.append("GLOB_MNG_ICVAN T1 \r\n");
 			strbuf.append("LEFT OUTER JOIN( \r\n");
-			strbuf.append("SELECT DEP_CD, TERM_NM, TERM_ID FROM TB_BAS_TIDMST WHERE ORG_CD='OR0015' \r\n");
+			strbuf.append("SELECT DEP_CD, TERM_NM, TERM_ID FROM TB_BAS_TIDMST WHERE ORG_CD='OR026' \r\n");
 			strbuf.append(")T3 ON(T1.TID=T3.TERM_ID) \r\n");
 			strbuf.append("LEFT OUTER JOIN( \r\n");
-			strbuf.append("SELECT DEP_NM, DEP_CD FROM TB_BAS_DEPART WHERE ORG_CD='OR0015' \r\n");
+			strbuf.append("SELECT DEP_NM, DEP_CD FROM TB_BAS_DEPART WHERE ORG_CD='OR026' \r\n");
 			strbuf.append(")T4 ON(T3.DEP_CD=T4.DEP_CD) \r\n");
 			strbuf.append("LEFT OUTER JOIN( SELECT PUR_NM, PUR_OCD, PUR_KOCES, PUR_CD FROM TB_BAS_PURINFO)T5 ON (T1.ACQ_CD=T5.PUR_OCD OR T1.ACQ_CD=T5.PUR_KOCES OR T1.ACQ_CD=T5.PUR_CD) \r\n");
-			strbuf.append("WHERE SVCGB IN ('CB') AND AUTHCD='0000' AND TID IN (select tid from tb_bas_tidmap where org_cd='OR0015') AND T1.APPDD>='20230223' AND (T1.APPDD<='20230223') \r\n");
-			strbuf.append("order by appdd desc, apptm desc \r\n");
+			strbuf.append("WHERE SVCGB IN ('CB') AND AUTHCD='0000' AND TID IN (select tid from tb_bas_tidmap where ORG_CD='OR026') AND T1.APPDD>='20230222' AND (T1.APPDD<='20230222') \r\n");
+			strbuf.append("order by APPDD desc, apptm desc \r\n");
 			strbuf.append(") \r\n");
 			strbuf.append(") \r\n");
 
@@ -1629,13 +1629,13 @@ public class trans_ora_manager {
 			strbuf.append("LEFT OUTER JOIN( \r\n");
 			strbuf.append("SELECT EXP_DD, REQ_DD, REG_DD, APP_DD, TRANIDX, RSC_CD, RTN_CD FROM TB_MNG_DEPDATA \r\n");
 			strbuf.append(")T2 ON(T1.APPDD=T2.APP_DD AND T1.TRANIDX=T2.TRANIDX) \r\n");
-			strbuf.append("LEFT OUTER JOIN( SELECT DEP_CD, TERM_NM, TERM_ID FROM TB_BAS_TIDMST WHERE ORG_CD='OR020')T3 ON(T1.TID=T3.TERM_ID) \r\n");
-			strbuf.append("LEFT OUTER JOIN( SELECT DEP_NM, DEP_CD FROM TB_BAS_DEPART WHERE ORG_CD='OR020')T4 ON(T3.DEP_CD=T4.DEP_CD) \r\n");
+			strbuf.append("LEFT OUTER JOIN( SELECT DEP_CD, TERM_NM, TERM_ID FROM TB_BAS_TIDMST WHERE ORG_CD='OR026')T3 ON(T1.TID=T3.TERM_ID) \r\n");
+			strbuf.append("LEFT OUTER JOIN( SELECT DEP_NM, DEP_CD FROM TB_BAS_DEPART WHERE ORG_CD='OR026')T4 ON(T3.DEP_CD=T4.DEP_CD) \r\n");
 			strbuf.append("LEFT OUTER JOIN( SELECT PUR_NM, PUR_OCD, PUR_KOCES FROM TB_BAS_PURINFO)T5 ON (T1.ACQ_CD=T5.PUR_OCD OR T1.ACQ_CD=T5.PUR_KOCES) \r\n");
 			strbuf.append("WHERE SVCGB IN ('CB') AND AUTHCD='0000' \r\n");
 			strbuf.append(" \r\n");
-			strbuf.append("AND TID IN (select tid from tb_bas_tidmap where org_cd='OR020' AND dep_cd='DP1201') AND T1.APPDD>='20230224' AND T1.APPDD<='20230224' \r\n");
-			strbuf.append("order by appdd desc, apptm desc \r\n");
+			strbuf.append("AND TID IN (select tid from tb_bas_tidmap where ORG_CD='OR026' AND dep_cd='DP1201') AND T1.APPDD>='20230222' AND T1.APPDD<='20230222' \r\n");
+			strbuf.append("order by APPDD desc, apptm desc \r\n");
 			strbuf.append(") \r\n");
 			strbuf.append(") \r\n");
 			strbuf.append(" \r\n");
@@ -1644,8 +1644,8 @@ public class trans_ora_manager {
 			strbuf.append(") \r\n");
 			strbuf.append("GROUP BY TID \r\n");
 			strbuf.append(")T2 \r\n");
-			strbuf.append("LEFT OUTER JOIN( SELECT DEP_CD, TERM_NM, TERM_ID FROM TB_BAS_TIDMST WHERE ORG_CD='OR020')T3 ON(T2.TID=T3.TERM_ID) \r\n");
-			strbuf.append("LEFT OUTER JOIN( SELECT DEP_NM, DEP_CD FROM TB_BAS_DEPART WHERE ORG_CD='OR020')T4 ON(T3.DEP_CD=T4.DEP_CD) \r\n");
+			strbuf.append("LEFT OUTER JOIN( SELECT DEP_CD, TERM_NM, TERM_ID FROM TB_BAS_TIDMST WHERE ORG_CD='OR026')T3 ON(T2.TID=T3.TERM_ID) \r\n");
+			strbuf.append("LEFT OUTER JOIN( SELECT DEP_NM, DEP_CD FROM TB_BAS_DEPART WHERE ORG_CD='OR026')T4 ON(T3.DEP_CD=T4.DEP_CD) \r\n");
 
 			
 			//System.lineSeparator()
@@ -1760,15 +1760,15 @@ public class trans_ora_manager {
 			strbuf.append(", DEPOREQDD DEPO_DD \r\n");
 			strbuf.append(", CASE \r\n");
 			strbuf.append("--정상거래 \r\n");
-			strbuf.append("WHEN T1.APPGB='A' AND OAPP_AMT IS NULL THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR0015' AND SCD_CD='SCD0011') \r\n");
+			strbuf.append("WHEN T1.APPGB='A' AND OAPP_AMT IS NULL THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR026' AND SCD_CD='SCD0011') \r\n");
 			strbuf.append("--당일취소 \r\n");
-			strbuf.append("WHEN T1.APPGB='A' AND OAPP_AMT=APPDD THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR0015' AND SCD_CD='SCD0012') \r\n");
+			strbuf.append("WHEN T1.APPGB='A' AND OAPP_AMT=APPDD THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR026' AND SCD_CD='SCD0012') \r\n");
 			strbuf.append("--당일취소 \r\n");
-			strbuf.append("WHEN T1.APPGB='C' AND APPDD=OAPPDD THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR0015' AND SCD_CD='SCD0012') \r\n");
+			strbuf.append("WHEN T1.APPGB='C' AND APPDD=OAPPDD THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR026' AND SCD_CD='SCD0012') \r\n");
 			strbuf.append("--전일취소 \r\n");
-			strbuf.append("WHEN T1.APPGB='C' AND APPDD<>OAPPDD THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR0015' AND SCD_CD='SCD0013') \r\n");
+			strbuf.append("WHEN T1.APPGB='C' AND APPDD<>OAPPDD THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR026' AND SCD_CD='SCD0013') \r\n");
 			strbuf.append("--전일취소 \r\n");
-			strbuf.append("WHEN T1.APPGB='A' AND APPDD<>OAPP_AMT AND OAPP_AMT IS NOT NULL THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR0015' AND SCD_CD='SCD0013') \r\n");
+			strbuf.append("WHEN T1.APPGB='A' AND APPDD<>OAPP_AMT AND OAPP_AMT IS NOT NULL THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR026' AND SCD_CD='SCD0013') \r\n");
 			strbuf.append("END TR_AUTHSTAT \r\n");
 			strbuf.append(", T6.EXPDD CIC_EXP_DD \r\n");
 			strbuf.append(", CASE \r\n");
@@ -1783,16 +1783,16 @@ public class trans_ora_manager {
 			strbuf.append("FROM \r\n");
 			strbuf.append("GLOB_MNG_ICVAN T1 \r\n");
 			strbuf.append("LEFT OUTER JOIN( \r\n");
-			strbuf.append("SELECT DEP_CD, TERM_NM, TERM_ID FROM TB_BAS_TIDMST WHERE ORG_CD='OR0015' \r\n");
+			strbuf.append("SELECT DEP_CD, TERM_NM, TERM_ID FROM TB_BAS_TIDMST WHERE ORG_CD='OR026' \r\n");
 			strbuf.append(")T3 ON(T1.TID=T3.TERM_ID) \r\n");
 			strbuf.append("LEFT OUTER JOIN( \r\n");
-			strbuf.append("SELECT DEP_NM, DEP_CD FROM TB_BAS_DEPART WHERE ORG_CD='OR0015' \r\n");
+			strbuf.append("SELECT DEP_NM, DEP_CD FROM TB_BAS_DEPART WHERE ORG_CD='OR026' \r\n");
 			strbuf.append(")T4 ON(T3.DEP_CD=T4.DEP_CD) \r\n");
 			strbuf.append("LEFT OUTER JOIN( SELECT PUR_NM, PUR_NICE FROM TB_BAS_PURINFO)T5 ON (T1.ISS_CD=T5.PUR_NICE) \r\n");
 			strbuf.append("LEFT OUTER JOIN( \r\n");
 			strbuf.append("SELECT SEQNO, TRANIDX, APPGB, APPNO, EXPDD FROM GLOB_MNG_CICEXP \r\n");
 			strbuf.append(")T6 ON (T1.SEQNO=T6.SEQNO AND T1.TRANIDX=T6.TRANIDX AND T1.APPGB=T6.APPGB AND T1.APPNO=T6.APPNO) \r\n");
-			strbuf.append("WHERE SVCGB IN ('IC') AND AUTHCD='0000' AND TID IN (select tid from tb_bas_tidmap where org_cd='OR0015') AND T1.APPDD>='20230224' and T1.APPDD<='20230224' \r\n");
+			strbuf.append("WHERE SVCGB IN ('IC') AND AUTHCD='0000' AND TID IN (select tid from tb_bas_tidmap where ORG_CD='OR026') AND T1.APPDD>='20230222' and T1.APPDD<='20230222' \r\n");
 			strbuf.append("ORDER BY APPDD ASC, APPTM ASC \r\n");
 			strbuf.append("CASE \r\n");
 			strbuf.append("WHEN APPGB='A' THEN '신용승인' \r\n");
@@ -1825,13 +1825,13 @@ public class trans_ora_manager {
 			strbuf.append("LEFT OUTER JOIN( \r\n");
 			strbuf.append("SELECT EXP_DD, REQ_DD, REG_DD, APP_DD, TRANIDX, RSC_CD, RTN_CD FROM TB_MNG_DEPDATA \r\n");
 			strbuf.append(")T2 ON(T1.APPDD=T2.APP_DD AND T1.TRANIDX=T2.TRANIDX) \r\n");
-			strbuf.append("LEFT OUTER JOIN( SELECT DEP_CD, TERM_NM, TERM_ID FROM TB_BAS_TIDMST WHERE ORG_CD='OR020')T3 ON(T1.TID=T3.TERM_ID) \r\n");
-			strbuf.append("LEFT OUTER JOIN( SELECT DEP_NM, DEP_CD FROM TB_BAS_DEPART WHERE ORG_CD='OR020')T4 ON(T3.DEP_CD=T4.DEP_CD) \r\n");
+			strbuf.append("LEFT OUTER JOIN( SELECT DEP_CD, TERM_NM, TERM_ID FROM TB_BAS_TIDMST WHERE ORG_CD='OR026')T3 ON(T1.TID=T3.TERM_ID) \r\n");
+			strbuf.append("LEFT OUTER JOIN( SELECT DEP_NM, DEP_CD FROM TB_BAS_DEPART WHERE ORG_CD='OR026')T4 ON(T3.DEP_CD=T4.DEP_CD) \r\n");
 			strbuf.append("LEFT OUTER JOIN( SELECT PUR_NM, PUR_OCD, PUR_KOCES FROM TB_BAS_PURINFO)T5 ON (T1.ACQ_CD=T5.PUR_OCD OR T1.ACQ_CD=T5.PUR_KOCES) \r\n");
 			strbuf.append("WHERE SVCGB IN ('CB') AND AUTHCD='0000' \r\n");
 			strbuf.append(" \r\n");
-			strbuf.append("AND TID IN (select tid from tb_bas_tidmap where org_cd='OR020' AND dep_cd='DP1201') AND T1.APPDD>='20230224' AND T1.APPDD<='20230224' \r\n");
-			strbuf.append("order by appdd desc, apptm desc \r\n");
+			strbuf.append("AND TID IN (select tid from tb_bas_tidmap where ORG_CD='OR026' AND dep_cd='DP1201') AND T1.APPDD>='20230222' AND T1.APPDD<='20230222' \r\n");
+			strbuf.append("order by APPDD desc, apptm desc \r\n");
 			strbuf.append(") \r\n");
 			strbuf.append(") \r\n");
 			strbuf.append(" \r\n");
@@ -1840,8 +1840,8 @@ public class trans_ora_manager {
 			strbuf.append(") \r\n");
 			strbuf.append("GROUP BY TID \r\n");
 			strbuf.append(")T2 \r\n");
-			strbuf.append("LEFT OUTER JOIN( SELECT DEP_CD, TERM_NM, TERM_ID FROM TB_BAS_TIDMST WHERE ORG_CD='OR020')T3 ON(T2.TID=T3.TERM_ID) \r\n");
-			strbuf.append("LEFT OUTER JOIN( SELECT DEP_NM, DEP_CD FROM TB_BAS_DEPART WHERE ORG_CD='OR020')T4 ON(T3.DEP_CD=T4.DEP_CD) \r\n");
+			strbuf.append("LEFT OUTER JOIN( SELECT DEP_CD, TERM_NM, TERM_ID FROM TB_BAS_TIDMST WHERE ORG_CD='OR026')T3 ON(T2.TID=T3.TERM_ID) \r\n");
+			strbuf.append("LEFT OUTER JOIN( SELECT DEP_NM, DEP_CD FROM TB_BAS_DEPART WHERE ORG_CD='OR026')T4 ON(T3.DEP_CD=T4.DEP_CD) \r\n");
 
 			
 			//System.lineSeparator()
@@ -1991,11 +1991,11 @@ public class trans_ora_manager {
 			strbuf.append("END TSTAT \r\n");
 			strbuf.append("FROM \r\n");
 			strbuf.append("GLOB_MNG_ICVAN T1 \r\n");
-			strbuf.append("LEFT OUTER JOIN( SELECT DEP_CD, TERM_NM, TERM_ID FROM TB_BAS_TIDMST WHERE ORG_CD='OR0015')T3 ON(T1.TID=T3.TERM_ID) \r\n");
-			strbuf.append("LEFT OUTER JOIN( SELECT DEP_NM, DEP_CD FROM TB_BAS_DEPART WHERE ORG_CD='OR0015')T4 ON(T3.DEP_CD=T4.DEP_CD) \r\n");
+			strbuf.append("LEFT OUTER JOIN( SELECT DEP_CD, TERM_NM, TERM_ID FROM TB_BAS_TIDMST WHERE ORG_CD='OR026')T3 ON(T1.TID=T3.TERM_ID) \r\n");
+			strbuf.append("LEFT OUTER JOIN( SELECT DEP_NM, DEP_CD FROM TB_BAS_DEPART WHERE ORG_CD='OR026')T4 ON(T3.DEP_CD=T4.DEP_CD) \r\n");
 			strbuf.append("LEFT OUTER JOIN( SELECT PUR_NM, PUR_OCD, PUR_KOCES FROM TB_BAS_PURINFO)T5 ON (T1.ACQ_CD=T5.PUR_OCD OR T1.ACQ_CD=T5.PUR_KOCES) \r\n");
-			strbuf.append("WHERE SVCGB IN ('IC') AND AUTHCD='0000' AND TID IN (select tid from tb_bas_tidmap where org_cd='OR0015') AND T1.APPDD>='20230224' and T1.APPDD<='20230224' \r\n");
-			strbuf.append("order by appdd desc, apptm desc \r\n");
+			strbuf.append("WHERE SVCGB IN ('IC') AND AUTHCD='0000' AND TID IN (select tid from tb_bas_tidmap where ORG_CD='OR026') AND T1.APPDD>='20230222' and T1.APPDD<='20230222' \r\n");
+			strbuf.append("order by APPDD desc, apptm desc \r\n");
 			strbuf.append(") \r\n");
 			strbuf.append(") \r\n");
 			strbuf.append(" \r\n");
@@ -2004,8 +2004,8 @@ public class trans_ora_manager {
 			strbuf.append(") \r\n");
 			strbuf.append("GROUP BY TID \r\n");
 			strbuf.append(")T2 \r\n");
-			strbuf.append("LEFT OUTER JOIN( SELECT DEP_CD, TERM_NM, TERM_ID FROM TB_BAS_TIDMST WHERE ORG_CD='OR0015')T3 ON(T2.TID=T3.TERM_ID) \r\n");
-			strbuf.append("LEFT OUTER JOIN( SELECT DEP_NM, DEP_CD FROM TB_BAS_DEPART WHERE ORG_CD='OR0015')T4 ON(T3.DEP_CD=T4.DEP_CD) \r\n");
+			strbuf.append("LEFT OUTER JOIN( SELECT DEP_CD, TERM_NM, TERM_ID FROM TB_BAS_TIDMST WHERE ORG_CD='OR026')T3 ON(T2.TID=T3.TERM_ID) \r\n");
+			strbuf.append("LEFT OUTER JOIN( SELECT DEP_NM, DEP_CD FROM TB_BAS_DEPART WHERE ORG_CD='OR026')T4 ON(T3.DEP_CD=T4.DEP_CD) \r\n");
 
 			/**
 			 * ----------디버그---------------
@@ -2109,11 +2109,11 @@ public class trans_ora_manager {
 			strbuf.append("AND T1.APP_TP=CASE WHEN T2.APPTP='11' THEN '02' WHEN T2.APPTP='21' THEN '12' END \r\n");
 			strbuf.append(") \r\n");
 			strbuf.append("LEFT OUTER JOIN( \r\n");
-			strbuf.append("SELECT APP_DD, APP_NO, CARDNO, AMOUNT, COUNT(1) MCNT FROM TB_MNG_VAN WHERE req_cd='0000' AND APP_DD>='20230223' and APP_DD<='20230223' group by app_dd, app_no, cardno, amount \r\n");
+			strbuf.append("SELECT APP_DD, APP_NO, CARDNO, AMOUNT, COUNT(1) MCNT FROM TB_MNG_VAN WHERE req_cd='0000' AND APP_DD>='20230222' and APP_DD<='20230222' group by APP_DD, app_no, cardno, amount \r\n");
 			strbuf.append(")T3 ON( \r\n");
 			strbuf.append("T1.APP_DD=T3.APP_DD AND T1.APP_NO=T3.APP_NO AND T1.CARDNO=T3.CARDNO AND T1.AMOUNT=T3.AMOUNT \r\n");
 			strbuf.append(") \r\n");
-			strbuf.append("WHERE T1.req_cd='0000' AND (T1.CARDNO IS NULL OR T2.CARDNO IS NULL) AND T3.MCNT<2 AND T1.app_dd>='20230223' and T1.app_dd<='20230223' and T1.APP_TP in ('02','12') \r\n");
+			strbuf.append("WHERE T1.req_cd='0000' AND (T1.CARDNO IS NULL OR T2.CARDNO IS NULL) AND T3.MCNT<2 AND T1.APP_DD>='20230222' and T1.APP_DD<='20230222' and T1.APP_TP in ('02','12') \r\n");
 			strbuf.append("ORDER BY T1.APP_DD ASC, T1.APP_NO ASC, T1.APP_TM ASC \r\n");
 
 			
@@ -2243,7 +2243,7 @@ public class trans_ora_manager {
 			strbuf.append("LEFT OUTER JOIN( \r\n");
 			strbuf.append("SELECT APP_DD AS OAPPDD, APP_TP, CARDNO, APP_NO, AMOUNT FROM TB_MNG_VAN \r\n");
 			strbuf.append(")T11 ON(T11.APP_TP='12' AND T11.CARDNO=T1.CARDNO AND T11.APP_NO=T1.APP_NO AND T11.AMOUNT=T1.AMOUNT) \r\n");
-			strbuf.append("where T1.app_dd>='2023-02-24' AND T1.APP_DD <='2023-02-24' and oappdd is null GROUP BY T1.APP_DD , T1.APP_TP, T1.CARDNO, T1.AMOUNT, T1.MEDI_NO ,T1.MEDI_CD HAVING COUNT(*) > 1 ) )T1 \r\n");
+			strbuf.append("where T1.APP_DD>='20230222' AND T1.APP_DD <='20230222' and oAPPDD is null GROUP BY T1.APP_DD , T1.APP_TP, T1.CARDNO, T1.AMOUNT, T1.MEDI_NO ,T1.MEDI_CD HAVING COUNT(*) > 1 ) )T1 \r\n");
 			strbuf.append("LEFT OUTER JOIN( SELECT DEP_CD, TERM_NM, TERM_ID FROM TB_BAS_TIDMST)T3 ON(T1.TID=T3.TERM_ID) \r\n");
 			strbuf.append("LEFT OUTER JOIN( SELECT DEP_NM, DEP_CD FROM TB_BAS_DEPART)T4 ON(T3.DEP_CD=T4.DEP_CD) \r\n");
 			strbuf.append("LEFT OUTER JOIN( SELECT PUR_NM, PUR_OCD FROM TB_BAS_PURINFO)T5 ON (T1.ACC_CD=T5.PUR_OCD) \r\n");
@@ -2253,8 +2253,8 @@ public class trans_ora_manager {
 			strbuf.append("LEFT OUTER JOIN( \r\n");
 			strbuf.append("SELECT APP_DD, APP_TP, CARDNO, APP_NO, AMOUNT FROM TB_MNG_VAN \r\n");
 			strbuf.append(")T11 ON(T11.APP_TP='12' AND T11.CARDNO=T1.CARDNO AND T11.APP_NO=T1.APP_NO AND T11.AMOUNT=T1.AMOUNT) \r\n");
-			strbuf.append("WHERE REQ_CD='0000' AND TID IN (select term_id from tb_bas_tidmst where dep_cd='DP0001') AND T1.APP_DD>='20230224' and T1.APP_DD<='20230224' AND (T1.APP_TP='02' OR T1.APP_TP='12') \r\n");
-			strbuf.append("order by T1.app_dd desc, T1.app_tm desc \r\n");
+			strbuf.append("WHERE REQ_CD='0000' AND TID IN (select term_id from tb_bas_tidmst where dep_cd='DP0001') AND T1.APP_DD>='20230222' and T1.APP_DD<='20230222' AND (T1.APP_TP='02' OR T1.APP_TP='12') \r\n");
+			strbuf.append("order by T1.APP_DD desc, T1.app_tm desc \r\n");
 
 			
 			//System.lineSeparator()
@@ -2434,7 +2434,7 @@ public class trans_ora_manager {
 			strbuf.append(",SUM(INP_AMT) TOT_INPAMT, SUM(EXP_AMT) TOT_EXPAMT \r\n");
 			strbuf.append("FROM \r\n");
 			strbuf.append("TB_MNG_DEPTOT \r\n");
-			strbuf.append("WHERE MID IN (SELECT MID FROM TB_BAS_MIDMAP where org_cd='OR026') AND EXP_DD>='20230222' AND EXP_DD<='20230222' \r\n");
+			strbuf.append("WHERE MID IN (SELECT MID FROM TB_BAS_MIDMAP where ORG_CD='OR026') AND EXP_DD>='20230224' AND EXP_DD<='20230224' \r\n");
 			strbuf.append("GROUP BY MID, EXP_DD, DEP_SEQ \r\n");
 			strbuf.append("ORDER BY EXP_DD DESC \r\n");
 			strbuf.append(")T1 \r\n");
@@ -2458,7 +2458,7 @@ public class trans_ora_manager {
 			strbuf.append(",CASE WHEN RTN_CD='67' THEN SUM(FEE) ELSE 0 END ITEM_FEE67 \r\n");
 			strbuf.append("FROM \r\n");
 			strbuf.append("TB_MNG_DEPDATA \r\n");
-			strbuf.append("WHERE MID IN (SELECT MID FROM TB_BAS_MIDMAP where org_cd='OR026') AND EXP_DD>='20230222' AND EXP_DD<='20230222' \r\n");
+			strbuf.append("WHERE MID IN (SELECT MID FROM TB_BAS_MIDMAP where ORG_CD='OR026') AND EXP_DD>='20230224' AND EXP_DD<='20230224' \r\n");
 			strbuf.append("GROUP BY DEP_SEQ, RTN_CD \r\n");
 			strbuf.append(") \r\n");
 			strbuf.append("GROUP BY DEP_SEQ \r\n");
@@ -2595,7 +2595,7 @@ public class trans_ora_manager {
 			strbuf.append("LEFT OUTER JOIN( \r\n");
 			strbuf.append("SELECT APPDD, TRANIDX, EXT_FIELD,ADD_CID, ADD_CASHER,ADD_DATE,APPTM,OAPPDD FROM GLOB_MNG_ICVAN \r\n");
 			strbuf.append(")T7 ON(T1.APP_DD=T7.APPDD AND T1.TRANIDX=T7.TRANIDX) \r\n");
-			strbuf.append("WHERE MID IN (SELECT MID FROM TB_BAS_MIDMAP where org_cd='OR026') AND EXP_DD>='20230222' AND EXP_DD<='20230222' \r\n");
+			strbuf.append("WHERE MID IN (SELECT MID FROM TB_BAS_MIDMAP where ORG_CD='OR026') AND EXP_DD>='20230224' AND EXP_DD<='20230224' \r\n");
 
 			
 			//System.lineSeparator()
@@ -2693,13 +2693,13 @@ public class trans_ora_manager {
 			strbuf.append("FROM \r\n");
 			strbuf.append("TB_MNG_DEPDATA T1 \r\n");
 			strbuf.append("LEFT OUTER JOIN( \r\n");
-			strbuf.append("SELECT ORG_CD, DEP_CD, STO_CD, MER_NO, PUR_CD FROM TB_BAS_MERINFO where org_cd='OR026' \r\n");
+			strbuf.append("SELECT ORG_CD, DEP_CD, STO_CD, MER_NO, PUR_CD FROM TB_BAS_MERINFO where ORG_CD='OR026' \r\n");
 			strbuf.append(")T2 ON(T1.MID=T2.MER_NO) \r\n");
 			strbuf.append("LEFT OUTER JOIN( \r\n");
-			strbuf.append("SELECT TERM_NM, TERM_ID FROM TB_BAS_TIDMST where org_cd='OR026' \r\n");
+			strbuf.append("SELECT TERM_NM, TERM_ID FROM TB_BAS_TIDMST where ORG_CD='OR026' \r\n");
 			strbuf.append(")T6 ON(T1.TID=T6.TERM_ID) \r\n");
 			strbuf.append("LEFT OUTER JOIN( \r\n");
-			strbuf.append("SELECT DEP_NM, DEP_CD FROM TB_BAS_DEPART where org_cd='OR026' \r\n");
+			strbuf.append("SELECT DEP_NM, DEP_CD FROM TB_BAS_DEPART where ORG_CD='OR026' \r\n");
 			strbuf.append(")T3 ON(T2.DEP_CD=T3.DEP_CD) \r\n");
 			strbuf.append("LEFT OUTER JOIN( \r\n");
 			strbuf.append("SELECT PUR_CD, PUR_NM, STO_CD FROM TB_BAS_PURINFO \r\n");
@@ -2707,7 +2707,7 @@ public class trans_ora_manager {
 			strbuf.append("LEFT OUTER JOIN( \r\n");
 			strbuf.append("SELECT APPDD, TRANIDX, EXT_FIELD,ADD_CID, CHECK_CARD FROM GLOB_MNG_ICVAN \r\n");
 			strbuf.append(")T7 ON(T1.APP_DD=T7.APPDD AND T1.TRANIDX=T7.TRANIDX) \r\n");
-			strbuf.append("WHERE MID IN (SELECT MID FROM TB_BAS_MIDMAP where org_cd='OR026') AND EXP_DD>='20230222' AND EXP_DD<='20230222' \r\n");
+			strbuf.append("WHERE MID IN (SELECT MID FROM TB_BAS_MIDMAP where ORG_CD='OR026') AND EXP_DD>='20230224' AND EXP_DD<='20230224' \r\n");
 			strbuf.append(") \r\n");
 			strbuf.append("GROUP BY MID, DEP_NM, PUR_NM, PUR_SORT, RTN_CD \r\n");
 			strbuf.append(") \r\n");
@@ -2835,7 +2835,7 @@ public class trans_ora_manager {
 			strbuf.append(",CASE WHEN RTN_CD='67' THEN SUM(FEE) ELSE 0 END ITEM_FEE67 \r\n");
 			strbuf.append("FROM \r\n");
 			strbuf.append("TB_MNG_DEPDATA \r\n");
-			strbuf.append("WHERE MID IN (SELECT MID FROM TB_BAS_MIDMAP where org_cd='OR026') AND APP_DD>='20230222' AND APP_DD<='20230222' \r\n");
+			strbuf.append("WHERE MID IN (SELECT MID FROM TB_BAS_MIDMAP where ORG_CD='OR026') AND APP_DD>='20230222' AND APP_DD<='20230222' \r\n");
 			strbuf.append("GROUP BY APP_DD, REQ_DD, EXP_DD, MID, TID, RTN_CD \r\n");
 			strbuf.append(") \r\n");
 			strbuf.append("GROUP BY APP_DD, REQ_DD, EXP_DD, TID, MID \r\n");
@@ -3047,7 +3047,7 @@ public class trans_ora_manager {
 			strbuf.append(",CASE WHEN ACQ_CD IN ('VC9995', '995', '9995','95') AND RTN_CD='67' THEN SUM(FEE) ELSE 0 END KAKAOCF  \r\n");
 			strbuf.append("FROM  \r\n");
 			strbuf.append("TB_MNG_DEPDATA  \r\n");
-			strbuf.append("WHERE MID IN (SELECT MID FROM TB_BAS_MIDMAP where org_cd='OR026') AND APP_DD>='20230222' AND APP_DD<='20230222'  \r\n");
+			strbuf.append("WHERE MID IN (SELECT MID FROM TB_BAS_MIDMAP where ORG_CD='OR026') AND APP_DD>='20230222' AND APP_DD<='20230222'  \r\n");
 			strbuf.append("GROUP BY  \r\n");
 			strbuf.append("TID, ACQ_CD, RTN_CD  \r\n");
 			strbuf.append(") GROUP BY TID  \r\n");
@@ -3154,21 +3154,21 @@ public class trans_ora_manager {
 			strbuf.append("FROM \r\n");
 			strbuf.append("TB_MNG_DEPDATA T1 \r\n");
 			strbuf.append("LEFT OUTER JOIN( \r\n");
-			strbuf.append("SELECT ORG_CD, DEP_CD, STO_CD, MER_NO, PUR_CD FROM TB_BAS_MERINFO WHERE ORG_CD='OR0015' \r\n");
+			strbuf.append("SELECT ORG_CD, DEP_CD, STO_CD, MER_NO, PUR_CD FROM TB_BAS_MERINFO WHERE ORG_CD='OR026' \r\n");
 			strbuf.append(")T2 ON(T1.MID=T2.MER_NO) \r\n");
 			strbuf.append("LEFT OUTER JOIN( \r\n");
-			strbuf.append("SELECT DEP_NM, DEP_CD FROM TB_BAS_DEPART WHERE ORG_CD='OR0015' \r\n");
+			strbuf.append("SELECT DEP_NM, DEP_CD FROM TB_BAS_DEPART WHERE ORG_CD='OR026' \r\n");
 			strbuf.append(")T3 ON(T2.DEP_CD=T3.DEP_CD) \r\n");
 			strbuf.append("LEFT OUTER JOIN( \r\n");
 			strbuf.append("SELECT STO_NM, STO_CD, DEP_CD, ORG_CD FROM TB_BAS_STORE \r\n");
 			strbuf.append(")T4 ON(T2.STO_CD=T4.STO_CD AND T2.DEP_CD=T4.DEP_CD AND T2.ORG_CD=T4.ORG_CD) \r\n");
 			strbuf.append("LEFT OUTER JOIN( \r\n");
-			strbuf.append("SELECT TERM_NM, TERM_ID FROM TB_BAS_TIDMST WHERE ORG_CD='OR0015' \r\n");
+			strbuf.append("SELECT TERM_NM, TERM_ID FROM TB_BAS_TIDMST WHERE ORG_CD='OR026' \r\n");
 			strbuf.append(")T5 ON(T1.TID=T5.TERM_ID) \r\n");
 			strbuf.append("LEFT OUTER JOIN( \r\n");
 			strbuf.append("SELECT PUR_CD, PUR_NM FROM TB_BAS_PURINFO \r\n");
 			strbuf.append(")T6 ON(T2.PUR_CD=T6.PUR_CD) \r\n");
-			strbuf.append("WHERE MID IN (SELECT MID FROM TB_BAS_MIDMAP where org_cd='OR0015') AND APP_DD>='20230220' AND APP_DD<='20230220' AND REQ_DD>='20230221' AND REQ_DD<='20230221' AND EXP_DD>='20230223' AND EXP_DD<='20230223' AND TID='6009802001' AND MID='00095773826' \r\n");
+			strbuf.append("WHERE MID IN (SELECT MID FROM TB_BAS_MIDMAP where ORG_CD='OR026') AND APP_DD>='20230222' AND APP_DD<='20230222' AND REQ_DD>='20230223' AND REQ_DD<='20230223' AND EXP_DD>='20230224' AND EXP_DD<='20230224' AND TID='6009802001' AND MID='00095773826' \r\n");
 
 			
 			//System.lineSeparator()
@@ -3286,7 +3286,7 @@ public class trans_ora_manager {
 			strbuf.append(",CASE WHEN ACQ_CD IN ('VC0007', '029', '1107','07') AND RTN_CD='67' THEN SUM(SALE_AMT) ELSE 0 END SIC \r\n");
 			strbuf.append("FROM \r\n");
 			strbuf.append("TB_MNG_DEPDATA \r\n");
-			strbuf.append("WHERE MID IN (SELECT MID FROM TB_BAS_MIDMAP where org_cd='OR0015') AND APP_DD>='20230220' AND APP_DD<='20230220' AND REQ_DD>='20230221' AND REQ_DD<='20230221' AND EXP_DD>='20230223' AND EXP_DD<='20230223' AND TID='6009802001' AND MID='00095773826' \r\n");
+			strbuf.append("WHERE MID IN (SELECT MID FROM TB_BAS_MIDMAP where ORG_CD='OR026') AND APP_DD>='20230222' AND APP_DD<='20230222' AND REQ_DD>='20230223' AND REQ_DD<='20230223' AND EXP_DD>='20230224' AND EXP_DD<='20230224' \r\n");
 			strbuf.append("GROUP BY \r\n");
 			strbuf.append("TID, ACQ_CD, RTN_CD \r\n");
 			strbuf.append(") GROUP BY TID \r\n");
@@ -3445,17 +3445,17 @@ public class trans_ora_manager {
 			strbuf.append("LEFT OUTER JOIN( \r\n");
 			strbuf.append("SELECT EXP_DD, REQ_DD, REG_DD, APP_DD, TRANIDX, RSC_CD, RTN_CD FROM TB_MNG_DEPDATA \r\n");
 			strbuf.append(")T2 ON(T1.APPDD=T2.APP_DD AND T1.TRANIDX=T2.TRANIDX) \r\n");
-			strbuf.append("LEFT OUTER JOIN( SELECT DEP_CD, TERM_NM, TERM_ID FROM TB_BAS_TIDMST WHERE ORG_CD='OR0008')T3 ON(T1.TID=T3.TERM_ID) \r\n");
-			strbuf.append("LEFT OUTER JOIN( SELECT DEP_NM, DEP_CD FROM TB_BAS_DEPART WHERE ORG_CD='OR0008')T4 ON(T3.DEP_CD=T4.DEP_CD) \r\n");
+			strbuf.append("LEFT OUTER JOIN( SELECT DEP_CD, TERM_NM, TERM_ID FROM TB_BAS_TIDMST WHERE ORG_CD='OR026')T3 ON(T1.TID=T3.TERM_ID) \r\n");
+			strbuf.append("LEFT OUTER JOIN( SELECT DEP_NM, DEP_CD FROM TB_BAS_DEPART WHERE ORG_CD='OR026')T4 ON(T3.DEP_CD=T4.DEP_CD) \r\n");
 			strbuf.append("LEFT OUTER JOIN( SELECT PUR_NM, PUR_CD, PUR_OCD, PUR_KOCES FROM TB_BAS_PURINFO)T5 ON (T1.ACQ_CD=T5.PUR_OCD OR T1.ACQ_CD=T5.PUR_KOCES OR T1.ACQ_CD=T5.PUR_CD) \r\n");
 			strbuf.append("WHERE SVCGB IN ('CC', 'CE') AND AUTHCD='0000' AND MID IN ( \r\n");
 			strbuf.append("SELECT MID FROM TB_BAS_MIDMAP MT1 \r\n");
 			strbuf.append("LEFT OUTER JOIN( \r\n");
-			strbuf.append("SELECT MER_NO, MTYPE FROM TB_BAS_MERINFO WHERE ORG_CD='OR0008' AND MTYPE='EDI' \r\n");
+			strbuf.append("SELECT MER_NO, MTYPE FROM TB_BAS_MERINFO WHERE ORG_CD='OR026' AND MTYPE='EDI' \r\n");
 			strbuf.append(")MT2 ON(MT1.MID=MT2.MER_NO) \r\n");
-			strbuf.append("WHERE MT1.ORG_CD='OR0008' AND MT2.MTYPE='EDI' \r\n");
-			strbuf.append(") AND T1.APPDD>='20230223' and T1.APPDD<='20230223' and NVL(TRAN_STAT,'TR00') IN ('TR00','RV01','DP99') \r\n");
-			strbuf.append("order by appdd desc, apptm desc \r\n");
+			strbuf.append("WHERE MT1.ORG_CD='OR026' AND MT2.MTYPE='EDI' \r\n");
+			strbuf.append(") AND T1.APPDD>='20230223' and T1.APPDD<='20230222' and NVL(TRAN_STAT,'TR00') IN ('TR00','RV01','DP99') \r\n");
+			strbuf.append("order by APPDD desc, apptm desc \r\n");
 			strbuf.append(") \r\n");
 			strbuf.append(") \r\n");
 
@@ -3582,11 +3582,11 @@ public class trans_ora_manager {
 			strbuf.append("WHERE SVCGB IN ('CC', 'CE') AND AUTHCD='0000' AND MID IN ( \r\n");
 			strbuf.append("SELECT MID FROM TB_BAS_MIDMAP MT1 \r\n");
 			strbuf.append("LEFT OUTER JOIN( \r\n");
-			strbuf.append("SELECT MER_NO, MTYPE FROM TB_BAS_MERINFO WHERE ORG_CD='OR0008' AND MTYPE='EDI' \r\n");
+			strbuf.append("SELECT MER_NO, MTYPE FROM TB_BAS_MERINFO WHERE ORG_CD='OR026' AND MTYPE='EDI' \r\n");
 			strbuf.append(")MT2 ON(MT1.MID=MT2.MER_NO) \r\n");
-			strbuf.append("WHERE MT1.ORG_CD='OR0008' AND MT2.MTYPE='EDI' \r\n");
-			strbuf.append(") AND T1.APPDD>='20230223' and T1.APPDD<='20230223' and NVL(TRAN_STAT,'TR00') IN ('TR00','RV01','DP99') \r\n");
-			strbuf.append("order by appdd desc, apptm desc \r\n");
+			strbuf.append("WHERE MT1.ORG_CD='OR026' AND MT2.MTYPE='EDI' \r\n");
+			strbuf.append(") AND T1.APPDD>='20230222' and T1.APPDD<='20230222' and NVL(TRAN_STAT,'TR00') IN ('TR00','RV01','DP99') \r\n");
+			strbuf.append("order by APPDD desc, apptm desc \r\n");
 			strbuf.append(") \r\n");
 			strbuf.append(") \r\n");
 
@@ -3672,7 +3672,7 @@ public class trans_ora_manager {
 			strbuf.append("to_char(regdate, 'yyyyMMdd') REQ_DD \r\n");
 			strbuf.append("FROM \r\n");
 			strbuf.append("TB_HIS_DPREQ_TOT \r\n");
-			strbuf.append("WHERE to_char(regdate, 'yyyyMMdd')>='20230217' and to_char(regdate, 'yyyyMMdd')<='20230224' AND ORGCD='OR0008' \r\n");
+			strbuf.append("WHERE to_char(regdate, 'yyyyMMdd')>='20230217' and to_char(regdate, 'yyyyMMdd')<='20230224' AND ORGCD='OR026' \r\n");
 			strbuf.append("order by REQ_DD desc \r\n");
 
 			
@@ -3787,42 +3787,42 @@ public class trans_ora_manager {
 			strbuf.append("SEQNO, DEP_NM, TERM_NM, TID, MID, PUR_NM, TSTAT, \r\n");
 			strbuf.append("CASE \r\n");
 			strbuf.append("--정상거래 \r\n");
-			strbuf.append("WHEN APPGB='A' AND TSTAT IS NULL THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR0008' AND SCD_CD='SCD0011') \r\n");
+			strbuf.append("WHEN APPGB='A' AND TSTAT IS NULL THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR026' AND SCD_CD='SCD0011') \r\n");
 			strbuf.append("--당일취소 \r\n");
-			strbuf.append("WHEN APPGB='A' AND TSTAT=APPDD THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR0008' AND SCD_CD='SCD0012') \r\n");
+			strbuf.append("WHEN APPGB='A' AND TSTAT=APPDD THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR026' AND SCD_CD='SCD0012') \r\n");
 			strbuf.append("--당일취소 \r\n");
-			strbuf.append("WHEN APPGB='C' AND APPDD=OAPPDD THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR0008' AND SCD_CD='SCD0012') \r\n");
+			strbuf.append("WHEN APPGB='C' AND APPDD=OAPPDD THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR026' AND SCD_CD='SCD0012') \r\n");
 			strbuf.append("--전일취소 \r\n");
-			strbuf.append("WHEN APPGB='C' AND APPDD<>OAPPDD THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR0008' AND SCD_CD='SCD0013') \r\n");
+			strbuf.append("WHEN APPGB='C' AND APPDD<>OAPPDD THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR026' AND SCD_CD='SCD0013') \r\n");
 			strbuf.append("--전일취소 \r\n");
-			strbuf.append("WHEN APPGB='A' AND APPDD<>TSTAT AND TSTAT IS NOT NULL THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR0008' AND SCD_CD='SCD0013') \r\n");
+			strbuf.append("WHEN APPGB='A' AND APPDD<>TSTAT AND TSTAT IS NOT NULL THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR026' AND SCD_CD='SCD0013') \r\n");
 			strbuf.append("END TSTAT_TXT, \r\n");
 			strbuf.append("APPDD, APPTM, TSTAT CANDATE, OAPPDD, APPNO, APPGB, \r\n");
 			strbuf.append("CASE \r\n");
 			strbuf.append("--승인거래 \r\n");
-			strbuf.append("WHEN APPGB='A' THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR0008' AND SCD_CD='SCD0015') \r\n");
+			strbuf.append("WHEN APPGB='A' THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR026' AND SCD_CD='SCD0015') \r\n");
 			strbuf.append("--취소거래 \r\n");
-			strbuf.append("WHEN APPGB='C' THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR0008' AND SCD_CD='SCD0016') \r\n");
+			strbuf.append("WHEN APPGB='C' THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR026' AND SCD_CD='SCD0016') \r\n");
 			strbuf.append("END APPGB_TXT, \r\n");
 			strbuf.append("CARDNO, AMOUNT, HALBU, \r\n");
 			strbuf.append("CASE \r\n");
 			strbuf.append("--체크카드 \r\n");
-			strbuf.append("WHEN CHECK_CARD='Y' THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR0008' AND SCD_CD='SCD0019') \r\n");
+			strbuf.append("WHEN CHECK_CARD='Y' THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR026' AND SCD_CD='SCD0019') \r\n");
 			strbuf.append("--신용카드 \r\n");
-			strbuf.append("ELSE (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR0008' AND SCD_CD='SCD0018') END CARDTP_TXT, \r\n");
+			strbuf.append("ELSE (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR026' AND SCD_CD='SCD0018') END CARDTP_TXT, \r\n");
 			strbuf.append("CASE \r\n");
 			strbuf.append("--전자서명 \r\n");
-			strbuf.append("WHEN SIGNCHK='Y' THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR0008' AND SCD_CD='SCD0021') \r\n");
+			strbuf.append("WHEN SIGNCHK='Y' THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR026' AND SCD_CD='SCD0021') \r\n");
 			strbuf.append("--무서명 \r\n");
-			strbuf.append("ELSE (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR0008' AND SCD_CD='SCD0022') END SIGNCHK_TXT, \r\n");
+			strbuf.append("ELSE (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR026' AND SCD_CD='SCD0022') END SIGNCHK_TXT, \r\n");
 			strbuf.append("REQ_DD, AUTHCD, REG_DD, RTN_CD, \r\n");
 			strbuf.append("CASE \r\n");
 			strbuf.append("--결과없음 \r\n");
-			strbuf.append("WHEN RTN_CD IS NULL THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR0008' AND SCD_CD='SCD0024') \r\n");
+			strbuf.append("WHEN RTN_CD IS NULL THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR026' AND SCD_CD='SCD0024') \r\n");
 			strbuf.append("--정상매입 \r\n");
-			strbuf.append("WHEN RTN_CD IN('60', '67') THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR0008' AND SCD_CD='SCD0025') \r\n");
+			strbuf.append("WHEN RTN_CD IN('60', '67') THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR026' AND SCD_CD='SCD0025') \r\n");
 			strbuf.append("--매입반송 \r\n");
-			strbuf.append("WHEN RTN_CD IN('61', '64') THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR0008' AND SCD_CD='SCD0026') \r\n");
+			strbuf.append("WHEN RTN_CD IN('61', '64') THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR026' AND SCD_CD='SCD0026') \r\n");
 			strbuf.append("END RTN_TXT, \r\n");
 			strbuf.append("EXP_DD, EXT_FIELD, TRANIDX, AUTHMSG \r\n");
 			strbuf.append(",CASE WHEN TLINEGB='9000' THEN '모바일' ELSE 'OFFLINE' END TLINEGBTXT \r\n");
@@ -3863,14 +3863,14 @@ public class trans_ora_manager {
 			strbuf.append("END \r\n");
 			strbuf.append(") \r\n");
 			strbuf.append("LEFT OUTER JOIN( \r\n");
-			strbuf.append("SELECT DEP_CD, TERM_NM, TERM_ID FROM TB_BAS_TIDMST WHERE ORG_CD='OR0008' \r\n");
+			strbuf.append("SELECT DEP_CD, TERM_NM, TERM_ID FROM TB_BAS_TIDMST WHERE ORG_CD='OR026' \r\n");
 			strbuf.append(")T3 ON(T1.TID=T3.TERM_ID) \r\n");
 			strbuf.append("LEFT OUTER JOIN( \r\n");
-			strbuf.append("SELECT DEP_NM, DEP_CD FROM TB_BAS_DEPART WHERE ORG_CD='OR0008' \r\n");
+			strbuf.append("SELECT DEP_NM, DEP_CD FROM TB_BAS_DEPART WHERE ORG_CD='OR026' \r\n");
 			strbuf.append(")T4 ON(T3.DEP_CD=T4.DEP_CD) \r\n");
 			strbuf.append("LEFT OUTER JOIN( SELECT PUR_NM, PUR_OCD, PUR_KOCES, PUR_CD FROM TB_BAS_PURINFO)T5 ON (T1.ACQ_CD=T5.PUR_OCD OR T1.ACQ_CD=T5.PUR_KOCES OR T1.ACQ_CD=T5.PUR_CD) \r\n");
-			strbuf.append("WHERE SVCGB IN ('CC', 'CE') AND AUTHCD='0000' AND TID IN (select tid from tb_bas_tidmap where org_cd='OR0008' AND dep_cd='MD1517581241') AND T1.DEPOREQDD>='TOTALROW' and T1.DEPOREQDD<='TOTALROW' \r\n");
-			strbuf.append("order by appdd desc, apptm desc \r\n");
+			strbuf.append("WHERE SVCGB IN ('CC', 'CE') AND AUTHCD='0000' AND TID IN (select tid from tb_bas_tidmap where ORG_CD='OR026' AND dep_cd='MD1517581241') AND T1.DEPOREQDD>='TOTALROW' and T1.DEPOREQDD<='TOTALROW' \r\n");
+			strbuf.append("order by APPDD desc, apptm desc \r\n");
 			strbuf.append(") \r\n");
 			strbuf.append(") \r\n");
 
@@ -4051,11 +4051,11 @@ public class trans_ora_manager {
 			strbuf.append("LEFT OUTER JOIN( \r\n");
 			strbuf.append("SELECT EXP_DD, REQ_DD, REG_DD, APP_DD, TRANIDX, RSC_CD, RTN_CD FROM TB_MNG_DEPDATA \r\n");
 			strbuf.append(")T2 ON(T1.APPDD=T2.APP_DD AND T1.TRANIDX=T2.TRANIDX) \r\n");
-			strbuf.append("LEFT OUTER JOIN( SELECT DEP_CD, TERM_NM, TERM_ID FROM TB_BAS_TIDMST WHERE ORG_CD='OR0009')T3 ON(T1.TID=T3.TERM_ID) \r\n");
-			strbuf.append("LEFT OUTER JOIN( SELECT DEP_NM, DEP_CD FROM TB_BAS_DEPART WHERE ORG_CD='OR0009')T4 ON(T3.DEP_CD=T4.DEP_CD) \r\n");
+			strbuf.append("LEFT OUTER JOIN( SELECT DEP_CD, TERM_NM, TERM_ID FROM TB_BAS_TIDMST WHERE ORG_CD='OR026')T3 ON(T1.TID=T3.TERM_ID) \r\n");
+			strbuf.append("LEFT OUTER JOIN( SELECT DEP_NM, DEP_CD FROM TB_BAS_DEPART WHERE ORG_CD='OR026')T4 ON(T3.DEP_CD=T4.DEP_CD) \r\n");
 			strbuf.append("LEFT OUTER JOIN( SELECT PUR_NM, PUR_OCD, PUR_KOCES FROM TB_BAS_PURINFO)T5 ON (T1.ACQ_CD=T5.PUR_OCD OR T1.ACQ_CD=T5.PUR_KOCES) \r\n");
-			strbuf.append("WHERE SVCGB IN ('CC', 'CE') AND AUTHCD='0000' AND TID IN (select tid from tb_bas_tidmap where org_cd='OR0009') AND T1.DEPOREQDD>='20230224' and T1.DEPOREQDD<='20230224' and T1.ACQ_CD IN ('0016', '002', '02', '') \r\n");
-			strbuf.append("order by appdd desc, apptm desc \r\n");
+			strbuf.append("WHERE SVCGB IN ('CC', 'CE') AND AUTHCD='0000' AND TID IN (select tid from tb_bas_tidmap where ORG_CD='OR026') AND T1.DEPOREQDD>='20230223' and T1.DEPOREQDD<='20230223' and T1.ACQ_CD IN ('0016', '002', '02', '') \r\n");
+			strbuf.append("order by APPDD desc, apptm desc \r\n");
 			strbuf.append(") \r\n");
 			strbuf.append(") \r\n");
 			strbuf.append(" \r\n");
@@ -4064,8 +4064,8 @@ public class trans_ora_manager {
 			strbuf.append(") \r\n");
 			strbuf.append("GROUP BY TID \r\n");
 			strbuf.append(")T2 \r\n");
-			strbuf.append("LEFT OUTER JOIN( SELECT DEP_CD, TERM_NM, TERM_ID FROM TB_BAS_TIDMST WHERE ORG_CD='OR0009')T3 ON(T2.TID=T3.TERM_ID) \r\n");
-			strbuf.append("LEFT OUTER JOIN( SELECT DEP_NM, DEP_CD FROM TB_BAS_DEPART WHERE ORG_CD='OR0009')T4 ON(T3.DEP_CD=T4.DEP_CD) \r\n");
+			strbuf.append("LEFT OUTER JOIN( SELECT DEP_CD, TERM_NM, TERM_ID FROM TB_BAS_TIDMST WHERE ORG_CD='OR026')T3 ON(T2.TID=T3.TERM_ID) \r\n");
+			strbuf.append("LEFT OUTER JOIN( SELECT DEP_NM, DEP_CD FROM TB_BAS_DEPART WHERE ORG_CD='OR026')T4 ON(T3.DEP_CD=T4.DEP_CD) \r\n");
 
 			
 			//System.lineSeparator()
@@ -4466,7 +4466,7 @@ public class trans_ora_manager {
 		
 		try {
 			strbuf = new StringBuffer();
-			strbuf.append("SELECT DEP_CD,DEP_NM FROM TB_BAS_DEPART WHERE org_cd = ?");
+			strbuf.append("SELECT DEP_CD,DEP_NM FROM TB_BAS_DEPART WHERE ORG_CD = ?");
 			con = getOraConnect();
 			stmt = con.prepareStatement(strbuf.toString());
 			System.out.println(strbuf.toString());	//로그
@@ -4854,11 +4854,11 @@ public class trans_ora_manager {
 	
 	/**
 	 * 메인화면 일자별로 뽑아오는 쿼리
-	 * @param orgcd, appdd (ex : 202302)
+	 * @param orgcd, APPDD (ex : 202302)
 	 * @return SVCGB(신용,현금,현금IC) , APPDD(20230222), AMT(금액)
 	 * 2023-03-08 김태균
 	 */
-	public JSONObject get_main_amt(String orgcd, String appdd) {
+	public JSONObject get_main_amt(String orgcd, String APPDD) {
 		Connection con = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -4889,7 +4889,7 @@ public class trans_ora_manager {
 			strbuf.append("END CAMT\r\n ");
 			strbuf.append("FROM \r\n ");
 			strbuf.append("GLOB_MNG_ICVAN\r\n ");
-			strbuf.append("WHERE AUTHCD='0000' AND TID IN (select tid from tb_bas_tidmap  where org_cd=?)  AND SUBSTR(APPDD,0,6)=?\r\n ");
+			strbuf.append("WHERE AUTHCD='0000' AND TID IN (select tid from tb_bas_tidmap  where ORG_CD=?)  AND SUBSTR(APPDD,0,6)=?\r\n ");
 			strbuf.append("GROUP BY APPDD, APPGB,SVCGB\r\n ");
 			strbuf.append(")\r\n ");
 			strbuf.append("GROUP BY APPDD,SVCGB\r\n ");
@@ -4899,7 +4899,7 @@ public class trans_ora_manager {
 			stmt = con.prepareStatement(strbuf.toString());
 			System.out.println(strbuf.toString());	//로그
 			stmt.setString(1, orgcd); //orgcd
-			stmt.setString(2, appdd); //orgcd
+			stmt.setString(2, APPDD); //orgcd
 				
 			
 			rs = stmt.executeQuery();
