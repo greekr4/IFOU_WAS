@@ -4955,8 +4955,124 @@ public class trans_ora_manager {
 			rs = stmt.executeQuery();
 			
 			while(rs.next()) {
-	            jsonob.put(rs.getString("SVCGB")+rs.getString("APPDD"),rs.getString("SVCGB")+ " " + rs.getString("AMT"));
-				jsonary.add(jsonob);
+	            jsonob.put(rs.getString("SVCGB")+rs.getString("APPDD"),rs.getString("AMT").trim());
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			setOraClose(con,stmt,rs);
+		}
+		return jsonob;
+	}
+
+	/**
+	 * 메인화면 월별 합계금액, 건수 조회
+	 * @param orgcd, APPDD (ex : 202302) **6자리면 월별검색 8자리면 일별 검색
+	 * @return 
+	 * 2023-03-08 김태균
+	 */
+	public JSONObject get_main_month_amt(String orgcd, String where_qry) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		JSONArray jsonary = new JSONArray();
+		JSONObject jsonob = new JSONObject();
+		try {
+			strbuf = new StringBuffer();
+			strbuf.append("SELECT\r\n");
+			strbuf.append("TO_CHAR(NVL(SUM(CCA-CCC),0),'999,999,999,999,999') AS CC_AMT\r\n");
+			strbuf.append(",TO_CHAR(NVL(SUM(CBA-CBC),0),'999,999,999,999,999') AS CB_AMT\r\n");
+			strbuf.append(",TO_CHAR(NVL(SUM(ICA-ICC),0),'999,999,999,999,999') AS IC_AMT\r\n");
+			strbuf.append(",TO_CHAR(NVL(SUM(CCA+CBA+ICA-CCC-CBC-ICC),0),'999,999,999,999,999') AS SUM_AMT\r\n");
+			strbuf.append(",TO_CHAR(SUM(CCCNT),'999,999,999,999,999') AS CC_CNT\r\n");
+			strbuf.append(",TO_CHAR(SUM(CBCNT),'999,999,999,999,999') AS CB_CNT\r\n");
+			strbuf.append(",TO_CHAR(SUM(ICCNT),'999,999,999,999,999') AS IC_CNT\r\n");
+			strbuf.append(",TO_CHAR(NVL(SUM(CCCNT+CBCNT+ICCNT),0),'999,999,999,999,999') AS SUM_CNT\r\n");
+			strbuf.append("FROM\r\n");
+			strbuf.append("(\r\n");
+			strbuf.append("SELECT\r\n");
+			strbuf.append("SUM(CASE WHEN SVCGB = 'CC' AND APPGB = 'A' THEN AMOUNT ELSE 0 END) AS CCA\r\n");
+			strbuf.append(",SUM(CASE WHEN SVCGB = 'CC' AND APPGB = 'C' THEN AMOUNT ELSE 0 END) AS CCC\r\n");
+			strbuf.append(",SUM(CASE WHEN SVCGB = 'CB' AND APPGB = 'A' THEN AMOUNT ELSE 0 END) AS CBA\r\n");
+			strbuf.append(",SUM(CASE WHEN SVCGB = 'CB' AND APPGB = 'C' THEN AMOUNT ELSE 0 END) AS CBC\r\n");
+			strbuf.append(",SUM(CASE WHEN SVCGB = 'IC' AND APPGB = 'A' THEN AMOUNT ELSE 0 END) AS ICA\r\n");
+			strbuf.append(",SUM(CASE WHEN SVCGB = 'IC' AND APPGB = 'C' THEN AMOUNT ELSE 0 END) AS ICC\r\n");
+			strbuf.append(",COUNT(CASE WHEN SVCGB = 'CC' THEN 1 END) AS CCCNT\r\n");
+			strbuf.append(",COUNT(CASE WHEN SVCGB = 'CB' THEN 1 END) AS CBCNT\r\n");
+			strbuf.append(",COUNT(CASE WHEN SVCGB = 'IC' THEN 1 END) AS ICCNT\r\n");
+			strbuf.append("FROM GLOB_MNG_ICVAN\r\n");
+			strbuf.append("WHERE TID IN (SELECT TID FROM TB_BAS_TIDMAP WHERE ORG_CD = ?)\r\n");
+			strbuf.append(where_qry);
+			strbuf.append(")\r\n");
+
+
+			con = getOraConnect();
+			stmt = con.prepareStatement(strbuf.toString());
+			System.out.println(strbuf.toString());	//로그
+			stmt.setString(1, orgcd); //orgcd
+			
+			rs = stmt.executeQuery();
+			while(rs.next()) {
+	            jsonob.put("CC_AMT",rs.getString("CC_AMT").trim());
+	            jsonob.put("CB_AMT",rs.getString("CB_AMT").trim());
+	            jsonob.put("IC_AMT",rs.getString("IC_AMT").trim());
+	            jsonob.put("SUM_AMT",rs.getString("SUM_AMT").trim());
+	            jsonob.put("CC_CNT",rs.getString("CC_CNT").trim());
+	            jsonob.put("CB_CNT",rs.getString("CB_CNT").trim());
+	            jsonob.put("IC_CNT",rs.getString("IC_CNT").trim());
+	            jsonob.put("SUM_CNT",rs.getString("SUM_CNT").trim());
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			setOraClose(con,stmt,rs);
+		}
+		return jsonob;
+	}
+	
+
+	/**
+	 * 메인화면 월별 합계금액, 건수 조회
+	 * @param orgcd, APPDD (ex : 20230222)
+	 * @return 
+	 * 2023-03-08 김태균
+	 */
+	public JSONObject get_main_daliy_depdata(String orgcd, String expdd) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		JSONArray jsonary = new JSONArray();
+		JSONObject jsonob = new JSONObject();
+		try {
+			strbuf = new StringBuffer();
+			strbuf.append("SELECT \r\n");
+			strbuf.append("TO_CHAR(NVL(SUM(SALE_AMT),0),'999,999,999,999,999') AS SALE_AMT \r\n");
+			strbuf.append(",TO_CHAR(NVL(SUM(FEE),0),'999,999,999,999,999') AS FEE\r\n");
+			strbuf.append(",TO_CHAR(NVL(SUM(SALE_AMT-FEE),0),'999,999,999,999,999') AS SUM\r\n");
+			strbuf.append("FROM \r\n");
+			strbuf.append("TB_MNG_DEPDATA\r\n");
+			strbuf.append("WHERE\r\n");
+			strbuf.append("TID IN (SELECT TID FROM TB_BAS_TIDMAP WHERE ORG_CD = ?)\r\n");
+			strbuf.append("AND EXP_DD = ?\r\n");
+
+
+
+
+			con = getOraConnect();
+			stmt = con.prepareStatement(strbuf.toString());
+			System.out.println(strbuf.toString());	//로그
+			stmt.setString(1, orgcd); //orgcd
+			stmt.setString(2, expdd); //APPDD
+			
+			rs = stmt.executeQuery();
+			while(rs.next()) {
+	            jsonob.put("SALE_AMT",rs.getString("SALE_AMT").trim());
+	            jsonob.put("FEE",rs.getString("FEE").trim());
+	            jsonob.put("SUM",rs.getString("SUM").trim());
 			}
 
 		} catch (Exception e) {
