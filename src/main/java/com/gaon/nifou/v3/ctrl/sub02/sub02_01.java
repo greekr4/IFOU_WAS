@@ -20,7 +20,7 @@ import com.gaon.nifou.v3.util_manager;
 public class sub02_01 extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		util_manager um = new util_manager();
+		
 		
 		request.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html; charset=UTF-8");
@@ -34,11 +34,9 @@ public class sub02_01 extends HttpServlet {
 		String DEBUG = request.getParameter("DEBUG");
 
 		
-
-		
+		util_manager um = new util_manager();
 		HashMap<String, String> whereqry = um.get_where_qry(request);
 		
-		System.out.println(whereqry);
 		
 		
 		

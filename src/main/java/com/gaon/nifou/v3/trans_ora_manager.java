@@ -398,11 +398,14 @@ public class trans_ora_manager {
 		
 		JSONArray jsonary = new JSONArray();
 		
+		
+		///WHERE QRY///
+		
 		String orgcd = whereqry.get("orgcd");
 		String depcd_where = "";
 		String set_where = "";
 		if(!Objects.equals(whereqry.get("depcd"),null )) {
-			depcd_where += " AND DEPCD = '" + whereqry.get("depcd") + "'";
+			depcd_where += " AND DEP_CD = '" + whereqry.get("depcd") + "'";
 		}
 		
 		if(!Objects.equals(whereqry.get("sappdd"),null )) {
@@ -446,7 +449,7 @@ public class trans_ora_manager {
 		}
 		
 		if(!Objects.equals(whereqry.get("cardtp"),null )) {
-			set_where += " AND CHECK_CARD = '" + whereqry.get("cardtp") + "'";
+			set_where += " AND NVL(CHECK_CARD,'N') = '" + whereqry.get("cardtp") + "'";
 		}
 		
 		if(!Objects.equals(whereqry.get("cardno"),null )) {
@@ -476,7 +479,7 @@ public class trans_ora_manager {
 //			set_where += " AND APP_GB = '" + whereqry.get("depstat") + "'";
 //		}
 		
-		
+		///WHERE QRY END///		
 		
 		
 		
@@ -644,12 +647,94 @@ public class trans_ora_manager {
 	 * @return json형식으로 dhx형식에 맞게
 	 * 2023-02-01 김태균
 	 */
-	public JSONArray get_sub0201T(JSONArray jary,String DEBUG) {
+	public JSONArray get_sub0201T(JSONArray jary,String DEBUG,HashMap<String, String> whereqry) {
 		Connection con = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		
 		JSONArray jsonary = new JSONArray();
+		
+		///WHERE QRY///
+		
+		String orgcd = whereqry.get("orgcd");
+		String depcd_where = "";
+		String set_where = "";
+		if(!Objects.equals(whereqry.get("depcd"),null )) {
+			depcd_where += " AND DEP_CD = '" + whereqry.get("depcd") + "'";
+		}
+		
+		if(!Objects.equals(whereqry.get("sappdd"),null )) {
+			set_where += " AND APPDD >= '" + whereqry.get("sappdd") + "'";
+		}
+		
+		if(!Objects.equals(whereqry.get("eappdd"),null )) {
+			set_where += " AND APPDD <= '" + whereqry.get("eappdd") + "'";
+		}
+		
+		if(!Objects.equals(whereqry.get("appno"),null )) {
+			set_where += " AND APPNO = '" + whereqry.get("appno") + "'";
+		}
+		
+		if(!Objects.equals(whereqry.get("pid"),null )) {
+			set_where += " AND ADD_CID = '" + whereqry.get("pid") + "'";
+		}
+		
+		if(!Objects.equals(whereqry.get("cid"),null )) {
+			set_where += " AND ADD_CASHER = '" + whereqry.get("cid") + "'";
+		}
+		
+		if(!Objects.equals(whereqry.get("pgb"),null )) {
+			set_where += " AND ADD_GB = '" + whereqry.get("pgb") + "'";
+		}
+		
+		if(!Objects.equals(whereqry.get("rhk"),null )) {
+			set_where += " AND ADD_CD = '" + whereqry.get("rhk") + "'";
+		}
+		
+		if(!Objects.equals(whereqry.get("samt"),null )) {
+			set_where += " AND AMOUNT >= '" + whereqry.get("samt") + "'";
+		}
+		
+		if(!Objects.equals(whereqry.get("eamt"),null )) {
+			set_where += " AND AMOUNT <= '" + whereqry.get("eamt") + "'";
+		}
+		
+		if(!Objects.equals(whereqry.get("acqcd"),null )) {
+			set_where += " AND ACQ_CD = '" + whereqry.get("acqcd") + "'";
+		}
+		
+		if(!Objects.equals(whereqry.get("cardtp"),null )) {
+			set_where += " AND NVL(CHECK_CARD,'N') = '" + whereqry.get("cardtp") + "'";
+		}
+		
+		if(!Objects.equals(whereqry.get("cardno"),null )) {
+			set_where += " AND CARDNO = '" + whereqry.get("cardno") + "'";
+		}
+		
+		if(!Objects.equals(whereqry.get("ovseacard"),null )) {
+			set_where += " AND OVSEA_CARD = '" + whereqry.get("ovseacard") + "'";
+		}
+		
+		if(!Objects.equals(whereqry.get("tid"),null )) {
+			set_where += " AND TID = '" + whereqry.get("tid") + "'";
+		}
+		
+		if(!Objects.equals(whereqry.get("authstat"),null )) {
+			set_where += " AND APP_GB = '" + whereqry.get("authstat") + "'";
+		}
+		
+//		미작업
+//		if(!Objects.equals(whereqry.get("transtat"),null )) {
+//			set_where += " AND APP_GB = '" + whereqry.get("transtat") + "'";
+//		}
+		
+		
+//		미작업
+//		if(!Objects.equals(whereqry.get("depstat"),null )) {
+//			set_where += " AND APP_GB = '" + whereqry.get("depstat") + "'";
+//		}
+		
+		///WHERE QRY END///		
 		
 		try {
 			strbuf = new StringBuffer();
@@ -730,38 +815,38 @@ public class trans_ora_manager {
 					+ "					RNUM, SEQNO, DEP_NM, TERM_NM, TID, MID, PUR_NM, APPGB,\r\n"
 					+ "					CASE \r\n"
 					+ "					--정상거래\r\n"
-					+ "					WHEN APPGB='A' THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR026' AND SCD_CD='SCD0011')\r\n"
+					+ "					WHEN APPGB='A' THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='"+orgcd+"' AND SCD_CD='SCD0011')\r\n"
 					+ "					--취소거래\r\n"
-					+ "					WHEN APPGB='C' THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR026' AND SCD_CD='SCD0012')\r\n"
+					+ "					WHEN APPGB='C' THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='"+orgcd+"' AND SCD_CD='SCD0012')\r\n"
 					+ "				END APPGB_TXT,\r\n"
 					+ "				APPDD, APPTM, OAPPDD, APPNO, ACQ_CD,\r\n"
 					+ "				CASE \r\n"
 					+ "					--승인거래\r\n"
-					+ "					WHEN APPGB='A' THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR026' AND SCD_CD='SCD0015')\r\n"
+					+ "					WHEN APPGB='A' THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='"+orgcd+"' AND SCD_CD='SCD0015')\r\n"
 					+ "					--취소거래\r\n"
-					+ "					WHEN APPGB='C' THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR026' AND SCD_CD='SCD0016')\r\n"
+					+ "					WHEN APPGB='C' THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='"+orgcd+"' AND SCD_CD='SCD0016')\r\n"
 					+ "				END TR_AUTHSTAT,\r\n"
 					+ "				CARDNO,	AMOUNT,	HALBU,\r\n"
 					+ "				CASE \r\n"
 					+ "					--체크카드\r\n"
-					+ "					WHEN CHECK_CARD='Y' THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR026' AND SCD_CD='SCD0019') \r\n"
+					+ "					WHEN CHECK_CARD='Y' THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='"+orgcd+"' AND SCD_CD='SCD0019') \r\n"
 					+ "					--신용카드\r\n"
-					+ "					ELSE (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR026' AND SCD_CD='SCD0018') \r\n"
+					+ "					ELSE (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='"+orgcd+"' AND SCD_CD='SCD0018') \r\n"
 					+ "				END CARDTP_TXT,\r\n"
 					+ "				CASE\r\n"
 					+ "					--전자서명\r\n"
-					+ "					WHEN SIGNCHK='1' THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR026' AND SCD_CD='SCD0021') \r\n"
+					+ "					WHEN SIGNCHK='1' THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='"+orgcd+"' AND SCD_CD='SCD0021') \r\n"
 					+ "					--무서명\r\n"
-					+ "					ELSE (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR026' AND SCD_CD='SCD0022') \r\n"
+					+ "					ELSE (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='"+orgcd+"' AND SCD_CD='SCD0022') \r\n"
 					+ "				END SIGNCHK_TXT,\r\n"
 					+ "				REQ_DD,	AUTHCD,	REG_DD,	RTN_CD,\r\n"
 					+ "				CASE\r\n"
 					+ "					--결과없음\r\n"
-					+ "					WHEN RTN_CD IS NULL THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR026' AND SCD_CD='SCD0024') \r\n"
+					+ "					WHEN RTN_CD IS NULL THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='"+orgcd+"' AND SCD_CD='SCD0024') \r\n"
 					+ "					--정상매입\r\n"
-					+ "					WHEN RTN_CD IN('60', '67') THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR026' AND SCD_CD='SCD0025')\r\n"
+					+ "					WHEN RTN_CD IN('60', '67') THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='"+orgcd+"' AND SCD_CD='SCD0025')\r\n"
 					+ "					--매입반송\r\n"
-					+ "					WHEN RTN_CD IN('61', '64') THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR026' AND SCD_CD='SCD0026') \r\n"
+					+ "					WHEN RTN_CD IN('61', '64') THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='"+orgcd+"' AND SCD_CD='SCD0026') \r\n"
 					+ "				END RTN_TXT,\r\n"
 					+ "					EXP_DD,	EXT_FIELD,	TRANIDX, AUTHMSG\r\n"
 					+ "				FROM(\r\n"
@@ -780,7 +865,7 @@ public class trans_ora_manager {
 					+ "					LEFT OUTER JOIN( SELECT DEP_CD, TERM_NM, TERM_ID FROM TB_BAS_TIDMST WHERE ORG_CD='OR026')T3 ON(T1.TID=T3.TERM_ID)\r\n"
 					+ "					LEFT OUTER JOIN( SELECT DEP_NM, DEP_CD FROM TB_BAS_DEPART WHERE ORG_CD='OR026')T4 ON(T3.DEP_CD=T4.DEP_CD)\r\n"
 					+ "					LEFT OUTER JOIN( SELECT PUR_NM, PUR_OCD, PUR_KOCES FROM TB_BAS_PURINFO)T5 ON (T1.ACQ_CD=T5.PUR_OCD OR T1.ACQ_CD=T5.PUR_KOCES)\r\n"
-					+ "					WHERE SVCGB IN ('CC', 'CE')  AND AUTHCD='0000' AND TID IN (select tid from tb_bas_tidmap  where ORG_CD='OR026' AND dep_cd='DP30101')   AND T1.APPDD>='20230222' and T1.APPDD<='20230222' AND ROWNUM <= (200*1)\r\n"
+					+ "					WHERE SVCGB IN ('CC', 'CE')  AND AUTHCD='0000' AND TID IN (select tid from tb_bas_tidmap  where ORG_CD='"+orgcd+"' "+depcd_where+")  "+ set_where +" AND ROWNUM <= (200*1)\r\n"
 					+ "					order by APPDD desc, apptm desc\r\n"
 					+ "				)  WHERE RNUM >= (200*(1-1)+1) \r\n"
 					+ "			)\r\n"
@@ -790,8 +875,8 @@ public class trans_ora_manager {
 					+ "    )\r\n"
 					+ "    GROUP BY TID        \r\n"
 					+ ")T2\r\n"
-					+ "LEFT OUTER JOIN( SELECT DEP_CD, TERM_NM, TERM_ID FROM TB_BAS_TIDMST WHERE ORG_CD='OR026')T3 ON(T2.TID=T3.TERM_ID)\r\n"
-					+ "LEFT OUTER JOIN( SELECT DEP_NM, DEP_CD FROM TB_BAS_DEPART WHERE ORG_CD='OR026')T4 ON(T3.DEP_CD=T4.DEP_CD)");
+					+ "LEFT OUTER JOIN( SELECT DEP_CD, TERM_NM, TERM_ID FROM TB_BAS_TIDMST WHERE ORG_CD='"+orgcd+"')T3 ON(T2.TID=T3.TERM_ID)\r\n"
+					+ "LEFT OUTER JOIN( SELECT DEP_NM, DEP_CD FROM TB_BAS_DEPART WHERE ORG_CD='"+orgcd+"')T4 ON(T3.DEP_CD=T4.DEP_CD)");
 			//System.lineSeparator()
 		
 			/**
