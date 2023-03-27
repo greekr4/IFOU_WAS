@@ -2,6 +2,7 @@ package com.gaon.nifou.v3.ctrl.sub02;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -13,11 +14,14 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import com.gaon.nifou.v3.trans_ora_manager;
+import com.gaon.nifou.v3.util_manager;
 
 @WebServlet("/sub02/01.gaon")
 public class sub02_01 extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		util_manager um = new util_manager();
+		
 		request.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html; charset=UTF-8");
 		response.setHeader("Access-Control-Allow-Origin", "*");
@@ -29,7 +33,16 @@ public class sub02_01 extends HttpServlet {
 		String pages = request.getParameter("pages");
 		String DEBUG = request.getParameter("DEBUG");
 
-		out.print(oram.get_sub0201(oram.get_tb_sys_domain(orgcd, pages),DEBUG));
+		
+
+		
+		HashMap<String, String> whereqry = um.get_where_qry(request);
+		
+		System.out.println(whereqry);
+		
+		
+		
+		out.print(oram.get_sub0201(oram.get_tb_sys_domain(orgcd, pages),DEBUG,whereqry));
 
 	}
 }

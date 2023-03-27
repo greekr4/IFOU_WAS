@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.Objects;
 import java.util.Properties;
 
@@ -390,12 +391,96 @@ public class trans_ora_manager {
 	 * @return json형식으로 dhx형식에 맞게
 	 * 2023-02-01 김태균
 	 */
-	public JSONArray get_sub0201(JSONArray jary,String DEBUG) {
+	public JSONArray get_sub0201(JSONArray jary,String DEBUG,HashMap<String, String> whereqry) {
 		Connection con = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		
 		JSONArray jsonary = new JSONArray();
+		
+		String orgcd = whereqry.get("orgcd");
+		String depcd_where = "";
+		String set_where = "";
+		if(!Objects.equals(whereqry.get("depcd"),null )) {
+			depcd_where += " AND DEPCD = '" + whereqry.get("depcd") + "'";
+		}
+		
+		if(!Objects.equals(whereqry.get("sappdd"),null )) {
+			set_where += " AND APPDD >= '" + whereqry.get("sappdd") + "'";
+		}
+		
+		if(!Objects.equals(whereqry.get("eappdd"),null )) {
+			set_where += " AND APPDD <= '" + whereqry.get("eappdd") + "'";
+		}
+		
+		if(!Objects.equals(whereqry.get("appno"),null )) {
+			set_where += " AND APPNO = '" + whereqry.get("appno") + "'";
+		}
+		
+		if(!Objects.equals(whereqry.get("pid"),null )) {
+			set_where += " AND ADD_CID = '" + whereqry.get("pid") + "'";
+		}
+		
+		if(!Objects.equals(whereqry.get("cid"),null )) {
+			set_where += " AND ADD_CASHER = '" + whereqry.get("cid") + "'";
+		}
+		
+		if(!Objects.equals(whereqry.get("pgb"),null )) {
+			set_where += " AND ADD_GB = '" + whereqry.get("pgb") + "'";
+		}
+		
+		if(!Objects.equals(whereqry.get("rhk"),null )) {
+			set_where += " AND ADD_CD = '" + whereqry.get("rhk") + "'";
+		}
+		
+		if(!Objects.equals(whereqry.get("samt"),null )) {
+			set_where += " AND AMOUNT >= '" + whereqry.get("samt") + "'";
+		}
+		
+		if(!Objects.equals(whereqry.get("eamt"),null )) {
+			set_where += " AND AMOUNT <= '" + whereqry.get("eamt") + "'";
+		}
+		
+		if(!Objects.equals(whereqry.get("acqcd"),null )) {
+			set_where += " AND ACQ_CD = '" + whereqry.get("acqcd") + "'";
+		}
+		
+		if(!Objects.equals(whereqry.get("cardtp"),null )) {
+			set_where += " AND CHECK_CARD = '" + whereqry.get("cardtp") + "'";
+		}
+		
+		if(!Objects.equals(whereqry.get("cardno"),null )) {
+			set_where += " AND CARDNO = '" + whereqry.get("cardno") + "'";
+		}
+		
+		if(!Objects.equals(whereqry.get("ovseacard"),null )) {
+			set_where += " AND OVSEA_CARD = '" + whereqry.get("ovseacard") + "'";
+		}
+		
+		if(!Objects.equals(whereqry.get("tid"),null )) {
+			set_where += " AND TID = '" + whereqry.get("tid") + "'";
+		}
+		
+		if(!Objects.equals(whereqry.get("authstat"),null )) {
+			set_where += " AND APP_GB = '" + whereqry.get("authstat") + "'";
+		}
+		
+//		미작업
+//		if(!Objects.equals(whereqry.get("transtat"),null )) {
+//			set_where += " AND APP_GB = '" + whereqry.get("transtat") + "'";
+//		}
+		
+		
+//		미작업
+//		if(!Objects.equals(whereqry.get("depstat"),null )) {
+//			set_where += " AND APP_GB = '" + whereqry.get("depstat") + "'";
+//		}
+		
+		
+		
+		
+		
+		
 		
 		try {
 			strbuf = new StringBuffer();
@@ -441,29 +526,29 @@ public class trans_ora_manager {
 			strbuf.append("		APPDD, APPTM,  OAPPDD, APPNO, OAPP_AMT,APPGB,\r\n");
 			strbuf.append("		CASE \r\n");
 			strbuf.append("			--승인거래\r\n");
-			strbuf.append("			WHEN APPGB='A' THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR026' AND SCD_CD='SCD0015')\r\n");
+			strbuf.append("			WHEN APPGB='A' THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='"+orgcd+"' AND SCD_CD='SCD0015')\r\n");
 			strbuf.append("			--취소거래\r\n");
-			strbuf.append("			WHEN APPGB='C' THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR026' AND SCD_CD='SCD0016')\r\n");
+			strbuf.append("			WHEN APPGB='C' THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='"+orgcd+"' AND SCD_CD='SCD0016')\r\n");
 			strbuf.append("		END APPGB_TXT,\r\n");
 			strbuf.append("		CARDNO,	AMOUNT,	HALBU,\r\n");
 			strbuf.append("		CASE \r\n");
 			strbuf.append("			--체크카드\r\n");
-			strbuf.append("			WHEN CHECK_CARD='Y' THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR026' AND SCD_CD='SCD0019') \r\n");
+			strbuf.append("			WHEN CHECK_CARD='Y' THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='"+orgcd+"' AND SCD_CD='SCD0019') \r\n");
 			strbuf.append("			--신용카드\r\n");
-			strbuf.append("			ELSE (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR026' AND SCD_CD='SCD0018') END CARDTP_TXT,\r\n");
+			strbuf.append("			ELSE (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='"+orgcd+"' AND SCD_CD='SCD0018') END CARDTP_TXT,\r\n");
 			strbuf.append("		CASE\r\n");
 			strbuf.append("			--전자서명\r\n");
-			strbuf.append("			WHEN SIGNCHK='1' THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR026' AND SCD_CD='SCD0021') \r\n");
+			strbuf.append("			WHEN SIGNCHK='1' THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='"+orgcd+"' AND SCD_CD='SCD0021') \r\n");
 			strbuf.append("			--무서명\r\n");
-			strbuf.append("			ELSE (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR026' AND SCD_CD='SCD0022') END SIGNCHK_TXT,\r\n");
+			strbuf.append("			ELSE (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='"+orgcd+"' AND SCD_CD='SCD0022') END SIGNCHK_TXT,\r\n");
 			strbuf.append("		REQ_DD,	AUTHCD,	REG_DD,	RTN_CD,\r\n");
 			strbuf.append("		CASE\r\n");
 			strbuf.append("			--결과없음\r\n");
-			strbuf.append("			WHEN RTN_CD IS NULL THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR026' AND SCD_CD='SCD0024') \r\n");
+			strbuf.append("			WHEN RTN_CD IS NULL THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='"+orgcd+"' AND SCD_CD='SCD0024') \r\n");
 			strbuf.append("			--정상매입\r\n");
-			strbuf.append("			WHEN RTN_CD IN('60', '67') THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR026' AND SCD_CD='SCD0025')\r\n");
+			strbuf.append("			WHEN RTN_CD IN('60', '67') THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='"+orgcd+"' AND SCD_CD='SCD0025')\r\n");
 			strbuf.append("			--매입반송\r\n");
-			strbuf.append("			WHEN RTN_CD IN('61', '64') THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR026' AND SCD_CD='SCD0026') \r\n");
+			strbuf.append("			WHEN RTN_CD IN('61', '64') THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='"+orgcd+"' AND SCD_CD='SCD0026') \r\n");
 			strbuf.append("		END RTN_TXT,\r\n");
 			strbuf.append("		EXP_DD,	EXT_FIELD,	TRANIDX, AUTHMSG\r\n");
 			strbuf.append("		,CASE WHEN TLINEGB IS NOT NULL THEN (SELECT CODE_VAL FROM TB_BAS_CODE WHERE TRIM(CODE_NO)=TRIM(TLINEGB)) END TLINEGBTXT\r\n");
@@ -482,13 +567,13 @@ public class trans_ora_manager {
 			strbuf.append("			SELECT EXP_DD, REQ_DD, REG_DD, APP_DD, TRANIDX, RSC_CD, RTN_CD FROM TB_MNG_DEPDATA\r\n");
 			strbuf.append("		)T2 ON(T1.APPDD=T2.APP_DD AND T1.TRANIDX=T2.TRANIDX)\r\n");
 			strbuf.append("		LEFT OUTER JOIN( \r\n");
-			strbuf.append("			SELECT DEP_CD, TERM_NM, TERM_ID FROM TB_BAS_TIDMST WHERE ORG_CD='OR026'\r\n");
+			strbuf.append("			SELECT DEP_CD, TERM_NM, TERM_ID FROM TB_BAS_TIDMST WHERE ORG_CD='"+orgcd+"'\r\n");
 			strbuf.append("		)T3 ON(T1.TID=T3.TERM_ID)\r\n");
 			strbuf.append("		LEFT OUTER JOIN( \r\n");
-			strbuf.append("			SELECT DEP_NM, DEP_CD FROM TB_BAS_DEPART WHERE ORG_CD='OR026'\r\n");
+			strbuf.append("			SELECT DEP_NM, DEP_CD FROM TB_BAS_DEPART WHERE ORG_CD='"+orgcd+"'\r\n");
 			strbuf.append("		)T4 ON(T3.DEP_CD=T4.DEP_CD)\r\n");
 			strbuf.append("		LEFT OUTER JOIN( SELECT PUR_NM, PUR_OCD, PUR_CD FROM TB_BAS_PURINFO)T5 ON (T1.ACQ_CD=T5.PUR_OCD OR T1.ACQ_CD=T5.PUR_CD)\r\n");
-			strbuf.append("		WHERE SVCGB IN ('CC', 'CE')  AND AUTHCD='0000' AND TID IN (select tid from tb_bas_tidmap  where ORG_CD='OR026' AND dep_cd='DP30101')   AND T1.APPDD>='20230222' and T1.APPDD<='20230222'\r\n");
+			strbuf.append("		WHERE SVCGB IN ('CC', 'CE')  AND AUTHCD='0000' AND TID IN (select tid from tb_bas_tidmap  where ORG_CD='"+orgcd+"' "+depcd_where+") " + set_where + "\r\n");
 			strbuf.append("		order by APPDD desc, apptm desc\r\n");
 			strbuf.append("	)\r\n");
 			strbuf.append(")\r\n");
@@ -4918,7 +5003,7 @@ public class trans_ora_manager {
 		try {
 			strbuf = new StringBuffer();
 			strbuf.append("SELECT \r\n ");
-			strbuf.append("SVCGB,APPDD, TO_CHAR((AAMT-CAMT),'999,999,999,999,999,999') AMT\r\n ");
+			strbuf.append("SVCGB,APPDD, TRIM(TO_CHAR((AAMT-CAMT),'999,999,999,999,999,999')) AMT\r\n ");
 			strbuf.append("FROM(\r\n ");
 			strbuf.append("SELECT\r\n ");
 			strbuf.append("CASE\r\n ");
