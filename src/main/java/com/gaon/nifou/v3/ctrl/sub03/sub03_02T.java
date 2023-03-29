@@ -2,6 +2,7 @@ package com.gaon.nifou.v3.ctrl.sub03;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -13,6 +14,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import com.gaon.nifou.v3.trans_ora_manager;
+import com.gaon.nifou.v3.util_manager;
 
 @WebServlet("/sub03/02T.gaon")
 public class sub03_02T extends HttpServlet {
@@ -28,7 +30,11 @@ public class sub03_02T extends HttpServlet {
 		String orgcd = request.getParameter("orgcd");
 		String pages = request.getParameter("pages");
 		String DEBUG = request.getParameter("DEBUG");
-		out.print(oram.get_sub0302T(oram.get_tb_sys_domain(orgcd, pages),DEBUG));
+		
+		util_manager um = new util_manager();
+		HashMap<String, String> whereqry = um.get_where_qry(request);
+		
+		out.print(oram.get_sub0302T(oram.get_tb_sys_domain(orgcd, pages),DEBUG,whereqry));
 
 	}
 
