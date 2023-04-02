@@ -20,7 +20,7 @@ import com.gaon.nifou.v3.trans_ora_manager;
 public class columns_tot extends HttpServlet {
 
 	
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
 		response.setHeader("Access-Control-Allow-Origin", "*");
@@ -28,12 +28,9 @@ public class columns_tot extends HttpServlet {
         JSONArray jsonary = new JSONArray();
 		PrintWriter out = response.getWriter();
 		
+		String orgcd = request.getParameter("orgcd");
+		String pages = request.getParameter("pages");		
 		
-		
-		out.print(oram.get_tb_sys_domain("OR026", "0201T"));
-		
-		
-		
+		out.print(oram.get_tb_sys_domain(orgcd, pages));	
 	}
-
 }

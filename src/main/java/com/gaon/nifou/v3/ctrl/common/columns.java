@@ -29,10 +29,9 @@ public class columns extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		
 		String orgcd = request.getParameter("orgcd");
-		String pages = request.getParameter("pages");
+		String pages = request.getParameter("pages");		
 		
-		
-		
+		out.print(oram.get_tb_sys_domain(orgcd, pages));
 		out.print(oram.get_tb_sys_domain(orgcd, pages));
 		
 		
