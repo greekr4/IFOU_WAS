@@ -31,6 +31,7 @@ public class trans_ora_manager {
 	private String db_id[] = null;
 	private String db_pwd[] = null;
 	private String debugmode = null;
+	private util_manager um = new util_manager();
 	
 	//DB¿¬°á Á¤º¸
 	public Connection getOraConnect(){
@@ -5276,6 +5277,182 @@ public class trans_ora_manager {
 		}
 		return jsonob;
 	}
+	
+	
+	/**
+	 * °¡¸ÍÁ¡°ü¸®
+	 * @param orgcd
+	 * @return ...
+	 * 2023-04-03 ±èÅÂ±Õ
+	 */
+	public JSONObject get_sub0601(String orgcd) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		JSONObject jsonob = new JSONObject();
+		try {
+			strbuf = new StringBuffer();
+			strbuf.append("SELECT ORG_NM,ORG_NO,ORG_CORP_NO,ORG_CEO_NM,ORG_ADDR,ORG_TEL1,ORG_MEMO FROM TB_BAS_ORG WHERE ORG_CD = '"+orgcd+"'");
+
+			con = getOraConnect();
+			stmt = con.prepareStatement(strbuf.toString());
+			System.out.println(strbuf.toString());	//·Î±×
+			
+			rs = stmt.executeQuery();
+			while(rs.next()) {
+	            jsonob.put("ORG_NM",um.getString(rs.getString("ORG_NM")));
+	            jsonob.put("ORG_NO",um.getString(rs.getString("ORG_NO")));
+	            jsonob.put("ORG_CORP_NO",um.getString(rs.getString("ORG_CORP_NO")));
+	            jsonob.put("ORG_CEO_NM",um.getString(rs.getString("ORG_CEO_NM")));
+	            jsonob.put("ORG_ADDR",um.getString(rs.getString("ORG_ADDR")));
+	            jsonob.put("ORG_TEL1",um.getString(rs.getString("ORG_TEL1")));
+	            jsonob.put("ORG_MEMO",um.getString(rs.getString("ORG_MEMO")));
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			setOraClose(con,stmt,rs);
+		}
+		return jsonob;
+		
+		
+	}
+	
+	/**
+	 * °¡¸ÍÁ¡°ü¸®_À¯Àú
+	 * @param orgcd
+	 * @return ...
+	 * 2023-04-03 ±èÅÂ±Õ
+	 */
+	public JSONArray get_sub0601_user(String orgcd) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		JSONArray jsonary = new JSONArray();
+		JSONObject jsonob = new JSONObject();
+		try {
+			strbuf = new StringBuffer();
+			strbuf.append("SELECT \r\n");
+			strbuf.append("MEM_CD\r\n");
+			strbuf.append(", ORG_CD\r\n");
+			strbuf.append(", T1.DEP_CD\r\n");
+			strbuf.append(", DEP_NM\r\n");
+			strbuf.append(", AUTH_SEQ\r\n");
+			strbuf.append(", USER_ID\r\n");
+			strbuf.append(", USER_PW\r\n");
+			strbuf.append(", USER_NM\r\n");
+			strbuf.append(", USER_TEL1\r\n");
+			strbuf.append(", USER_TEL2\r\n");
+			strbuf.append(", USER_MEMO\r\n");
+			strbuf.append(", USER_EMAIL\r\n");
+			strbuf.append(", USER_FAX\r\n");
+			strbuf.append(", USER_LV\r\n");
+			strbuf.append(", TO_CHAR(INS_DT,'YYYY-MM-DD HH24:MI:SS') INS_DT\r\n");
+			strbuf.append("FROM\r\n");
+			strbuf.append("TB_BAS_USER T1\r\n");
+			strbuf.append("LEFT OUTER JOIN(\r\n");
+			strbuf.append("SELECT DEP_NM, DEP_CD FROM TB_BAS_DEPART\r\n");
+			strbuf.append(")T2 ON(T1.DEP_CD=T2.DEP_CD)\r\n");
+			strbuf.append("WHERE \r\n");
+			strbuf.append("ORG_CD='"+orgcd+"'\r\n");
+			strbuf.append("ORDER BY USER_ID ASC, INS_DT ASC\r\n");
+
+
+			con = getOraConnect();
+			stmt = con.prepareStatement(strbuf.toString());
+			System.out.println(strbuf.toString());	//·Î±×
+			
+			rs = stmt.executeQuery();
+			while(rs.next()) {
+	            jsonob.put("MEM_CD",um.getString(rs.getString("MEM_CD")));
+	            jsonob.put("ORG_CD",um.getString(rs.getString("ORG_CD")));
+	            jsonob.put("DEP_CD",um.getString(rs.getString("DEP_CD")));
+	            jsonob.put("DEP_NM",um.getString(rs.getString("DEP_NM")));
+	            jsonob.put("AUTH_SEQ",um.getString(rs.getString("AUTH_SEQ")));
+	            jsonob.put("USER_ID",um.getString(rs.getString("USER_ID")));
+	            jsonob.put("USER_NM",um.getString(rs.getString("USER_NM")));
+	            jsonob.put("USER_TEL1",um.getString(rs.getString("USER_TEL1")));
+	            jsonob.put("USER_TEL2",um.getString(rs.getString("USER_TEL2")));
+	            jsonob.put("USER_EMAIL",um.getString(rs.getString("USER_EMAIL")));
+	            jsonob.put("INS_DT",um.getString(rs.getString("INS_DT")));
+	            jsonob.put("USER_LV",um.getString(rs.getString("USER_LV")));
+	            
+	            jsonary.add(jsonob);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			setOraClose(con,stmt,rs);
+		}
+		return jsonary;
+		
+		
+	}
+	
+	/**
+	 * °¡¸ÍÁ¡°ü¸®_À¯Àú
+	 * @param orgcd
+	 * @return ...
+	 * 2023-04-03 ±èÅÂ±Õ
+	 */
+	public JSONArray get_sub0603(String orgcd) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		JSONArray jsonary = new JSONArray();
+		JSONObject jsonob = new JSONObject();
+		try {
+			strbuf = new StringBuffer();
+			strbuf.append("SELECT \r\n");
+			strbuf.append("ORG_CD\r\n");
+			strbuf.append(", DEP_CD\r\n");
+			strbuf.append(", DEP_NM\r\n");
+			strbuf.append(", DEP_ADM_USER\r\n");
+			strbuf.append(", DEP_ADDR\r\n");
+			strbuf.append(", DEP_TEL1\r\n");
+			strbuf.append(", DEP_EMAIL\r\n");
+			strbuf.append(", DEP_SORT\r\n");
+			strbuf.append(", DEP_TYPE\r\n");
+			strbuf.append(", TO_CHAR(DEP_INDT,'YYYY-MM-DD HH24:MI:SS') DEP_INDT\r\n");
+			strbuf.append("FROM\r\n");
+			strbuf.append("TB_BAS_DEPART\r\n");
+			strbuf.append("WHERE \r\n");
+			strbuf.append("ORG_CD='"+orgcd+"'\r\n");
+			strbuf.append("ORDER BY DEP_INDT ASC\r\n");
+
+
+
+			con = getOraConnect();
+			stmt = con.prepareStatement(strbuf.toString());
+			System.out.println(strbuf.toString());	//·Î±×
+			
+			rs = stmt.executeQuery();
+			while(rs.next()) {
+	            jsonob.put("DEP_CD",um.getString(rs.getString("DEP_CD")));
+	            jsonob.put("DEP_NM",um.getString(rs.getString("DEP_NM")));
+	            jsonob.put("DEP_ADM_USER",um.getString(rs.getString("DEP_ADM_USER")));
+	            jsonob.put("DEP_ADDR",um.getString(rs.getString("DEP_ADDR")));
+	            jsonob.put("DEP_TEL1",um.getString(rs.getString("DEP_TEL1")));
+	            jsonob.put("DEP_EMAIL",um.getString(rs.getString("DEP_EMAIL")));
+	            jsonob.put("DEP_TYPE",um.getString(rs.getString("DEP_TYPE")));
+	            jsonob.put("DEP_INDT",um.getString(rs.getString("DEP_INDT")));
+	            jsonary.add(jsonob);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			setOraClose(con,stmt,rs);
+		}
+		return jsonary;
+		
+		
+	}
+	
+	
 	
 	
 	

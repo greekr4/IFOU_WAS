@@ -140,4 +140,9 @@ public class util_manager {
 		return resultList;
 	}
 	
+	public String getString(String obj) {
+		String res = (Objects.isNull(obj)) ? "" : obj;
+		return res;
+	}
+	
 }
