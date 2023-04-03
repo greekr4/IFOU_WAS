@@ -5143,7 +5143,7 @@ public class trans_ora_manager {
 			strbuf.append("END CAMT\r\n ");
 			strbuf.append("FROM \r\n ");
 			strbuf.append("GLOB_MNG_ICVAN\r\n ");
-			strbuf.append("WHERE AUTHCD='0000' AND TID IN (select tid from tb_bas_tidmap  where ORG_CD = '" + orgcd + "' )  AND SUBSTR(" + APPDD + ",0,6)=?\r\n ");
+			strbuf.append("WHERE AUTHCD='0000' AND TID IN (select tid from tb_bas_tidmap  where ORG_CD = '" + orgcd + "' )  AND SUBSTR(APPDD,0,6)='"+APPDD+"'\r\n ");
 			strbuf.append("GROUP BY APPDD, APPGB,SVCGB\r\n ");
 			strbuf.append(")\r\n ");
 			strbuf.append("GROUP BY APPDD,SVCGB\r\n ");
