@@ -5448,11 +5448,256 @@ public class trans_ora_manager {
 			setOraClose(con,stmt,rs);
 		}
 		return jsonary;
-		
-		
 	}
 	
+	/**
+	 * 가맹점번호 원장
+	 * @param orgcd,depcd
+	 * @return ...
+	 * 2023-04-03 김태균
+	 */
+	public JSONArray get_sub0604_01(String orgcd,String depcd) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		JSONArray jsonary = new JSONArray();
+		JSONObject jsonob = new JSONObject();
+		try {
+			strbuf = new StringBuffer();
+			strbuf.append("SELECT \r\n");
+			strbuf.append("MER_CD\r\n");
+			strbuf.append(", ORG_CD\r\n");
+			strbuf.append(", T3.DEP_CD\r\n");
+			strbuf.append(", DEP_NM\r\n");
+			strbuf.append(", T1.PUR_CD\r\n");
+			strbuf.append(", PUR_NM\r\n");
+			strbuf.append(", MER_NO\r\n");
+			strbuf.append(", MER_ST\r\n");
+			strbuf.append(", MER_ET\r\n");
+			strbuf.append(", FEE01\r\n");
+			strbuf.append(", FEE02\r\n");
+			strbuf.append(", FEE03\r\n");
+			strbuf.append(", VAN\r\n");
+			strbuf.append(", TO_CHAR(INT_DT,'YYYY-MM-DD HH24:MI:SS') INS_DT\r\n");
+			strbuf.append("FROM\r\n");
+			strbuf.append("TB_BAS_MERINFO T1\r\n");
+			strbuf.append("LEFT OUTER JOIN(\r\n");
+			strbuf.append("SELECT PUR_NM, PUR_CD FROM TB_BAS_PURINFO\r\n");
+			strbuf.append(")T2 ON(T1.PUR_CD=T2.PUR_CD)\r\n");
+			strbuf.append("LEFT OUTER JOIN(\r\n");
+			strbuf.append("SELECT DEP_NM, DEP_CD FROM TB_BAS_DEPART\r\n");
+			strbuf.append(")T3 ON(T1.DEP_CD=T3.DEP_CD)\r\n");
+			strbuf.append("WHERE \r\n");
+			strbuf.append("T1.ORG_CD='"+orgcd+"' AND T1.DEP_CD='"+depcd+"'\r\n");
+
+
+
+
+			con = getOraConnect();
+			stmt = con.prepareStatement(strbuf.toString());
+			System.out.println(strbuf.toString());	//로그
+			
+			rs = stmt.executeQuery();
+			while(rs.next()) {
+	            jsonob.put("DEP_NM",um.getString(rs.getString("DEP_NM")));
+	            jsonob.put("PUR_CD",um.getString(rs.getString("PUR_CD")));
+	            jsonob.put("PUR_NM",um.getString(rs.getString("PUR_NM")));
+	            jsonob.put("MER_NO",um.getString(rs.getString("MER_NO")));
+	            jsonob.put("VAN",um.getString(rs.getString("VAN")));
+	            jsonob.put("FEE01",um.getString(rs.getString("FEE01")));
+	            jsonob.put("FEE02",um.getString(rs.getString("FEE02")));
+	            jsonob.put("FEE03",um.getString(rs.getString("FEE03")));
+	            jsonob.put("INS_DT",um.getString(rs.getString("INS_DT")));
+	            jsonary.add(jsonob);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			setOraClose(con,stmt,rs);
+		}
+		return jsonary;
+	}
 	
+	/**
+	 * 가맹점번호 등록현황
+	 * @param orgcd
+	 * @return ...
+	 * 2023-04-03 김태균
+	 */
+	public JSONArray get_sub0604_02(String orgcd) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		JSONArray jsonary = new JSONArray();
+		JSONObject jsonob = new JSONObject();
+		try {
+			strbuf = new StringBuffer();
+			strbuf.append("SELECT \r\n");
+			strbuf.append("ORG_CD\r\n");
+			strbuf.append(",T1.DEP_CD\r\n");
+			strbuf.append(",T3.DEP_NM\r\n");
+			strbuf.append(",T2.PUR_NM\r\n");
+			strbuf.append(",T5.VAN\r\n");
+			strbuf.append(",MID\r\n");
+			strbuf.append(",TO_CHAR(INSTIME,'YYYY-MM-DD HH24:MI:SS') INS_DT\r\n");
+			strbuf.append(",INSUSER\r\n");
+			strbuf.append("FROM\r\n");
+			strbuf.append("TB_BAS_MIDMAP T1\r\n");
+			strbuf.append("LEFT OUTER JOIN(\r\n");
+			strbuf.append("SELECT MER_NO, PUR_CD, VAN FROM TB_BAS_MERINFO\r\n");
+			strbuf.append(")T5 ON(T1.MID=T5.MER_NO)\r\n");
+			strbuf.append("LEFT OUTER JOIN(\r\n");
+			strbuf.append("SELECT PUR_NM, PUR_CD, PUR_SORT FROM TB_BAS_PURINFO\r\n");
+			strbuf.append(")T2 ON(T5.PUR_CD=T2.PUR_CD)\r\n");
+			strbuf.append("LEFT OUTER JOIN(\r\n");
+			strbuf.append("SELECT DEP_NM, DEP_CD FROM TB_BAS_DEPART\r\n");
+			strbuf.append(")T3 ON(T1.DEP_CD=T3.DEP_CD)\r\n");
+			strbuf.append("WHERE \r\n");
+			strbuf.append("T1.ORG_CD='"+orgcd+"' \r\n");
+			strbuf.append("ORDER BY T1.DEP_CD ASC, T2.PUR_SORT ASC, INSTIME ASC\r\n");
+
+			con = getOraConnect();
+			stmt = con.prepareStatement(strbuf.toString());
+			System.out.println(strbuf.toString());	//로그
+			
+			rs = stmt.executeQuery();
+			while(rs.next()) {
+	            jsonob.put("DEP_NM",um.getString(rs.getString("DEP_NM")));
+	            jsonob.put("PUR_NM",um.getString(rs.getString("PUR_NM")));
+	            jsonob.put("MID",um.getString(rs.getString("MID")));
+	            jsonob.put("VAN",um.getString(rs.getString("VAN")));
+	            jsonob.put("INSUSER",um.getString(rs.getString("INSUSER")));
+	            jsonob.put("INS_DT",um.getString(rs.getString("INS_DT")));
+	            jsonary.add(jsonob);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			setOraClose(con,stmt,rs);
+		}
+		return jsonary;
+	}
+	
+	/**
+	 * 단말기번호 원장
+	 * @param orgcd
+	 * @return ...
+	 * 2023-04-03 김태균
+	 */
+	public JSONArray get_sub0605_01(String orgcd) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		JSONArray jsonary = new JSONArray();
+		JSONObject jsonob = new JSONObject();
+		try {
+			strbuf = new StringBuffer();
+			strbuf.append("SELECT \r\n");
+			strbuf.append("TID_CD\r\n");
+			strbuf.append(", ORG_CD\r\n");
+			strbuf.append(", T1.DEP_CD\r\n");
+			strbuf.append(", DEP_NM\r\n");
+			strbuf.append(", TERM_NM\r\n");
+			strbuf.append(", TERM_ID\r\n");
+			strbuf.append(", TERM_TYPE\r\n");
+			strbuf.append(", VAN\r\n");
+			strbuf.append(", TO_CHAR(TERM_IST_DD,'YYYY-MM-DD HH24:MI:SS') INS_DT\r\n");
+			strbuf.append("FROM\r\n");
+			strbuf.append("TB_BAS_TIDMST T1\r\n");
+			strbuf.append("LEFT OUTER JOIN(\r\n");
+			strbuf.append("SELECT DEP_NM, DEP_CD FROM TB_BAS_DEPART\r\n");
+			strbuf.append(")T2 ON(T1.DEP_CD=T2.DEP_CD)\r\n");
+			strbuf.append("WHERE \r\n");
+			strbuf.append("ORG_CD='"+orgcd+"'\r\n");
+			strbuf.append("ORDER BY T1.DEP_CD ASC, T1.TERM_IST_DD ASC\r\n");
+
+
+			con = getOraConnect();
+			stmt = con.prepareStatement(strbuf.toString());
+			System.out.println(strbuf.toString());	//로그
+			
+			rs = stmt.executeQuery();
+			while(rs.next()) {
+	            jsonob.put("DEP_NM",um.getString(rs.getString("DEP_NM")));
+	            jsonob.put("TERM_NM",um.getString(rs.getString("TERM_NM")));
+	            jsonob.put("TERM_ID",um.getString(rs.getString("TERM_ID")));
+	            jsonob.put("VAN",um.getString(rs.getString("VAN")));
+	            jsonob.put("TERM_TYPE",um.getString(rs.getString("TERM_TYPE")));
+	            jsonob.put("INS_DT",um.getString(rs.getString("INS_DT")));
+	            jsonary.add(jsonob);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			setOraClose(con,stmt,rs);
+		}
+		return jsonary;
+	}
+
+	/**
+	 * 단말기번호 등록현황
+	 * @param orgcd
+	 * @return ...
+	 * 2023-04-03 김태균
+	 */
+	public JSONArray get_sub0605_02(String orgcd) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		JSONArray jsonary = new JSONArray();
+		JSONObject jsonob = new JSONObject();
+		try {
+			strbuf = new StringBuffer();
+			strbuf.append("SELECT\r\n");
+			strbuf.append("ORG_CD,\r\n");
+			strbuf.append("T1.DEP_CD,\r\n");
+			strbuf.append("T3.DEP_NM,\r\n");
+			strbuf.append("TID,\r\n");
+			strbuf.append("VAN,\r\n");
+			strbuf.append("TO_CHAR(INSTIME,'YYYY-MM-DD HH24:MI:SS') INS_DT,\r\n");
+			strbuf.append("INSUSER,\r\n");
+			strbuf.append("TERM_NM\r\n");
+			strbuf.append("FROM\r\n");
+			strbuf.append("TB_BAS_TIDMAP T1\r\n");
+			strbuf.append("LEFT OUTER JOIN(\r\n");
+			strbuf.append("SELECT TERM_ID, VAN, TERM_NM FROM TB_BAS_TIDMST WHERE ORG_CD='"+orgcd+"'\r\n");
+			strbuf.append(")T5 ON(T1.TID=T5.TERM_ID)\r\n");
+			strbuf.append("LEFT OUTER JOIN(\r\n");
+			strbuf.append("SELECT DEP_NM, DEP_CD FROM TB_BAS_DEPART WHERE ORG_CD='"+orgcd+"'\r\n");
+			strbuf.append(")T3 ON(T1.DEP_CD=T3.DEP_CD)\r\n");
+			strbuf.append("WHERE \r\n");
+			strbuf.append("T1.ORG_CD='"+orgcd+"' \r\n");
+			strbuf.append("ORDER BY T1.DEP_CD ASC, INSTIME ASC\r\n");
+
+
+
+			con = getOraConnect();
+			stmt = con.prepareStatement(strbuf.toString());
+			System.out.println(strbuf.toString());	//로그
+			
+			rs = stmt.executeQuery();
+			while(rs.next()) {
+	            jsonob.put("DEP_NM",um.getString(rs.getString("DEP_NM")));
+	            jsonob.put("TERM_NM",um.getString(rs.getString("TERM_NM")));
+	            jsonob.put("TID",um.getString(rs.getString("TID")));
+	            jsonob.put("VAN",um.getString(rs.getString("VAN")));
+	            jsonob.put("INSUSER",um.getString(rs.getString("INSUSER")));
+	            jsonob.put("INS_DT",um.getString(rs.getString("INS_DT")));
+	            jsonary.add(jsonob);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			setOraClose(con,stmt,rs);
+		}
+		return jsonary;
+	}
+
+
 	
 	
 	
