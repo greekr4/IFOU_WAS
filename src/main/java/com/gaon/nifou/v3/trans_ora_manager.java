@@ -5293,7 +5293,7 @@ public class trans_ora_manager {
 		JSONObject jsonob = new JSONObject();
 		try {
 			strbuf = new StringBuffer();
-			strbuf.append("SELECT ORG_NM,ORG_NO,ORG_CORP_NO,ORG_CEO_NM,ORG_ADDR,ORG_TEL1,ORG_MEMO FROM TB_BAS_ORG WHERE ORG_CD = '"+orgcd+"'");
+			strbuf.append("SELECT ORG_CD,ORG_NM,ORG_NO,ORG_CORP_NO,ORG_CEO_NM,ORG_ADDR,ORG_TEL1,ORG_MEMO,ORG_EMAIL FROM TB_BAS_ORG WHERE ORG_CD = '"+orgcd+"'");
 
 			con = getOraConnect();
 			stmt = con.prepareStatement(strbuf.toString());
@@ -5301,13 +5301,15 @@ public class trans_ora_manager {
 			
 			rs = stmt.executeQuery();
 			while(rs.next()) {
-	            jsonob.put("ORG_NM",um.getString(rs.getString("ORG_NM")));
+				jsonob.put("ORG_CD",um.getString(rs.getString("ORG_CD")));
+				jsonob.put("ORG_NM",um.getString(rs.getString("ORG_NM")));
 	            jsonob.put("ORG_NO",um.getString(rs.getString("ORG_NO")));
 	            jsonob.put("ORG_CORP_NO",um.getString(rs.getString("ORG_CORP_NO")));
 	            jsonob.put("ORG_CEO_NM",um.getString(rs.getString("ORG_CEO_NM")));
 	            jsonob.put("ORG_ADDR",um.getString(rs.getString("ORG_ADDR")));
 	            jsonob.put("ORG_TEL1",um.getString(rs.getString("ORG_TEL1")));
 	            jsonob.put("ORG_MEMO",um.getString(rs.getString("ORG_MEMO")));
+	            jsonob.put("ORG_EMAIL",um.getString(rs.getString("ORG_EMAIL")));
 			}
 
 		} catch (Exception e) {
