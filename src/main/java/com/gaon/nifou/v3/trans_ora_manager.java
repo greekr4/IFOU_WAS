@@ -5381,7 +5381,7 @@ public class trans_ora_manager {
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		JSONArray jsonary = new JSONArray();
-		JSONObject jsonob = new JSONObject();
+
 		try {
 			strbuf = new StringBuffer();
 			strbuf.append("SELECT \r\n");
@@ -5416,6 +5416,7 @@ public class trans_ora_manager {
 			
 			rs = stmt.executeQuery();
 			while(rs.next()) {
+				JSONObject jsonob = new JSONObject();
 	            jsonob.put("MEM_CD",um.getString(rs.getString("MEM_CD")));
 	            jsonob.put("ORG_CD",um.getString(rs.getString("ORG_CD")));
 	            jsonob.put("DEP_CD",um.getString(rs.getString("DEP_CD")));
@@ -5428,7 +5429,7 @@ public class trans_ora_manager {
 	            jsonob.put("USER_EMAIL",um.getString(rs.getString("USER_EMAIL")));
 	            jsonob.put("INS_DT",um.getString(rs.getString("INS_DT")));
 	            jsonob.put("USER_LV",um.getString(rs.getString("USER_LV")));
-	            
+	            jsonob.put("INS_ID",um.getString(rs.getString("USER_FAX")));
 	            jsonary.add(jsonob);
 			}
 
@@ -5453,7 +5454,7 @@ public class trans_ora_manager {
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		JSONArray jsonary = new JSONArray();
-		JSONObject jsonob = new JSONObject();
+
 		try {
 			strbuf = new StringBuffer();
 			strbuf.append("SELECT \r\n");
@@ -5481,6 +5482,7 @@ public class trans_ora_manager {
 			
 			rs = stmt.executeQuery();
 			while(rs.next()) {
+				JSONObject jsonob = new JSONObject();
 	            jsonob.put("DEP_CD",um.getString(rs.getString("DEP_CD")));
 	            jsonob.put("DEP_NM",um.getString(rs.getString("DEP_NM")));
 	            jsonob.put("DEP_ADM_USER",um.getString(rs.getString("DEP_ADM_USER")));
@@ -5511,7 +5513,7 @@ public class trans_ora_manager {
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		JSONArray jsonary = new JSONArray();
-		JSONObject jsonob = new JSONObject();
+
 		try {
 			strbuf = new StringBuffer();
 			strbuf.append("SELECT \r\n");
@@ -5549,6 +5551,7 @@ public class trans_ora_manager {
 			
 			rs = stmt.executeQuery();
 			while(rs.next()) {
+				JSONObject jsonob = new JSONObject();
 	            jsonob.put("DEP_NM",um.getString(rs.getString("DEP_NM")));
 	            jsonob.put("PUR_CD",um.getString(rs.getString("PUR_CD")));
 	            jsonob.put("PUR_NM",um.getString(rs.getString("PUR_NM")));
@@ -5580,7 +5583,7 @@ public class trans_ora_manager {
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		JSONArray jsonary = new JSONArray();
-		JSONObject jsonob = new JSONObject();
+
 		try {
 			strbuf = new StringBuffer();
 			strbuf.append("SELECT \r\n");
@@ -5613,6 +5616,7 @@ public class trans_ora_manager {
 			
 			rs = stmt.executeQuery();
 			while(rs.next()) {
+				JSONObject jsonob = new JSONObject();
 	            jsonob.put("DEP_NM",um.getString(rs.getString("DEP_NM")));
 	            jsonob.put("PUR_NM",um.getString(rs.getString("PUR_NM")));
 	            jsonob.put("MID",um.getString(rs.getString("MID")));
@@ -5641,7 +5645,7 @@ public class trans_ora_manager {
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		JSONArray jsonary = new JSONArray();
-		JSONObject jsonob = new JSONObject();
+
 		try {
 			strbuf = new StringBuffer();
 			strbuf.append("SELECT \r\n");
@@ -5670,6 +5674,7 @@ public class trans_ora_manager {
 			
 			rs = stmt.executeQuery();
 			while(rs.next()) {
+				JSONObject jsonob = new JSONObject();
 	            jsonob.put("DEP_NM",um.getString(rs.getString("DEP_NM")));
 	            jsonob.put("TERM_NM",um.getString(rs.getString("TERM_NM")));
 	            jsonob.put("TERM_ID",um.getString(rs.getString("TERM_ID")));
@@ -5698,7 +5703,7 @@ public class trans_ora_manager {
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		JSONArray jsonary = new JSONArray();
-		JSONObject jsonob = new JSONObject();
+
 		try {
 			strbuf = new StringBuffer();
 			strbuf.append("SELECT\r\n");
@@ -5730,6 +5735,7 @@ public class trans_ora_manager {
 			
 			rs = stmt.executeQuery();
 			while(rs.next()) {
+				JSONObject jsonob = new JSONObject();
 	            jsonob.put("DEP_NM",um.getString(rs.getString("DEP_NM")));
 	            jsonob.put("TERM_NM",um.getString(rs.getString("TERM_NM")));
 	            jsonob.put("TID",um.getString(rs.getString("TID")));
@@ -5753,7 +5759,7 @@ public class trans_ora_manager {
 	 * @return 1 : 성공 / 0 : 실패 (인서트된 로우 수)
 	 * 2023-04-05 김태균
 	 */
-	public int register_user(String depcd,String orgcd, String user_id, String user_pw, String user_lv, String user_tel1, String user_tel2) {
+	public int register_user(String depcd,String orgcd, String user_id, String user_pw, String user_lv, String user_tel1, String user_tel2, String user_name, String user_email, String ins_id) {
 		Connection con = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -5762,15 +5768,21 @@ public class trans_ora_manager {
 		String auth_seq = (user_lv.equals("M")) ? "AS000001" : "AS000002"; 
 		try {
 			strbuf = new StringBuffer();
-			strbuf.append("BEGIN INSERT INTO TB_BAS_USER(MEM_CD,ORG_CD,AUTH_SEQ,USER_ID,USER_PW,USER_TEL1,USER_TEL2,USER_LV) VALUES(\r\n");
+			strbuf.append("BEGIN INSERT INTO TB_BAS_USER(MEM_CD,DEP_CD,ORG_CD,AUTH_SEQ,USER_ID,USER_PW,USER_TEL1,USER_TEL2,USER_LV,USER_NM,USER_EMAIL,USER_FAX,INS_DT) VALUES(\r\n");
 			strbuf.append("'"+memcd+"',\r\n");
+			strbuf.append("'"+depcd+"',\r\n");
 			strbuf.append("'"+orgcd+"',\r\n");
 			strbuf.append("'"+auth_seq+"',\r\n");
 			strbuf.append("'"+user_id+"',\r\n");
 			strbuf.append("'"+user_pw+"',\r\n");
 			strbuf.append("'"+user_tel1+"',\r\n");
 			strbuf.append("'"+user_tel2+"',\r\n");
-			strbuf.append("'"+user_lv+"'); COMMIT; END;");
+			strbuf.append("'"+user_lv+"',\r\n");
+			strbuf.append("'"+user_name+"',\r\n");
+			strbuf.append("'"+user_email+"',\r\n");
+			strbuf.append("'"+ins_id+"',\r\n");
+			strbuf.append("SYSDATE);\r\n");
+			strbuf.append("COMMIT; END;\r\n");
 					
 			con = getOraConnect();
 			stmt = con.prepareStatement(strbuf.toString());
