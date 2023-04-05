@@ -2437,18 +2437,65 @@ public class trans_ora_manager {
 		try {
 			strbuf = new StringBuffer();
 			//쿼리입력
-			strbuf.append("TR_DEPNM \r\n");
-			strbuf.append(",TR_APPDD \r\n");
-			strbuf.append(",SALES_CREDIT \r\n");
-			strbuf.append(",SALES_CHECK \r\n");
-			strbuf.append(",SALES_TOT \r\n");
-			strbuf.append(",FEE_CREDIT \r\n");
-			strbuf.append(",FEE_CHECK \r\n");
-			strbuf.append(",FEE_TOT \r\n");
-			strbuf.append(",DEPOSIT_CREDIT \r\n");
-			strbuf.append(",DEPOSIT_CHECK \r\n");
-			strbuf.append(",DEPOSIT_TOT \r\n");
-			// 화이팅!
+			strbuf.append("select \r\n");
+			strbuf.append("sum(card_amount) SALES_CREDIT, \r\n");
+			strbuf.append("sum(check_amount) SALES_CHECK, \r\n");
+			strbuf.append("sum(card_amount) + sum(check_amount) SALES_TOT, \r\n");
+			strbuf.append("sum(card_fee) FEE_CREDIT, \r\n");
+			strbuf.append("sum(check_fee) FEE_CHECK, \r\n");
+			strbuf.append("sum(card_fee) + sum(check_fee) FEE_TOT, \r\n");
+			strbuf.append("sum(card_depo) - sum(card_fee) DEPOSIT_CREDIT, \r\n");
+			strbuf.append("sum(check_depo) - sum(check_fee) DEPOSIT_CHECK, \r\n");
+			strbuf.append("(SUM(card_depo) - SUM(card_fee)) + (SUM(check_depo) - SUM(check_fee)) DEPOSIT_TOT, \r\n");
+			strbuf.append("S4.DEP_NM TR_DEPNM, S1.MDATE TR_APPDD \r\n");
+			strbuf.append("from ( \r\n");
+			strbuf.append("SELECT \r\n");
+			strbuf.append("sum(card_amount_a) - sum(card_amount_c) card_amount, \r\n");
+			strbuf.append("sum(check_amount_a) - sum(check_amount_c) check_amount, \r\n");
+			strbuf.append("sum(card_sale_amt_a) - sum(card_sale_amt_c) card_depo, \r\n");
+			strbuf.append("sum(check_sale_amt_a) - sum(check_sale_amt_c) check_depo, \r\n");
+			strbuf.append("sum(card_fee_a) - sum(card_fee_c) card_fee, \r\n");
+			strbuf.append("sum(check_fee_a) - sum(check_fee_c) check_fee, \r\n");
+			strbuf.append("MDATE, TID, ACQ_CD \r\n");
+			strbuf.append("from( \r\n");
+			strbuf.append("select \r\n");
+			strbuf.append("case when T1.APPGB = 'A' AND T1.CHECK_CARD != 'Y' then amount else 0 end card_amount_a, \r\n"); 
+			strbuf.append("case when T1.APPGB = 'C' AND T1.CHECK_CARD != 'Y' then amount else 0 end card_amount_c, \r\n");
+			strbuf.append("case when T1.APPGB = 'A' AND T1.CHECK_CARD = 'Y' then amount else 0 end check_amount_a, \r\n");
+			strbuf.append("case when T1.APPGB = 'C' AND T1.CHECK_CARD = 'Y' then amount else 0 end check_amount_c, \r\n");
+			strbuf.append("case when T2.RTN_CD = '60' AND T1.CHECK_CARD != 'Y' then sale_amt else 0 end card_sale_amt_a, \r\n");
+			strbuf.append("case when T2.RTN_CD = '67' AND T1.CHECK_CARD != 'Y' then sale_amt else 0 end card_sale_amt_c, \r\n");
+			strbuf.append("case when T2.RTN_CD = '60' AND T1.CHECK_CARD = 'Y' then sale_amt else 0 end check_sale_amt_a, \r\n");
+			strbuf.append("case when T2.RTN_CD = '67' AND T1.CHECK_CARD = 'Y' then sale_amt else 0 end check_sale_amt_c, \r\n");
+			strbuf.append("case when T2.RTN_CD = '60' AND T1.CHECK_CARD != 'Y' then fee else 0 end card_fee_a, \r\n");
+			strbuf.append("case when T2.RTN_CD = '67' AND T1.CHECK_CARD != 'Y' then fee else 0 end card_fee_c, \r\n");
+			strbuf.append("case when T2.RTN_CD = '60' AND T1.CHECK_CARD = 'Y' then fee else 0 end check_fee_a, \r\n");
+			strbuf.append("case when T2.RTN_CD = '67' AND T1.CHECK_CARD = 'Y' then fee else 0 end check_fee_c, \r\n");
+			strbuf.append("MDATE, TID, acq_cd \r\n");
+			strbuf.append("from( \r\n");
+			strbuf.append("select * \r\n");
+			strbuf.append("from GLOB_MNG_ICVAN \r\n");			
+			strbuf.append("WHERE SVCGB IN ('CC', 'CE') AND AUTHCD='0000' AND TID IN (select tid from tb_bas_tidmap where " + depcd_where + ")" + set_where + " \r\n");
+			strbuf.append(") T1 \r\n");
+			strbuf.append("LEFT OUTER JOIN( \r\n");
+			strbuf.append("SELECT EXP_DD, REQ_DD, REG_DD, APP_DD, TRANIDX, RSC_CD, RTN_CD, FEE, SALE_AMT \r\n");
+			strbuf.append("FROM TB_MNG_DEPDATA \r\n");
+			strbuf.append("where RTN_CD IN ('60','67')" + set_where + "\r\n");
+			strbuf.append(") T2 \r\n");
+			strbuf.append("ON (T1.APPDD = T2.APP_DD AND T1.TRANIDX = T2.TRANIDX) \r\n");
+			strbuf.append(") GROUP BY mdate,tid,acq_cd) S1 \r\n");
+			strbuf.append("left outer join( \r\n");
+			strbuf.append("SELECT TERM_ID, TERM_NM, DEP_CD FROM TB_BAS_TIDMST \r\n");
+			strbuf.append(")S2 ON (S1.TID = S2.TERM_ID ) \r\n");
+			strbuf.append("left outer join( \r\n");
+			strbuf.append("select pur_nm, pur_ocd from tb_bas_purinfo \r\n");
+			strbuf.append(")S3 ON (S1.ACQ_CD= S3.pur_ocd) \r\n");
+			strbuf.append("left outer join( \r\n");
+			strbuf.append("select dep_cd, dep_nm from tb_bas_depart \r\n");
+			strbuf.append(")S4 ON (S2.dep_cd= S4.dep_cd ) \r\n");
+			strbuf.append("group by S4.DEP_NM, MDATE \r\n");
+			strbuf.append("order by S4.DEP_NM, MDATE \r\n");
+			
 			
 			
 			//System.lineSeparator()
