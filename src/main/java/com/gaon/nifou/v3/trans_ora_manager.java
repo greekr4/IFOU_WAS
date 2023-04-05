@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -5699,7 +5700,50 @@ public class trans_ora_manager {
 		return jsonary;
 	}
 
+	/**
+	 * 회원 추가
+	 * @param user_id,program_seq,sort
+	 * @return 1 : 성공 / 0 : 실패 (인서트된 로우 수)
+	 * 2023-04-05 김태균
+	 */
+	public int register_user(String depcd,String orgcd, String user_id, String user_pw, String user_lv, String user_tel1, String user_tel2) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		Date date = new Date();
+		String memcd = "NMEM" + date.getTime();
+		String auth_seq = (user_lv.equals("M")) ? "AS000001" : "AS000002"; 
+		try {
+			strbuf = new StringBuffer();
+			strbuf.append("BEGIN INSERT INTO TB_BAS_USER(MEM_CD,ORG_CD,AUTH_SEQ,USER_ID,USER_PW,USER_TEL1,USER_TEL2,USER_LV) VALUES(\r\n");
+			strbuf.append("'"+memcd+"',\r\n");
+			strbuf.append("'"+orgcd+"',\r\n");
+			strbuf.append("'"+auth_seq+"',\r\n");
+			strbuf.append("'"+user_id+"',\r\n");
+			strbuf.append("'"+user_pw+"',\r\n");
+			strbuf.append("'"+user_tel1+"',\r\n");
+			strbuf.append("'"+user_tel2+"',\r\n");
+			strbuf.append("'"+user_lv+"'); COMMIT; END;");
+					
+			con = getOraConnect();
+			stmt = con.prepareStatement(strbuf.toString());
+			System.out.println(strbuf.toString());	//로그
+			
+			int rowsInserted = stmt.executeUpdate();
+			
+            if (rowsInserted > 0) {
+                return rowsInserted;
+            } else {
+                return 0;
+            }
 
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			setOraClose(con,stmt,rs);
+		}
+		return 0;
+	}
 	
 	
 	
