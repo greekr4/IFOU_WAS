@@ -2447,7 +2447,10 @@ public class trans_ora_manager {
 			strbuf.append("sum(card_fee) + sum(check_fee) FEE_TOT, \r\n");
 			strbuf.append("sum(card_depo) - sum(card_fee) DEPOSIT_CREDIT, \r\n");
 			strbuf.append("sum(check_depo) - sum(check_fee) DEPOSIT_CHECK, \r\n");
-			strbuf.append("(SUM(card_depo) - SUM(card_fee)) + (SUM(check_depo) - SUM(check_fee)) DEPOSIT_TOT, \r\n");
+			strbuf.append("(SUM(card_depo) - SUM(card_fee)) + (SUM(check_depo) - SUM(check_fee)) DEPOSIT_TOT, \r\n");			
+			strbuf.append("sum(card_amount)  - sum(card_depo)  card_amount_unpaid, \r\n");
+			strbuf.append("sum(check_amount)  - sum(check_depo)  check_amount_unpaid, \r\n");
+			strbuf.append("(sum(card_amount)  - sum(card_depo)) +(sum(check_amount)  - sum(check_depo)) tot_amount_unpaid, \r\n");			
 			strbuf.append("S4.DEP_NM TR_DEPNM, S1.MDATE TR_APPDD \r\n");
 			strbuf.append("from ( \r\n");
 			strbuf.append("SELECT \r\n");
