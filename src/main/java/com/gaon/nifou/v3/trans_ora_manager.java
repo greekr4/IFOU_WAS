@@ -2475,7 +2475,7 @@ public class trans_ora_manager {
 			strbuf.append("from( \r\n");
 			strbuf.append("select * \r\n");
 			strbuf.append("from GLOB_MNG_ICVAN \r\n");			
-			strbuf.append("WHERE SVCGB IN ('CC', 'CE') AND AUTHCD='0000' AND TID IN (select tid from tb_bas_tidmap where " + depcd_where + ")" + set_where + " \r\n");
+			strbuf.append("WHERE SVCGB IN ('CC', 'CE') AND AUTHCD='0000' AND TID IN (select tid from tb_bas_tidmap where ORG_CD= '" + orgcd + "' " + depcd_where + ")" + set_where + " \r\n");
 			strbuf.append(") T1 \r\n");
 			strbuf.append("LEFT OUTER JOIN( \r\n");
 			strbuf.append("SELECT EXP_DD, REQ_DD, REG_DD, APP_DD, TRANIDX, RSC_CD, RTN_CD, FEE, SALE_AMT \r\n");
