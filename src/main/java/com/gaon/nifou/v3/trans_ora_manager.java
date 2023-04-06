@@ -709,7 +709,7 @@ public class trans_ora_manager {
 			strbuf.append(" LEFT OUTER JOIN( SELECT PUR_NM, PUR_OCD, PUR_KOCES FROM TB_BAS_PURINFO)T5 ON (T1.ACQ_CD=T5.PUR_OCD OR T1.ACQ_CD=T5.PUR_KOCES)\r\n");
 			strbuf.append(" WHERE SVCGB IN ('CC', 'CE')  AND AUTHCD='0000' AND TID IN (select tid from tb_bas_tidmap  where ORG_CD='" + orgcd + "' " + depcd_where + ")  " + set_where + " AND ROWNUM <= (200*1)\r\n");
 			strbuf.append(" order by APPDD desc, apptm desc\r\n");
-			strbuf.append(" )  WHERE RNUM >= (200*(1-1)+1) \r\n");
+			strbuf.append(" )\r\n");
 			strbuf.append(" )\r\n");
 			strbuf.append(" )\r\n");
 			strbuf.append(" GROUP BY TID, APPGB, ACQ_CD\r\n");
@@ -2193,7 +2193,7 @@ public class trans_ora_manager {
 			strbuf.append("T3.MCNT, \r\n");
 			strbuf.append("T1.OAPP_DD IFOU_OAPPDD \r\n");
 			strbuf.append("FROM \r\n");
-			strbuf.append("TB_MNG_VAN T1 \r\n");
+			strbuf.append("GLOB_MNG_ICVAN T1 \r\n");
 			strbuf.append("FULL OUTER JOIN( \r\n");
 			strbuf.append("SELECT CARDNO, APPDD, APPTM, APPNO, AMOUNT, APPTP FROM TB_MNG_POS \r\n");
 			strbuf.append(")T2 ON( \r\n");
@@ -2476,7 +2476,7 @@ public class trans_ora_manager {
 			strbuf.append("from( \r\n");
 			strbuf.append("select * \r\n");
 			strbuf.append("from GLOB_MNG_ICVAN \r\n");			
-			strbuf.append("WHERE SVCGB IN ('CC', 'CE') AND AUTHCD='0000' AND TID IN (select tid from tb_bas_tidmap where " + depcd_where + ")" + set_where + " \r\n");
+			strbuf.append("WHERE SVCGB IN ('CC', 'CE') AND AUTHCD='0000' AND TID IN (select tid from tb_bas_tidmap where ORG_CD= '" + orgcd + "' " + depcd_where + ")" + set_where + " \r\n");
 			strbuf.append(") T1 \r\n");
 			strbuf.append("LEFT OUTER JOIN( \r\n");
 			strbuf.append("SELECT EXP_DD, REQ_DD, REG_DD, APP_DD, TRANIDX, RSC_CD, RTN_CD, FEE, SALE_AMT \r\n");
