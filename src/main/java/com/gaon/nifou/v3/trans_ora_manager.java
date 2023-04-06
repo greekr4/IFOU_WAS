@@ -2192,7 +2192,7 @@ public class trans_ora_manager {
 			strbuf.append("T3.MCNT, \r\n");
 			strbuf.append("T1.OAPP_DD IFOU_OAPPDD \r\n");
 			strbuf.append("FROM \r\n");
-			strbuf.append("TB_MNG_VAN T1 \r\n");
+			strbuf.append("GLOB_MNG_ICVAN T1 \r\n");
 			strbuf.append("FULL OUTER JOIN( \r\n");
 			strbuf.append("SELECT CARDNO, APPDD, APPTM, APPNO, AMOUNT, APPTP FROM TB_MNG_POS \r\n");
 			strbuf.append(")T2 ON( \r\n");
