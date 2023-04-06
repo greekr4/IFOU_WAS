@@ -708,7 +708,7 @@ public class trans_ora_manager {
 			strbuf.append(" LEFT OUTER JOIN( SELECT PUR_NM, PUR_OCD, PUR_KOCES FROM TB_BAS_PURINFO)T5 ON (T1.ACQ_CD=T5.PUR_OCD OR T1.ACQ_CD=T5.PUR_KOCES)\r\n");
 			strbuf.append(" WHERE SVCGB IN ('CC', 'CE')  AND AUTHCD='0000' AND TID IN (select tid from tb_bas_tidmap  where ORG_CD='" + orgcd + "' " + depcd_where + ")  " + set_where + " AND ROWNUM <= (200*1)\r\n");
 			strbuf.append(" order by APPDD desc, apptm desc\r\n");
-			strbuf.append(" )  WHERE RNUM >= (200*(1-1)+1) \r\n");
+			strbuf.append(" )\r\n");
 			strbuf.append(" )\r\n");
 			strbuf.append(" )\r\n");
 			strbuf.append(" GROUP BY TID, APPGB, ACQ_CD\r\n");
