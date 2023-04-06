@@ -2433,6 +2433,7 @@ public class trans_ora_manager {
 		String orgcd = resultList.get(0);
 		String depcd_where = resultList.get(1);
 		String set_where = resultList.get(2);
+		String set_where_dep = resultList.get(3);
 	
 		try {
 			strbuf = new StringBuffer();
@@ -2480,7 +2481,7 @@ public class trans_ora_manager {
 			strbuf.append("LEFT OUTER JOIN( \r\n");
 			strbuf.append("SELECT EXP_DD, REQ_DD, REG_DD, APP_DD, TRANIDX, RSC_CD, RTN_CD, FEE, SALE_AMT \r\n");
 			strbuf.append("FROM TB_MNG_DEPDATA \r\n");
-			strbuf.append("where RTN_CD IN ('60','67')" + set_where + "\r\n");
+			strbuf.append("where RTN_CD IN ('60','67')" + set_where_dep + "\r\n");
 			strbuf.append(") T2 \r\n");
 			strbuf.append("ON (T1.APPDD = T2.APP_DD AND T1.TRANIDX = T2.TRANIDX) \r\n");
 			strbuf.append(") GROUP BY mdate,tid,acq_cd) S1 \r\n");
