@@ -153,7 +153,7 @@ public class util_manager {
 		inputHashMap.put("orgcd", orgcd);
 		inputHashMap.put("depcd_where", depcd_where);
 		inputHashMap.put("set_where", set_where);
-		inputHashMap.put("set_where", set_where_dep);
+		inputHashMap.put("set_where_dep", set_where_dep);
 		
 	    List<String> resultList = new ArrayList<>();
         resultList.add(inputHashMap.get("orgcd"));
