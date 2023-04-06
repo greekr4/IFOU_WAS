@@ -50,6 +50,7 @@ public class util_manager {
 		String orgcd = whereqry.get("orgcd");
 		String depcd_where = "";
 		String set_where = "";
+		String set_where_dep ="";
 		
 		if(!Objects.equals(whereqry.get("depcd"),null )) {
 			depcd_where += " AND DEP_CD = '" + whereqry.get("depcd") + "'";
@@ -57,14 +58,17 @@ public class util_manager {
 		
 		if(!Objects.equals(whereqry.get("sappdd"),null )) {
 			set_where += " AND APPDD >= '" + whereqry.get("sappdd") + "'";
+			set_where_dep += " AND APP_DD >= '" + whereqry.get("sappdd") + "'";
 		}
 		
 		if(!Objects.equals(whereqry.get("eappdd"),null )) {
 			set_where += " AND APPDD <= '" + whereqry.get("eappdd") + "'";
+			set_where_dep += " AND APP_DD <= '" + whereqry.get("eappdd") + "'";
 		}
 		
 		if(!Objects.equals(whereqry.get("appno"),null )) {
 			set_where += " AND APPNO = '" + whereqry.get("appno") + "'";
+			set_where_dep += " AND APP_NO = '" + whereqry.get("appno") + "'";
 		}
 		
 		if(!Objects.equals(whereqry.get("pid"),null )) {
@@ -85,10 +89,12 @@ public class util_manager {
 		
 		if(!Objects.equals(whereqry.get("samt"),null )) {
 			set_where += " AND AMOUNT >= '" + whereqry.get("samt") + "'";
+			set_where_dep += " AND SALE_AMT >= '" + whereqry.get("samt") + "'";
 		}
 		
 		if(!Objects.equals(whereqry.get("eamt"),null )) {
 			set_where += " AND AMOUNT <= '" + whereqry.get("eamt") + "'";
+			set_where_dep += " AND SALE_AMT <= '" + whereqry.get("eamt") + "'";
 		}
 		
 		if(!Objects.equals(whereqry.get("acqcd"),null )) {
@@ -101,6 +107,7 @@ public class util_manager {
 		
 		if(!Objects.equals(whereqry.get("cardno"),null )) {
 			set_where += " AND CARDNO = '" + whereqry.get("cardno") + "'";
+			set_where_dep += " AND CARD_NO = '" + whereqry.get("cardno") + "'";
 		}
 		
 		if(!Objects.equals(whereqry.get("ovseacard"),null )) {
@@ -113,6 +120,22 @@ public class util_manager {
 		
 		if(!Objects.equals(whereqry.get("authstat"),null )) {
 			set_where += " AND APP_GB = '" + whereqry.get("authstat") + "'";
+		}
+		
+		if(!Objects.equals(whereqry.get("sexpdd"),null )) {
+			set_where_dep += " AND EXP_DD >= '" + whereqry.get("sexpdd") + "'";
+		}
+		
+		if(!Objects.equals(whereqry.get("eexpdd"),null )) {
+			set_where_dep += " AND EXP_DD <= '" + whereqry.get("eexpdd") + "'";
+		}
+		
+		if(!Objects.equals(whereqry.get("sreqdd"),null )) {
+			set_where_dep += " AND REQ_DD >= '" + whereqry.get("sreqdd") + "'";
+		}
+		
+		if(!Objects.equals(whereqry.get("ereqdd"),null )) {
+			set_where_dep += " AND REQ_DD <= '" + whereqry.get("ereqdd") + "'";
 		}
 		
 //		¹ÌÀÛ¾÷
@@ -130,11 +153,13 @@ public class util_manager {
 		inputHashMap.put("orgcd", orgcd);
 		inputHashMap.put("depcd_where", depcd_where);
 		inputHashMap.put("set_where", set_where);
+		inputHashMap.put("set_where", set_where_dep);
 		
 	    List<String> resultList = new ArrayList<>();
         resultList.add(inputHashMap.get("orgcd"));
         resultList.add(inputHashMap.get("depcd_where"));
         resultList.add(inputHashMap.get("set_where"));
+        resultList.add(inputHashMap.get("set_where_dep"));
 		
 		///WHERE QRY END///		
 		return resultList;

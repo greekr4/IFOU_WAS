@@ -2571,6 +2571,7 @@ public class trans_ora_manager {
 		String orgcd = resultList.get(0);
 		String depcd_where = resultList.get(1);
 		String set_where = resultList.get(2);
+		String set_where_dep = resultList.get(3);
 	
 		try {
 			strbuf = new StringBuffer();
@@ -2598,7 +2599,7 @@ public class trans_ora_manager {
 			strbuf.append(",SUM(INP_AMT) TOT_INPAMT, SUM(EXP_AMT) TOT_EXPAMT \r\n");
 			strbuf.append("FROM \r\n");
 			strbuf.append("TB_MNG_DEPTOT \r\n");
-			strbuf.append("WHERE MID IN (SELECT MID FROM TB_BAS_MIDMAP where ORG_CD= '" + orgcd + "') " + set_where + " \r\n");
+			strbuf.append("WHERE MID IN (SELECT MID FROM TB_BAS_MIDMAP where ORG_CD= '" + orgcd + "') " + set_where_dep + " \r\n");
 			strbuf.append("GROUP BY MID, EXP_DD, DEP_SEQ \r\n");
 			strbuf.append("ORDER BY EXP_DD DESC \r\n");
 			strbuf.append(")T1 \r\n");
@@ -2622,7 +2623,7 @@ public class trans_ora_manager {
 			strbuf.append(",CASE WHEN RTN_CD='67' THEN SUM(FEE) ELSE 0 END ITEM_FEE67 \r\n");
 			strbuf.append("FROM \r\n");
 			strbuf.append("TB_MNG_DEPDATA \r\n");
-			strbuf.append("WHERE MID IN (SELECT MID FROM TB_BAS_MIDMAP where ORG_CD= '" + orgcd + "')  " + set_where + " \r\n");
+			strbuf.append("WHERE MID IN (SELECT MID FROM TB_BAS_MIDMAP where ORG_CD= '" + orgcd + "')  " + set_where_dep + " \r\n");
 			strbuf.append("GROUP BY DEP_SEQ, RTN_CD \r\n");
 			strbuf.append(") \r\n");
 			strbuf.append("GROUP BY DEP_SEQ \r\n");
@@ -2728,6 +2729,7 @@ public class trans_ora_manager {
 		String orgcd = resultList.get(0);
 		String depcd_where = resultList.get(1);
 		String set_where = resultList.get(2);
+		String set_where_dep = resultList.get(3);
 	
 		try {
 			strbuf = new StringBuffer();
@@ -2844,6 +2846,7 @@ public class trans_ora_manager {
 		String orgcd = resultList.get(0);
 		String depcd_where = resultList.get(1);
 		String set_where = resultList.get(2);
+		String set_where_dep = resultList.get(3);
 
 		try {
 			strbuf = new StringBuffer();
@@ -2969,6 +2972,7 @@ public class trans_ora_manager {
 		String orgcd = resultList.get(0);
 		String depcd_where = resultList.get(1);
 		String set_where = resultList.get(2);
+		String set_where_dep = resultList.get(3);
 
 		try {
 			strbuf = new StringBuffer();
@@ -3023,7 +3027,7 @@ public class trans_ora_manager {
 			strbuf.append(",CASE WHEN RTN_CD='67' THEN SUM(FEE) ELSE 0 END ITEM_FEE67 \r\n");
 			strbuf.append("FROM \r\n");
 			strbuf.append("TB_MNG_DEPDATA \r\n");
-			strbuf.append("WHERE MID IN (SELECT MID FROM TB_BAS_MIDMAP where ORG_CD= '" + orgcd + "') " + set_where + " \r\n");
+			strbuf.append("WHERE MID IN (SELECT MID FROM TB_BAS_MIDMAP where ORG_CD= '" + orgcd + "') " + set_where_dep + " \r\n");
 			strbuf.append("GROUP BY APP_DD, REQ_DD, EXP_DD, MID, TID, RTN_CD \r\n");
 			strbuf.append(") \r\n");
 			strbuf.append("GROUP BY APP_DD, REQ_DD, EXP_DD, TID, MID \r\n");
@@ -3124,6 +3128,7 @@ public class trans_ora_manager {
 		String orgcd = resultList.get(0);
 		String depcd_where = resultList.get(1);
 		String set_where = resultList.get(2);
+		String set_where_dep = resultList.get(3);
 		
 		try {
 			strbuf = new StringBuffer();
@@ -3243,7 +3248,7 @@ public class trans_ora_manager {
 			strbuf.append(",CASE WHEN ACQ_CD IN ('VC9995', '995', '9995','95') AND RTN_CD='67' THEN SUM(FEE) ELSE 0 END KAKAOCF  \r\n");
 			strbuf.append("FROM  \r\n");
 			strbuf.append("TB_MNG_DEPDATA  \r\n");
-			strbuf.append("WHERE MID IN (SELECT MID FROM TB_BAS_MIDMAP where ORG_CD= '" + orgcd + "') " + set_where + " \r\n");
+			strbuf.append("WHERE MID IN (SELECT MID FROM TB_BAS_MIDMAP where ORG_CD= '" + orgcd + "') " + set_where_dep + " \r\n");
 			strbuf.append("GROUP BY  \r\n");
 			strbuf.append("TID, ACQ_CD, RTN_CD  \r\n");
 			strbuf.append(") GROUP BY TID  \r\n");
@@ -3328,6 +3333,7 @@ public class trans_ora_manager {
 		String orgcd = resultList.get(0);
 		String depcd_where = resultList.get(1);
 		String set_where = resultList.get(2);
+		String set_where_dep = resultList.get(3);
 		
 		try {
 			strbuf = new StringBuffer();
@@ -3376,7 +3382,7 @@ public class trans_ora_manager {
 			strbuf.append("LEFT OUTER JOIN( \r\n");
 			strbuf.append("SELECT PUR_CD, PUR_NM FROM TB_BAS_PURINFO \r\n");
 			strbuf.append(")T6 ON(T2.PUR_CD=T6.PUR_CD) \r\n");
-			strbuf.append("WHERE MID IN (SELECT MID FROM TB_BAS_MIDMAP where ORG_CD= '" + orgcd + "') " + set_where + " \r\n");
+			strbuf.append("WHERE MID IN (SELECT MID FROM TB_BAS_MIDMAP where ORG_CD= '" + orgcd + "') " + set_where_dep + " \r\n");
 
 			
 			//System.lineSeparator()
@@ -3455,6 +3461,7 @@ public class trans_ora_manager {
 		String orgcd = resultList.get(0);
 		String depcd_where = resultList.get(1);
 		String set_where = resultList.get(2);
+		String set_where_dep = resultList.get(3);
 		
 		try {
 			strbuf = new StringBuffer();
@@ -3547,7 +3554,7 @@ public class trans_ora_manager {
 			strbuf.append(",CASE WHEN ACQ_CD IN ('VC9995', '995', '9995','95') AND RTN_CD='67' THEN SUM(FEE) ELSE 0 END KAKAOCF  \r\n");
 			strbuf.append("FROM \r\n");
 			strbuf.append("TB_MNG_DEPDATA \r\n");
-			strbuf.append("WHERE MID IN (SELECT MID FROM TB_BAS_MIDMAP where ORG_CD= '" + orgcd + "') " + set_where + " \r\n");
+			strbuf.append("WHERE MID IN (SELECT MID FROM TB_BAS_MIDMAP where ORG_CD= '" + orgcd + "') " + set_where_dep + " \r\n");
 			strbuf.append("GROUP BY \r\n");
 			strbuf.append("TID, ACQ_CD, RTN_CD \r\n");
 			strbuf.append(") GROUP BY TID \r\n");
@@ -3631,6 +3638,7 @@ public class trans_ora_manager {
 		String orgcd = resultList.get(0);
 		String depcd_where = resultList.get(1);
 		String set_where = resultList.get(2);
+		String set_where_dep = resultList.get(3);
 		
 		try {
 			strbuf = new StringBuffer();
@@ -3723,7 +3731,7 @@ public class trans_ora_manager {
 			strbuf.append("SELECT MER_NO, MTYPE FROM TB_BAS_MERINFO WHERE ORG_CD= '" + orgcd + "' AND MTYPE='EDI' \r\n");
 			strbuf.append(")MT2 ON(MT1.MID=MT2.MER_NO) \r\n");
 			strbuf.append("WHERE MT1.ORG_CD= '" + orgcd + "' AND MT2.MTYPE='EDI' \r\n");
-			strbuf.append(") and NVL(TRAN_STAT,'TR00') IN ('TR00','RV01','DP99') " + set_where + " \r\n");
+			strbuf.append(") and NVL(TRAN_STAT,'TR00') IN ('TR00','RV01','DP99') " + set_where_dep + " \r\n");
 			strbuf.append("order by APPDD desc, apptm desc \r\n");
 			strbuf.append(") \r\n");
 			strbuf.append(") \r\n");
@@ -3803,6 +3811,7 @@ public class trans_ora_manager {
 		String orgcd = resultList.get(0);
 		String depcd_where = resultList.get(1);
 		String set_where = resultList.get(2);
+		String set_where_dep = resultList.get(3);
 		
 		try {
 			strbuf = new StringBuffer();
@@ -3862,7 +3871,7 @@ public class trans_ora_manager {
 			strbuf.append("SELECT MER_NO, MTYPE FROM TB_BAS_MERINFO WHERE ORG_CD= '" + orgcd + "' AND MTYPE='EDI' \r\n");
 			strbuf.append(")MT2 ON(MT1.MID=MT2.MER_NO) \r\n");
 			strbuf.append("WHERE MT1.ORG_CD= '" + orgcd + "' AND MT2.MTYPE='EDI' \r\n");
-			strbuf.append(") and NVL(TRAN_STAT,'TR00') IN ('TR00','RV01','DP99') " + set_where + " \r\n");
+			strbuf.append(") and NVL(TRAN_STAT,'TR00') IN ('TR00','RV01','DP99') " + set_where_dep + " \r\n");
 			strbuf.append("order by APPDD desc, apptm desc \r\n");
 			strbuf.append(") \r\n");
 			strbuf.append(") \r\n");
@@ -3943,6 +3952,7 @@ public class trans_ora_manager {
 		String orgcd = resultList.get(0);
 		String depcd_where = resultList.get(1);
 		String set_where = resultList.get(2);
+		String set_where_dep = resultList.get(3);
 		
 		try {
 			strbuf = new StringBuffer();
@@ -3957,7 +3967,7 @@ public class trans_ora_manager {
 			strbuf.append("to_char(regdate, 'yyyyMMdd') REQ_DD \r\n");
 			strbuf.append("FROM \r\n");
 			strbuf.append("TB_HIS_DPREQ_TOT \r\n");
-			strbuf.append("WHERE ORGCD = '" + orgcd + "' " + set_where + " \r\n");
+			strbuf.append("WHERE ORGCD = '" + orgcd + "' " + set_where_dep + " \r\n");
 			strbuf.append("order by REQ_DD desc \r\n");
 
 			
@@ -4035,6 +4045,7 @@ public class trans_ora_manager {
 		String orgcd = resultList.get(0);
 		String depcd_where = resultList.get(1);
 		String set_where = resultList.get(2);
+		String set_where_dep = resultList.get(3);
 		
 		try {
 			strbuf = new StringBuffer();
@@ -4162,7 +4173,7 @@ public class trans_ora_manager {
 			strbuf.append("SELECT DEP_NM, DEP_CD FROM TB_BAS_DEPART WHERE ORG_CD= '" + orgcd + "' \r\n");
 			strbuf.append(")T4 ON(T3.DEP_CD=T4.DEP_CD) \r\n");
 			strbuf.append("LEFT OUTER JOIN( SELECT PUR_NM, PUR_OCD, PUR_KOCES, PUR_CD FROM TB_BAS_PURINFO)T5 ON (T1.ACQ_CD=T5.PUR_OCD OR T1.ACQ_CD=T5.PUR_KOCES OR T1.ACQ_CD=T5.PUR_CD) \r\n");
-			strbuf.append("WHERE SVCGB IN ('CC', 'CE') AND AUTHCD='0000' AND TID IN (select tid from tb_bas_tidmap where ORG_CD= '" + orgcd + "' " + depcd_where + ")" + set_where + " and T1.DEPOREQDD<='TOTALROW' \r\n");
+			strbuf.append("WHERE SVCGB IN ('CC', 'CE') AND AUTHCD='0000' AND TID IN (select tid from tb_bas_tidmap where ORG_CD= '" + orgcd + "' " + depcd_where + ")" + set_where_dep + " and T1.DEPOREQDD<='TOTALROW' \r\n");
 			strbuf.append("order by APPDD desc, apptm desc \r\n");
 			strbuf.append(") \r\n");
 			strbuf.append(") \r\n");
@@ -4242,6 +4253,8 @@ public class trans_ora_manager {
 		String orgcd = resultList.get(0);
 		String depcd_where = resultList.get(1);
 		String set_where = resultList.get(2);
+		String set_where_dep = resultList.get(3);
+		
 		
 		try {
 			strbuf = new StringBuffer();
@@ -4443,6 +4456,7 @@ public class trans_ora_manager {
 		String orgcd = resultList.get(0);
 		String depcd_where = resultList.get(1);
 		String set_where = resultList.get(2);
+		String set_where_dep = resultList.get(3);
 		
 		try {
 			strbuf = new StringBuffer();
@@ -4524,6 +4538,7 @@ public class trans_ora_manager {
 		String orgcd = resultList.get(0);
 		String depcd_where = resultList.get(1);
 		String set_where = resultList.get(2);
+		String set_where_dep = resultList.get(3);
 		
 		try {
 			strbuf = new StringBuffer();
@@ -4565,73 +4580,73 @@ public class trans_ora_manager {
 			strbuf.append("GROUP BY TID \r\n");
 			strbuf.append(")T1 \r\n");
 			strbuf.append("LEFT OUTER JOIN( \r\n");
-			strbuf.append("SELECT TID, SUM(SALE_AMT) BCA FROM TB_MNG_DEPDATA WHERE ACQ_CD='001' AND RTN_CD='60' AND " + set_where + " GROUP BY TID \r\n");
+			strbuf.append("SELECT TID, SUM(SALE_AMT) BCA FROM TB_MNG_DEPDATA WHERE ACQ_CD='001' AND RTN_CD='60' AND " + set_where_dep + " GROUP BY TID \r\n");
 			strbuf.append(")T2 ON(T1.TID=T2.TID) \r\n");
 			strbuf.append("LEFT OUTER JOIN( \r\n");
-			strbuf.append("SELECT TID, SUM(SALE_AMT) BCC FROM TB_MNG_DEPDATA WHERE ACQ_CD='001' AND RTN_CD='67' AND " + set_where + " GROUP BY TID \r\n");
+			strbuf.append("SELECT TID, SUM(SALE_AMT) BCC FROM TB_MNG_DEPDATA WHERE ACQ_CD='001' AND RTN_CD='67' AND " + set_where_dep + " GROUP BY TID \r\n");
 			strbuf.append(")T3 ON(T1.TID=T3.TID) \r\n");
 			strbuf.append(" \r\n");
 			strbuf.append("LEFT OUTER JOIN( \r\n");
-			strbuf.append("SELECT TID, SUM(SALE_AMT) NHA FROM TB_MNG_DEPDATA WHERE ACQ_CD='016' AND RTN_CD='60' AND " + set_where + " GROUP BY TID \r\n");
+			strbuf.append("SELECT TID, SUM(SALE_AMT) NHA FROM TB_MNG_DEPDATA WHERE ACQ_CD='016' AND RTN_CD='60' AND " + set_where_dep + " GROUP BY TID \r\n");
 			strbuf.append(")T4 ON(T1.TID=T4.TID) \r\n");
 			strbuf.append("LEFT OUTER JOIN( \r\n");
-			strbuf.append("SELECT TID, SUM(SALE_AMT) NHC FROM TB_MNG_DEPDATA WHERE ACQ_CD='016' AND RTN_CD='67' AND " + set_where + " GROUP BY TID \r\n");
+			strbuf.append("SELECT TID, SUM(SALE_AMT) NHC FROM TB_MNG_DEPDATA WHERE ACQ_CD='016' AND RTN_CD='67' AND " + set_where_dep + " GROUP BY TID \r\n");
 			strbuf.append(")T5 ON(T1.TID=T5.TID) \r\n");
 			strbuf.append(" \r\n");
 			strbuf.append("LEFT OUTER JOIN( \r\n");
-			strbuf.append("SELECT TID, SUM(SALE_AMT) KBA FROM TB_MNG_DEPDATA WHERE ACQ_CD='002' AND RTN_CD='60' AND " + set_where + " GROUP BY TID \r\n");
+			strbuf.append("SELECT TID, SUM(SALE_AMT) KBA FROM TB_MNG_DEPDATA WHERE ACQ_CD='002' AND RTN_CD='60' AND " + set_where_dep + " GROUP BY TID \r\n");
 			strbuf.append(")T6 ON(T1.TID=T6.TID) \r\n");
 			strbuf.append("LEFT OUTER JOIN( \r\n");
-			strbuf.append("SELECT TID, SUM(SALE_AMT) KBC FROM TB_MNG_DEPDATA WHERE ACQ_CD='002' AND RTN_CD='67' AND " + set_where + " GROUP BY TID \r\n");
+			strbuf.append("SELECT TID, SUM(SALE_AMT) KBC FROM TB_MNG_DEPDATA WHERE ACQ_CD='002' AND RTN_CD='67' AND " + set_where_dep + " GROUP BY TID \r\n");
 			strbuf.append(")T7 ON(T1.TID=T7.TID) \r\n");
 			strbuf.append(" \r\n");
 			strbuf.append("LEFT OUTER JOIN( \r\n");
-			strbuf.append("SELECT TID, SUM(SALE_AMT) SSA FROM TB_MNG_DEPDATA WHERE ACQ_CD='003' AND RTN_CD='60' AND " + set_where + " GROUP BY TID \r\n");
+			strbuf.append("SELECT TID, SUM(SALE_AMT) SSA FROM TB_MNG_DEPDATA WHERE ACQ_CD='003' AND RTN_CD='60' AND " + set_where_dep + " GROUP BY TID \r\n");
 			strbuf.append(")T8 ON(T1.TID=T8.TID) \r\n");
 			strbuf.append("LEFT OUTER JOIN( \r\n");
-			strbuf.append("SELECT TID, SUM(SALE_AMT) SSC FROM TB_MNG_DEPDATA WHERE ACQ_CD='003' AND RTN_CD='67' AND " + set_where + " GROUP BY TID \r\n");
+			strbuf.append("SELECT TID, SUM(SALE_AMT) SSC FROM TB_MNG_DEPDATA WHERE ACQ_CD='003' AND RTN_CD='67' AND " + set_where_dep + " GROUP BY TID \r\n");
 			strbuf.append(")T9 ON(T1.TID=T9.TID) \r\n");
 			strbuf.append(" \r\n");
 			strbuf.append("LEFT OUTER JOIN( \r\n");
-			strbuf.append("SELECT TID, SUM(SALE_AMT) HNA FROM TB_MNG_DEPDATA WHERE ACQ_CD='005' AND RTN_CD='60' AND " + set_where + " GROUP BY TID \r\n");
+			strbuf.append("SELECT TID, SUM(SALE_AMT) HNA FROM TB_MNG_DEPDATA WHERE ACQ_CD='005' AND RTN_CD='60' AND " + set_where_dep + " GROUP BY TID \r\n");
 			strbuf.append(")T10 ON(T1.TID=T10.TID) \r\n");
 			strbuf.append("LEFT OUTER JOIN( \r\n");
-			strbuf.append("SELECT TID, SUM(SALE_AMT) HNC FROM TB_MNG_DEPDATA WHERE ACQ_CD='005' AND RTN_CD='67' AND " + set_where + " GROUP BY TID \r\n");
+			strbuf.append("SELECT TID, SUM(SALE_AMT) HNC FROM TB_MNG_DEPDATA WHERE ACQ_CD='005' AND RTN_CD='67' AND " + set_where_dep + " GROUP BY TID \r\n");
 			strbuf.append(")T11 ON(T1.TID=T11.TID) \r\n");
 			strbuf.append(" \r\n");
 			strbuf.append("LEFT OUTER JOIN( \r\n");
-			strbuf.append("SELECT TID, SUM(SALE_AMT) LOA FROM TB_MNG_DEPDATA WHERE ACQ_CD='007' AND RTN_CD='60' AND " + set_where + " GROUP BY TID \r\n");
+			strbuf.append("SELECT TID, SUM(SALE_AMT) LOA FROM TB_MNG_DEPDATA WHERE ACQ_CD='007' AND RTN_CD='60' AND " + set_where_dep + " GROUP BY TID \r\n");
 			strbuf.append(")T12 ON(T1.TID=T12.TID) \r\n");
 			strbuf.append("LEFT OUTER JOIN( \r\n");
-			strbuf.append("SELECT TID, SUM(SALE_AMT) LOC FROM TB_MNG_DEPDATA WHERE ACQ_CD='007' AND RTN_CD='67' AND " + set_where + " GROUP BY TID \r\n");
+			strbuf.append("SELECT TID, SUM(SALE_AMT) LOC FROM TB_MNG_DEPDATA WHERE ACQ_CD='007' AND RTN_CD='67' AND " + set_where_dep + " GROUP BY TID \r\n");
 			strbuf.append(")T13 ON(T1.TID=T13.TID) \r\n");
 			strbuf.append(" \r\n");
 			strbuf.append("LEFT OUTER JOIN( \r\n");
-			strbuf.append("SELECT TID, SUM(SALE_AMT) HDA FROM TB_MNG_DEPDATA WHERE ACQ_CD='008' AND RTN_CD='60' AND " + set_where + " GROUP BY TID \r\n");
+			strbuf.append("SELECT TID, SUM(SALE_AMT) HDA FROM TB_MNG_DEPDATA WHERE ACQ_CD='008' AND RTN_CD='60' AND " + set_where_dep + " GROUP BY TID \r\n");
 			strbuf.append(")T14 ON(T1.TID=T14.TID) \r\n");
 			strbuf.append("LEFT OUTER JOIN( \r\n");
-			strbuf.append("SELECT TID, SUM(SALE_AMT) HDC FROM TB_MNG_DEPDATA WHERE ACQ_CD='008' AND RTN_CD='67' AND " + set_where + " GROUP BY TID \r\n");
+			strbuf.append("SELECT TID, SUM(SALE_AMT) HDC FROM TB_MNG_DEPDATA WHERE ACQ_CD='008' AND RTN_CD='67' AND " + set_where_dep + " GROUP BY TID \r\n");
 			strbuf.append(")T15 ON(T1.TID=T15.TID) \r\n");
 			strbuf.append(" \r\n");
 			strbuf.append("LEFT OUTER JOIN( \r\n");
-			strbuf.append("SELECT TID, SUM(SALE_AMT) SIA FROM TB_MNG_DEPDATA WHERE ACQ_CD='004' AND RTN_CD='60' AND " + set_where + " GROUP BY TID \r\n");
+			strbuf.append("SELECT TID, SUM(SALE_AMT) SIA FROM TB_MNG_DEPDATA WHERE ACQ_CD='004' AND RTN_CD='60' AND " + set_where_dep + " GROUP BY TID \r\n");
 			strbuf.append(")T16 ON(T1.TID=T16.TID) \r\n");
 			strbuf.append("LEFT OUTER JOIN( \r\n");
-			strbuf.append("SELECT TID, SUM(SALE_AMT) SIC FROM TB_MNG_DEPDATA WHERE ACQ_CD='004' AND RTN_CD='67' AND " + set_where + " GROUP BY TID \r\n");
+			strbuf.append("SELECT TID, SUM(SALE_AMT) SIC FROM TB_MNG_DEPDATA WHERE ACQ_CD='004' AND RTN_CD='67' AND " + set_where_dep + " GROUP BY TID \r\n");
 			strbuf.append(")T17 ON(T1.TID=T17.TID) \r\n");
 			strbuf.append(" \r\n");
 			strbuf.append("LEFT OUTER JOIN( \r\n");
-			strbuf.append("SELECT TID, SUM(SALE_AMT) KKA FROM TB_MNG_DEPDATA WHERE ACQ_CD='022' AND RTN_CD='60' AND " + set_where + " GROUP BY TID \r\n");
+			strbuf.append("SELECT TID, SUM(SALE_AMT) KKA FROM TB_MNG_DEPDATA WHERE ACQ_CD='022' AND RTN_CD='60' AND " + set_where_dep + " GROUP BY TID \r\n");
 			strbuf.append(")T18 ON(T1.TID=T18.TID) \r\n");
 			strbuf.append("LEFT OUTER JOIN( \r\n");
-			strbuf.append("SELECT TID, SUM(SALE_AMT) KKC FROM TB_MNG_DEPDATA WHERE ACQ_CD='022' AND RTN_CD='67' AND " + set_where + " GROUP BY TID \r\n");
+			strbuf.append("SELECT TID, SUM(SALE_AMT) KKC FROM TB_MNG_DEPDATA WHERE ACQ_CD='022' AND RTN_CD='67' AND " + set_where_dep + " GROUP BY TID \r\n");
 			strbuf.append(")T19 ON(T1.TID=T19.TID) \r\n");
 			strbuf.append(" \r\n");
 			strbuf.append("LEFT OUTER JOIN( \r\n");
-			strbuf.append("SELECT TID, SUM(SALE_AMT) ZRA FROM TB_MNG_DEPDATA WHERE ACQ_CD='012' AND RTN_CD='60' AND " + set_where + " GROUP BY TID \r\n");
+			strbuf.append("SELECT TID, SUM(SALE_AMT) ZRA FROM TB_MNG_DEPDATA WHERE ACQ_CD='012' AND RTN_CD='60' AND " + set_where_dep + " GROUP BY TID \r\n");
 			strbuf.append(")T20 ON(T1.TID=T20.TID) \r\n");
 			strbuf.append("LEFT OUTER JOIN( \r\n");
-			strbuf.append("SELECT TID, SUM(SALE_AMT) ZRC FROM TB_MNG_DEPDATA WHERE ACQ_CD='012' AND RTN_CD='67' AND " + set_where + " GROUP BY TID \r\n");
+			strbuf.append("SELECT TID, SUM(SALE_AMT) ZRC FROM TB_MNG_DEPDATA WHERE ACQ_CD='012' AND RTN_CD='67' AND " + set_where_dep + " GROUP BY TID \r\n");
 			strbuf.append(")T21 ON(T1.TID=T21.TID) \r\n");
 			strbuf.append(" \r\n");
 			strbuf.append("LEFT OUTER JOIN( \r\n");
@@ -4714,6 +4729,7 @@ public class trans_ora_manager {
 		String orgcd = resultList.get(0);
 		String depcd_where = resultList.get(1);
 		String set_where = resultList.get(2);
+		String set_where_dep = resultList.get(3);
 		
 		try {
 			strbuf = new StringBuffer();
