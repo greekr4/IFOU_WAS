@@ -5805,5 +5805,35 @@ public class trans_ora_manager {
 	}
 	
 	
+	/**
+	 * 아이디 중복
+	 * @param user_id
+	 * @return 1보다크면 : 중복 / 0 : 중복없음 (인서트된 로우 수)
+	 * 2023-04-05 김태균
+	 */
+	public int isIdDuplicated (String user_id) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			strbuf = new StringBuffer();
+			strbuf.append("SELECT COUNT(1) CNT FROM TB_BAS_USER WHERE\r\n");
+			strbuf.append("USER_ID = '"+user_id+"'\r\n");
+			con = getOraConnect();
+			stmt = con.prepareStatement(strbuf.toString());
+			System.out.println(strbuf.toString());	//로그
+			rs = stmt.executeQuery();
+			if(rs.next()) {
+			return rs.getInt("CNT");
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			setOraClose(con,stmt,rs);
+		}
+		return 0;
+	}
+	
 	
 }//end class

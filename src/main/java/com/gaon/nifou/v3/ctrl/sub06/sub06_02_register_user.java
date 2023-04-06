@@ -33,13 +33,18 @@ public class sub06_02_register_user extends HttpServlet {
 		String user_pw = request.getParameter("user_pw");
 		String user_name = request.getParameter("user_name");
 		String user_lv = request.getParameter("user_lv");
-		String user_tel = request.getParameter("user_tel");
+		String user_tel1 = request.getParameter("user_tel1");
 		String user_tel2 = request.getParameter("user_tel2");
 		String user_email = request.getParameter("user_email");
 		String ins_id = request.getParameter("ins_id");
-		int res = oram.register_user(depcd,orgcd, user_id, user_pw, user_lv, user_tel, user_tel2,user_name,user_email,ins_id);
+		
 		JSONObject res_json = new JSONObject();
+		if (oram.isIdDuplicated(user_id) == 0) {
+		int res = oram.register_user(depcd,orgcd, user_id, user_pw, user_lv, user_tel1, user_tel2,user_name,user_email,ins_id);
 		res_json.put("res", res);
+		}else {
+		res_json.put("res",2);
+		}
 		out.print(res_json);
 
 	}
