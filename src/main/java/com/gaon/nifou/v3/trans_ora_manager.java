@@ -187,10 +187,10 @@ public class trans_ora_manager {
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		
-		String[] rtnstr = new String[10];
+		String[] rtnstr = new String[11];
 		try {
 			strbuf = new StringBuffer();
-			strbuf.append("SELECT t2.USER_ID, t2.ORG_CD, t2.DEP_CD , t1.ORG_NO , t1.PTAB , t1.VTAB , t1.DTAB , t2.USER_LV,t2.TRANS_NO,t2.AUTH_SEQ FROM TB_BAS_ORG t1 ");
+			strbuf.append("SELECT t2.USER_ID, t2.ORG_CD, t2.DEP_CD , t1.ORG_NO , t1.PTAB , t1.VTAB , t1.DTAB , t2.USER_LV,t2.TRANS_NO,t2.AUTH_SEQ,t2.USER_NM FROM TB_BAS_ORG t1 ");
 			strbuf.append("INNER JOIN TB_BAS_USER t2 ");
 			strbuf.append("ON (t1.ORG_CD=t2.ORG_CD) ");
 			strbuf.append("where t2.USER_ID = '" + uid +"'");
@@ -211,6 +211,7 @@ public class trans_ora_manager {
 				rtnstr[7] = rs.getString(8);
 				rtnstr[8] = rs.getString(9);
 				rtnstr[9] = rs.getString(10);
+				rtnstr[10] = rs.getString(11);
 			}
 
 		} catch (Exception e) {
@@ -529,14 +530,14 @@ public class trans_ora_manager {
 					jsonob2 = (JSONObject) jary.get(i);	
 					String id = (String)(jsonob2.get("id"));
 					if(!Objects.equals(id, "ORN") && !Objects.equals(id, null)) {
-					System.out.println(id);
+					//System.out.println(id);
 					
 					if(Objects.equals(rs.getString(id), null)) {
 						jsonob.put(id,"");	
 					}else{
 						jsonob.put(id,rs.getString(id));	
 					}
-					System.out.println("¼º°ø");
+					//System.out.println("¼º°ø");
 					}else {
 					jsonob.put("ORN",orn);
 					orn++;
@@ -5444,7 +5445,7 @@ public class trans_ora_manager {
 	}
 	
 	/**
-	 * °¡¸ÍÁ¡°ü¸®_À¯Àú
+	 * 
 	 * @param orgcd
 	 * @return ...
 	 * 2023-04-03 ±èÅÂ±Õ
@@ -5835,5 +5836,144 @@ public class trans_ora_manager {
 		return 0;
 	}
 	
+
+	/**
+	 * °¡¸ÍÁ¡°ü¸®_À¯Àú µðÅ×ÀÏ
+	 * @param orgcd
+	 * @return ...
+	 * 2023-04-03 ±èÅÂ±Õ
+	 */
+	public JSONObject get_sub0602detail_user(String orgcd,String memcd) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		JSONObject jsonob = new JSONObject();
+
+		try {
+			strbuf = new StringBuffer();
+			strbuf.append("SELECT \r\n");
+			strbuf.append("MEM_CD\r\n");
+			strbuf.append(", ORG_CD\r\n");
+			strbuf.append(", T1.DEP_CD\r\n");
+			strbuf.append(", DEP_NM\r\n");
+			strbuf.append(", AUTH_SEQ\r\n");
+			strbuf.append(", USER_ID\r\n");
+			strbuf.append(", USER_PW\r\n");
+			strbuf.append(", USER_NM\r\n");
+			strbuf.append(", USER_TEL1\r\n");
+			strbuf.append(", USER_TEL2\r\n");
+			strbuf.append(", USER_MEMO\r\n");
+			strbuf.append(", USER_EMAIL\r\n");
+			strbuf.append(", USER_FAX\r\n");
+			strbuf.append(", USER_LV\r\n");
+			strbuf.append(", TO_CHAR(INS_DT,'YYYY-MM-DD HH24:MI:SS') INS_DT\r\n");
+			strbuf.append("FROM\r\n");
+			strbuf.append("TB_BAS_USER T1\r\n");
+			strbuf.append("LEFT OUTER JOIN(\r\n");
+			strbuf.append("SELECT DEP_NM, DEP_CD FROM TB_BAS_DEPART\r\n");
+			strbuf.append(")T2 ON(T1.DEP_CD=T2.DEP_CD)\r\n");
+			strbuf.append("WHERE \r\n");
+			strbuf.append("ORG_CD='"+orgcd+"' AND MEM_CD = '"+memcd+"'\r\n");
+			strbuf.append("ORDER BY USER_ID ASC, INS_DT ASC\r\n");
+
+
+			con = getOraConnect();
+			stmt = con.prepareStatement(strbuf.toString());
+			System.out.println(strbuf.toString());	//·Î±×
+			
+			rs = stmt.executeQuery();
+			while(rs.next()) {
+	            jsonob.put("MEM_CD",um.getString(rs.getString("MEM_CD")));
+	            jsonob.put("ORG_CD",um.getString(rs.getString("ORG_CD")));
+	            jsonob.put("DEP_CD",um.getString(rs.getString("DEP_CD")));
+	            jsonob.put("DEP_NM",um.getString(rs.getString("DEP_NM")));
+	            jsonob.put("AUTH_SEQ",um.getString(rs.getString("AUTH_SEQ")));
+	            jsonob.put("USER_ID",um.getString(rs.getString("USER_ID")));
+	            jsonob.put("USER_NM",um.getString(rs.getString("USER_NM")));
+	            jsonob.put("USER_TEL1",um.getString(rs.getString("USER_TEL1")));
+	            jsonob.put("USER_TEL2",um.getString(rs.getString("USER_TEL2")));
+	            jsonob.put("USER_EMAIL",um.getString(rs.getString("USER_EMAIL")));
+	            jsonob.put("INS_DT",um.getString(rs.getString("INS_DT")));
+	            jsonob.put("USER_LV",um.getString(rs.getString("USER_LV")));
+	            jsonob.put("INS_ID",um.getString(rs.getString("USER_FAX")));
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			setOraClose(con,stmt,rs);
+		}
+		return jsonob;
+	}
+	
+	/**
+	 * À¯Àú Á¤º¸ ¼öÁ¤
+	 * @return ...
+	 * 2023-04-03 ±èÅÂ±Õ
+	 */
+	public int modify_user(String memcd, String user_pw, String user_nm, String user_email, String user_tel1, String user_tel2, String user_lv) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		int rowsInserted = 0;
+		try {
+			strbuf = new StringBuffer();
+			strbuf.append("BEGIN \r\n");
+			strbuf.append("UPDATE TB_BAS_USER SET\r\n");
+			strbuf.append("USER_NM = '"+user_nm+"' \r\n");
+			if(!Objects.equals(user_pw, "")) strbuf.append(",USER_PW = '"+user_pw+"' \r\n");
+			strbuf.append(",USER_EMAIL = '"+user_email+"' \r\n");
+			strbuf.append(",USER_TEL1 = '"+user_tel1+"' \r\n");
+			strbuf.append(",USER_TEL2 = '"+user_tel2+"' \r\n");
+			strbuf.append(",USER_LV = '"+user_lv+"' \r\n");
+			strbuf.append("WHERE MEM_CD = '"+memcd+"'; \r\n");
+			strbuf.append("COMMIT; END; \r\n");
+
+			con = getOraConnect();
+			stmt = con.prepareStatement(strbuf.toString());
+			System.out.println(strbuf.toString());	//·Î±×
+			
+			rowsInserted = stmt.executeUpdate();
+					
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			setOraClose(con,stmt,rs);
+		}
+		return rowsInserted;
+	}
+	
+	/**
+	 * À¯Àú Á¤º¸ »èÁ¦
+	 * @return ...
+	 * 2023-04-03 ±èÅÂ±Õ
+	 */
+	public int delete_user(String memcd) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		int rowsInserted = 0;
+		try {
+			strbuf = new StringBuffer();
+			strbuf.append("BEGIN \r\n");
+			strbuf.append("DELETE FROM TB_BAS_USER WHERE\r\n");
+			strbuf.append("MEM_CD = '"+memcd+"';\r\n");
+			strbuf.append("COMMIT; END; \r\n");
+
+			con = getOraConnect();
+			stmt = con.prepareStatement(strbuf.toString());
+			System.out.println(strbuf.toString());	//·Î±×
+			
+			rowsInserted = stmt.executeUpdate();
+					
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			setOraClose(con,stmt,rs);
+		}
+		return rowsInserted;
+	}
 	
 }//end class
