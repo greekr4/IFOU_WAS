@@ -402,6 +402,7 @@ public class trans_ora_manager {
 		String orgcd = resultList.get(0);
 		String depcd_where = resultList.get(1);
 		String set_where = resultList.get(2);
+		String set_where_dep = resultList.get(3);
 		
 		try {
 			strbuf = new StringBuffer();			
@@ -498,6 +499,7 @@ public class trans_ora_manager {
 			strbuf.append("			GLOB_MNG_ICVAN T1\r\n");
 			strbuf.append("		LEFT OUTER JOIN(\r\n");
 			strbuf.append("			SELECT EXP_DD, REQ_DD, REG_DD, APP_DD, TRANIDX, RSC_CD, RTN_CD FROM TB_MNG_DEPDATA\r\n");
+			strbuf.append("			WHERE DEP_SEQ IS NOT NULL" + set_where_dep + "\r\n");
 			strbuf.append("		)T2 ON(T1.APPDD=T2.APP_DD AND T1.TRANIDX=T2.TRANIDX)\r\n");
 			strbuf.append("		LEFT OUTER JOIN( \r\n");
 			strbuf.append("			SELECT DEP_CD, TERM_NM, TERM_ID FROM TB_BAS_TIDMST WHERE ORG_CD='" + orgcd + "'\r\n");

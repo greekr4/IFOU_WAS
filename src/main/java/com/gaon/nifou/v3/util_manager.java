@@ -180,22 +180,22 @@ public class util_manager {
 		        value = value.trim(); // 공백 제거
 
 		        if (value.equals("1")) {
-		            conditionBuilder.append(" (APPGB = 'A' AND (OAPP_AMT IS NULL OR OAPP_AMT = 0))");
+		            conditionBuilder.append(" RTN_CD IN('60', '67')");
 		        } else if (value.equals("2")) {
-		            conditionBuilder.append(" ((APPGB = 'A' AND OAPP_AMT = APPDD) OR (APPGB = 'C' AND OAPPDD = APPDD))");
+		            conditionBuilder.append(" RTN_CD IN('61', '64')");
 		        } else if (value.equals("3")) {
-		            conditionBuilder.append(" ((APPGB = 'A' AND OAPP_AMT <> APPDD) OR (APPGB = 'C' AND OAPPDD <> APPDD))");
+		            conditionBuilder.append(" RTN_CD IS NULL");
 		        }
 
 		        // 다음 조건을 위해 OR 추가
 		        if (!value.equals(transtatValues[transtatValues.length - 1])) {
-		            conditionBuilder.append(" OR");
+		            conditionBuilder.append(" AND");
 		        }
 		    }
 
 		    // 완성된 조건을 set_where에 추가
 		    if (conditionBuilder.length() > 0) {
-		        set_where += " AND (" + conditionBuilder.toString().trim().replaceAll("\\s+OR$", "") + ")";
+		        set_where_dep += " (" + conditionBuilder.toString().trim().replaceAll("\\s+OR$", "") + ")";
 		    }
 		}
 
