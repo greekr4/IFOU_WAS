@@ -20,8 +20,7 @@ import com.gaon.nifou.v3.util_manager;
 public class sub02_01 extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		
-		
+				
 		request.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html; charset=UTF-8");
 		response.setHeader("Access-Control-Allow-Origin", "*");
@@ -32,13 +31,9 @@ public class sub02_01 extends HttpServlet {
 		String orgcd = request.getParameter("orgcd");
 		String pages = request.getParameter("pages");
 		String DEBUG = request.getParameter("DEBUG");
-
 		
 		util_manager um = new util_manager();
-		HashMap<String, String> whereqry = um.get_where_qry(request);
-		
-		
-		
+		HashMap<String, String> whereqry = um.get_where_qry(request);		
 		
 		out.print(oram.get_sub0201(oram.get_tb_sys_domain(orgcd, pages),DEBUG,whereqry));
 
