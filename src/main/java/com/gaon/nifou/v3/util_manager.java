@@ -119,7 +119,8 @@ public class util_manager {
 		}
 		
 		if(!Objects.equals(whereqry.get("authstat"),null )) {
-			set_where += " AND APP_GB = '" + whereqry.get("authstat") + "'";
+			set_where += " AND APPGB = '" + whereqry.get("authstat") + "'";
+			set_where_dep += " AND RTN_CD = '" + whereqry.get("authstat") + "'";
 		}
 		
 		if(!Objects.equals(whereqry.get("sexpdd"),null )) {
@@ -137,11 +138,73 @@ public class util_manager {
 		if(!Objects.equals(whereqry.get("ereqdd"),null )) {
 			set_where_dep += " AND REQ_DD <= '" + whereqry.get("ereqdd") + "'";
 		}
+				
+		if (!Objects.equals(whereqry.get("transtat"), null)) {
+
+		    // transtat 값을 쉼표(,)로 분리하여 배열로 변환
+		    String[] transtatValues = whereqry.get("transtat").split(",");
+
+		    // transtat 배열의 값들을 순회하며 쿼리에 추가
+		    StringBuilder conditionBuilder = new StringBuilder();
+		    for (String value : transtatValues) {
+		        value = value.trim(); // 공백 제거
+
+		        if (value.equals("1")) {
+		            conditionBuilder.append(" (APPGB = 'A' AND (OAPP_AMT IS NULL OR OAPP_AMT = 0))");
+		        } else if (value.equals("2")) {
+		            conditionBuilder.append(" ((APPGB = 'A' AND OAPP_AMT = APPDD) OR (APPGB = 'C' AND OAPPDD = APPDD))");
+		        } else if (value.equals("3")) {
+		            conditionBuilder.append(" ((APPGB = 'A' AND OAPP_AMT <> APPDD) OR (APPGB = 'C' AND OAPPDD <> APPDD))");
+		        }
+
+		        // 다음 조건을 위해 OR 추가
+		        if (!value.equals(transtatValues[transtatValues.length - 1])) {
+		            conditionBuilder.append(" OR");
+		        }
+		    }
+
+		    // 완성된 조건을 set_where에 추가
+		    if (conditionBuilder.length() > 0) {
+		        set_where += " AND (" + conditionBuilder.toString().trim().replaceAll("\\s+OR$", "") + ")";
+		    }
+		}
+
+		if (!Objects.equals(whereqry.get("depstat"), null)) {
+
+		    // transtat 값을 쉼표(,)로 분리하여 배열로 변환
+		    String[] transtatValues = whereqry.get("depstat").split(",");
+
+		    // transtat 배열의 값들을 순회하며 쿼리에 추가
+		    StringBuilder conditionBuilder = new StringBuilder();
+		    for (String value : transtatValues) {
+		        value = value.trim(); // 공백 제거
+
+		        if (value.equals("1")) {
+		            conditionBuilder.append(" (APPGB = 'A' AND (OAPP_AMT IS NULL OR OAPP_AMT = 0))");
+		        } else if (value.equals("2")) {
+		            conditionBuilder.append(" ((APPGB = 'A' AND OAPP_AMT = APPDD) OR (APPGB = 'C' AND OAPPDD = APPDD))");
+		        } else if (value.equals("3")) {
+		            conditionBuilder.append(" ((APPGB = 'A' AND OAPP_AMT <> APPDD) OR (APPGB = 'C' AND OAPPDD <> APPDD))");
+		        }
+
+		        // 다음 조건을 위해 OR 추가
+		        if (!value.equals(transtatValues[transtatValues.length - 1])) {
+		            conditionBuilder.append(" OR");
+		        }
+		    }
+
+		    // 완성된 조건을 set_where에 추가
+		    if (conditionBuilder.length() > 0) {
+		        set_where += " AND (" + conditionBuilder.toString().trim().replaceAll("\\s+OR$", "") + ")";
+		    }
+		}
+
 		
-//		미작업
-//		if(!Objects.equals(whereqry.get("transtat"),null )) {
-//			set_where += " AND APP_GB = '" + whereqry.get("transtat") + "'";
-//		}
+		
+		
+			
+			
+			
 		
 		
 //		미작업
