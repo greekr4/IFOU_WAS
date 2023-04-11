@@ -51,6 +51,7 @@ public class util_manager {
 		String depcd_where = "";
 		String set_where = "";
 		String set_where_dep ="";
+		String set_where_req ="";
 		
 		if(!Objects.equals(whereqry.get("depcd"),null )) {
 			depcd_where += " AND DEP_CD = '" + whereqry.get("depcd") + "'";
@@ -59,11 +60,13 @@ public class util_manager {
 		if(!Objects.equals(whereqry.get("sappdd"),null )) {
 			set_where += " AND APPDD >= '" + whereqry.get("sappdd") + "'";
 			set_where_dep += " AND APP_DD >= '" + whereqry.get("sappdd") + "'";
+			set_where_req += " AND SDATE >= '" + whereqry.get("sappdd") + "'";
 		}
 		
 		if(!Objects.equals(whereqry.get("eappdd"),null )) {
 			set_where += " AND APPDD <= '" + whereqry.get("eappdd") + "'";
 			set_where_dep += " AND APP_DD <= '" + whereqry.get("eappdd") + "'";
+			set_where_req += " AND EDATE <= '" + whereqry.get("eappdd") + "'";
 		}
 		
 		if(!Objects.equals(whereqry.get("appno"),null )) {
@@ -101,6 +104,19 @@ public class util_manager {
 			set_where += " AND ACQ_CD = '" + whereqry.get("acqcd") + "'";
 		}
 		
+		if(!Objects.equals(whereqry.get("cashid"),null )) {
+			set_where += " AND CARDNO = '" + whereqry.get("cashid") + "'";
+		}
+		
+		if(!Objects.equals(whereqry.get("cashtp"),null )) {
+			if(!Objects.equals(whereqry.get("cashtp"),"2" )){
+				set_where += " AND DDCGB = '" + whereqry.get("cashtp") + "'";
+			}else {
+				set_where += " AND DDCGB IS NULL";
+			}
+			
+		}
+		
 		if(!Objects.equals(whereqry.get("cardtp"),null )) {
 			set_where += " AND NVL(CHECK_CARD,'N') = '" + whereqry.get("cardtp") + "'";
 		}
@@ -133,10 +149,12 @@ public class util_manager {
 		
 		if(!Objects.equals(whereqry.get("sreqdd"),null )) {
 			set_where_dep += " AND REQ_DD >= '" + whereqry.get("sreqdd") + "'";
+			set_where_req += " AND to_char(REGDATE, 'yyyyMMdd')  >= " + whereqry.get("sreqdd") + "";
 		}
 		
 		if(!Objects.equals(whereqry.get("ereqdd"),null )) {
 			set_where_dep += " AND REQ_DD <= '" + whereqry.get("ereqdd") + "'";
+			set_where_req += " AND to_char(REGDATE, 'yyyyMMdd')  <= " + whereqry.get("sreqdd") + "";
 		}
 				
 		if (!Objects.equals(whereqry.get("transtat"), null)) {
@@ -180,22 +198,22 @@ public class util_manager {
 		        value = value.trim(); // 공백 제거
 
 		        if (value.equals("1")) {
-		            conditionBuilder.append(" RTN_CD IN('60', '67')");
+		            conditionBuilder.append(" T2.RTN_CD IN('60', '67')");
 		        } else if (value.equals("2")) {
-		            conditionBuilder.append(" RTN_CD IN('61', '64')");
+		            conditionBuilder.append(" T2.RTN_CD IN('61', '64')");
 		        } else if (value.equals("3")) {
-		            conditionBuilder.append(" RTN_CD IS NULL");
+		            conditionBuilder.append(" T2.RTN_CD IS NULL");
 		        }
 
 		        // 다음 조건을 위해 OR 추가
 		        if (!value.equals(transtatValues[transtatValues.length - 1])) {
-		            conditionBuilder.append(" AND");
+		            conditionBuilder.append(" OR");
 		        }
 		    }
 
 		    // 완성된 조건을 set_where에 추가
 		    if (conditionBuilder.length() > 0) {
-		        set_where_dep += " (" + conditionBuilder.toString().trim().replaceAll("\\s+OR$", "") + ")";
+		        set_where += " AND (" + conditionBuilder.toString().trim().replaceAll("\\s+OR$", "") + ")";
 		    }
 		}
 
@@ -217,12 +235,14 @@ public class util_manager {
 		inputHashMap.put("depcd_where", depcd_where);
 		inputHashMap.put("set_where", set_where);
 		inputHashMap.put("set_where_dep", set_where_dep);
+		inputHashMap.put("set_where_req", set_where_req);
 		
 	    List<String> resultList = new ArrayList<>();
         resultList.add(inputHashMap.get("orgcd"));
         resultList.add(inputHashMap.get("depcd_where"));
         resultList.add(inputHashMap.get("set_where"));
         resultList.add(inputHashMap.get("set_where_dep"));
+        resultList.add(inputHashMap.get("set_where_req"));
 		
 		///WHERE QRY END///		
 		return resultList;
