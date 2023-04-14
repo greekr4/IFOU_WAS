@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -186,10 +187,10 @@ public class trans_ora_manager {
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		
-		String[] rtnstr = new String[10];
+		String[] rtnstr = new String[11];
 		try {
 			strbuf = new StringBuffer();
-			strbuf.append("SELECT t2.USER_ID, t2.ORG_CD, t2.DEP_CD , t1.ORG_NO , t1.PTAB , t1.VTAB , t1.DTAB , t2.USER_LV,t2.TRANS_NO,t2.AUTH_SEQ FROM TB_BAS_ORG t1 ");
+			strbuf.append("SELECT t2.USER_ID, t2.ORG_CD, t2.DEP_CD , t1.ORG_NO , t1.PTAB , t1.VTAB , t1.DTAB , t2.USER_LV,t2.TRANS_NO,t2.AUTH_SEQ,t2.USER_NM FROM TB_BAS_ORG t1 ");
 			strbuf.append("INNER JOIN TB_BAS_USER t2 ");
 			strbuf.append("ON (t1.ORG_CD=t2.ORG_CD) ");
 			strbuf.append("where t2.USER_ID = '" + uid +"'");
@@ -210,6 +211,7 @@ public class trans_ora_manager {
 				rtnstr[7] = rs.getString(8);
 				rtnstr[8] = rs.getString(9);
 				rtnstr[9] = rs.getString(10);
+				rtnstr[10] = rs.getString(11);
 			}
 
 		} catch (Exception e) {
@@ -325,8 +327,12 @@ public class trans_ora_manager {
 	            
 	            
 	            if(rs.getString("SORTS").equals("int")) {
-	            jsonob.put("format","#,###");
-	            }
+		            jsonob.put("format","#,###");
+		        } 
+	            
+				/*
+				 * if(rs.getString("SORTS").equals("boolean")) { jsonob.put("type","boolean"); }
+				 */
 	           
 	            jsonob.put("header",jsonary_header);
 				jsonary.add(jsonob);
@@ -533,14 +539,14 @@ public class trans_ora_manager {
 					jsonob2 = (JSONObject) jary.get(i);	
 					String id = (String)(jsonob2.get("id"));
 					if(!Objects.equals(id, "ORN") && !Objects.equals(id, null)) {
-					System.out.println(id);
+					//System.out.println(id);
 					
 					if(Objects.equals(rs.getString(id), null)) {
 						jsonob.put(id,"");	
 					}else{
 						jsonob.put(id,rs.getString(id));	
 					}
-					System.out.println("성공");
+					//System.out.println("성공");
 					}else {
 					jsonob.put("ORN",orn);
 					orn++;
@@ -1843,7 +1849,7 @@ public class trans_ora_manager {
 			strbuf.append("    ISS_CD CIC_ISSCD, \r\n");
 			strbuf.append("    ACQ_CD CIC_ACQCD, \r\n");
 			strbuf.append("    MEDI_GOODS CIC_ICSEQNO, \r\n");
-			strbuf.append("    CLIENT_TP, \r\n"); //			//
+			strbuf.append("    '일반가맹점' CLIENT_TP, \r\n"); //			//
 			strbuf.append("    T1.SEQNO, \r\n");
 			strbuf.append("    VANGB, \r\n");
 			strbuf.append("    MDATE, \r\n");
@@ -2600,79 +2606,67 @@ public class trans_ora_manager {
 			strbuf = new StringBuffer();
 			
 			strbuf.append("SELECT \r\n");
-			strbuf.append("DEP_NM TR_DEPNM, T3.DEP_CD DEP_CD, PUR_NM TR_ACQNM, T1.MID TR_MID, T1.EXP_DD DEP_EXP_DD, T_CNT TOT_CNT \r\n");
-			strbuf.append(", T_BAN TOT_BAN, T_AMT TOT_AMT, T_FEE TOT_FEE, T_EXP TOT_EXP \r\n");
-			strbuf.append(", I_CNT DEP_CNT \r\n");
-			strbuf.append(", I_BAN DEP_BAN \r\n");
-			strbuf.append(", I_AMT DEP_AMT \r\n");
-			strbuf.append(", I_FEE DEP_FEE \r\n");
-			strbuf.append(", I_EXP DEP_EXP \r\n");
-			strbuf.append(", BANK_AMT \r\n");
-			strbuf.append(", NVL(BANK_AMT,0) \r\n");
-			strbuf.append(", TO_NUMBER(T_EXP-I_EXP) AS DIF_TOT_AMT \r\n");
-			strbuf.append(", TO_NUMBER(NVL(BANK_AMT,0)-I_EXP) AS DIF_BANK_AMT \r\n");
-			strbuf.append("FROM( \r\n");
-			strbuf.append("SELECT \r\n");
-			strbuf.append("MID, EXP_DD, SUM(TOT_CNT) T_CNT, SUM(TOT_BAN) T_BAN, SUM(TOT_NETAMT) T_AMT \r\n");
-			strbuf.append(", SUM(TOT_INPAMT) T_FEE, SUM(TOT_EXPAMT) T_EXP, SUM(I_CNT) I_CNT, SUM(I_BAN) I_BAN \r\n");
-			strbuf.append(", SUM(I_AMT) I_AMT, SUM(I_FEE) I_FEE, SUM(I_EXP) I_EXP \r\n");
-			strbuf.append("FROM( \r\n");
-			strbuf.append("SELECT \r\n");
-			strbuf.append("MID, EXP_DD, DEP_SEQ,SUM(TOT_CNT) TOT_CNT ,SUM(BAN_CNT) TOT_BAN,(SUM(EXP_AMT)+SUM(INP_AMT)) TOT_NETAMT \r\n");
-			strbuf.append(",SUM(INP_AMT) TOT_INPAMT, SUM(EXP_AMT) TOT_EXPAMT \r\n");
-			strbuf.append("FROM \r\n");
-			strbuf.append("TB_MNG_DEPTOT \r\n");
-			strbuf.append("WHERE MID IN (SELECT MID FROM TB_BAS_MIDMAP where ORG_CD= '" + orgcd + "') " + set_where_dep + " \r\n");
-			strbuf.append("GROUP BY MID, EXP_DD, DEP_SEQ \r\n");
-			strbuf.append("ORDER BY EXP_DD DESC \r\n");
-			strbuf.append(")T1 \r\n");
-			strbuf.append("LEFT OUTER JOIN( \r\n");
-			strbuf.append("SELECT \r\n");
-			strbuf.append("DEP_SEQ \r\n");
-			strbuf.append(", (SUM(ITEM_CNT60)+SUM(ITEM_CNT67)) I_CNT \r\n");
-			strbuf.append(", SUM(ITEM_CNTBAN) I_BAN \r\n");
-			strbuf.append(", (SUM(ITEM_AMT60)-SUM(ITEM_AMT67)) I_AMT \r\n");
-			strbuf.append(", (SUM(ITEM_FEE60)-SUM(ITEM_FEE67)) I_FEE \r\n");
-			strbuf.append(", (SUM(ITEM_AMT60)-SUM(ITEM_AMT67))-(SUM(ITEM_FEE60)-SUM(ITEM_FEE67)) I_EXP \r\n");
-			strbuf.append("FROM( \r\n");
-			strbuf.append("SELECT \r\n");
-			strbuf.append("DEP_SEQ \r\n");
-			strbuf.append(",CASE WHEN RTN_CD='60' THEN COUNT(1) ELSE 0 END ITEM_CNT60 \r\n");
-			strbuf.append(",CASE WHEN RTN_CD='67' THEN COUNT(1) ELSE 0 END ITEM_CNT67 \r\n");
-			strbuf.append(",CASE WHEN RTN_CD NOT IN ('60', '67') THEN COUNT(1) ELSE 0 END ITEM_CNTBAN \r\n");
-			strbuf.append(",CASE WHEN RTN_CD='60' THEN SUM(SALE_AMT) ELSE 0 END ITEM_AMT60 \r\n");
-			strbuf.append(",CASE WHEN RTN_CD='67' THEN SUM(SALE_AMT) ELSE 0 END ITEM_AMT67 \r\n");
-			strbuf.append(",CASE WHEN RTN_CD='60' THEN SUM(FEE) ELSE 0 END ITEM_FEE60 \r\n");
-			strbuf.append(",CASE WHEN RTN_CD='67' THEN SUM(FEE) ELSE 0 END ITEM_FEE67 \r\n");
-			strbuf.append("FROM \r\n");
-			strbuf.append("TB_MNG_DEPDATA \r\n");
-			strbuf.append("WHERE MID IN (SELECT MID FROM TB_BAS_MIDMAP where ORG_CD= '" + orgcd + "')  " + set_where_dep + " \r\n");
-			strbuf.append("GROUP BY DEP_SEQ, RTN_CD \r\n");
-			strbuf.append(") \r\n");
-			strbuf.append("GROUP BY DEP_SEQ \r\n");
+			strbuf.append("    DEP_NM TR_DEPNM, T3.DEP_CD DEP_CD, PUR_NM TR_ACQNM, T1.MID TR_MID, T1.EXP_DD DEP_EXP_DD, \r\n");
+			strbuf.append("    T_CNT TOT_CNT, T_BAN TOT_BAN, T_AMT TOT_AMT, T_FEE TOT_FEE, T_EXP TOT_EXP, \r\n");
+			strbuf.append("    I_CNT DEP_CNT, I_BAN DEP_BAN, I_AMT DEP_AMT, I_FEE DEP_FEE, I_EXP DEP_EXP, \r\n");
+			strbuf.append("    BANK_AMT, NVL(BANK_AMT,0), TO_NUMBER(T_EXP-I_EXP) AS DIF_TOT_AMT, TO_NUMBER(NVL(BANK_AMT,0)-I_EXP) AS DIF_BANK_AMT \r\n");
+			strbuf.append("FROM ( \r\n");
+			strbuf.append("    SELECT \r\n");
+			strbuf.append("        MID, EXP_DD, \r\n");
+			strbuf.append("       SUM(TOT_CNT) T_CNT, SUM(TOT_BAN) T_BAN, SUM(TOT_NETAMT) T_AMT, SUM(TOT_INPAMT) T_FEE, SUM(TOT_EXPAMT) T_EXP, \r\n");
+			strbuf.append("       SUM(I_CNT)   I_CNT, SUM(I_BAN)   I_BAN, SUM(I_AMT)      I_AMT, SUM(I_FEE)      I_FEE, SUM(I_EXP)      I_EXP \r\n");
+			strbuf.append("    FROM ( \r\n");
+			strbuf.append("        SELECT \r\n");
+			strbuf.append("            MID, EXP_DD,  \r\n");
+			strbuf.append("           DEP_SEQ,SUM(TOT_CNT) TOT_CNT ,SUM(BAN_CNT) TOT_BAN,(SUM(EXP_AMT)+SUM(INP_AMT)) TOT_NETAMT,SUM(INP_AMT) TOT_INPAMT, SUM(EXP_AMT) TOT_EXPAMT \r\n");
+			strbuf.append("        FROM \r\n");
+			strbuf.append("            TB_MNG_DEPTOT \r\n");
+			strbuf.append("        WHERE MID IN (SELECT MID FROM TB_BAS_MIDMAP where ORG_CD= '" + orgcd + "') " + set_where_dep + " \r\n");
+			strbuf.append("        GROUP BY MID, EXP_DD, DEP_SEQ \r\n");
+			strbuf.append("        ORDER BY EXP_DD DESC \r\n");
+			strbuf.append("    )T1 \r\n");
+			strbuf.append("LEFT OUTER JOIN ( \r\n");
+			strbuf.append("    SELECT \r\n");
+			strbuf.append("        DEP_SEQ, \r\n");
+			strbuf.append("        (SUM(ITEM_CNT60)+SUM(ITEM_CNT67)) I_CNT, SUM(ITEM_CNTBAN) I_BAN, (SUM(ITEM_AMT60)-SUM(ITEM_AMT67)) I_AMT, (SUM(ITEM_FEE60)-SUM(ITEM_FEE67)) I_FEE, (SUM(ITEM_AMT60)-SUM(ITEM_AMT67))-(SUM(ITEM_FEE60)-SUM(ITEM_FEE67)) I_EXP \r\n");
+			strbuf.append("    FROM ( \r\n");
+			strbuf.append("        SELECT \r\n");
+			strbuf.append("            DEP_SEQ, \r\n");
+			strbuf.append("            CASE WHEN RTN_CD='60' THEN COUNT(1) ELSE 0 END ITEM_CNT60, \r\n");
+			strbuf.append("            CASE WHEN RTN_CD='67' THEN COUNT(1) ELSE 0 END ITEM_CNT67, \r\n");
+			strbuf.append("            CASE WHEN RTN_CD NOT IN ('60', '67') THEN COUNT(1) ELSE 0 END ITEM_CNTBAN, \r\n");
+			strbuf.append("            CASE WHEN RTN_CD='60' THEN SUM(SALE_AMT) ELSE 0 END ITEM_AMT60, \r\n");
+			strbuf.append("            CASE WHEN RTN_CD='67' THEN SUM(SALE_AMT) ELSE 0 END ITEM_AMT67, \r\n");
+			strbuf.append("            CASE WHEN RTN_CD='60' THEN SUM(FEE) ELSE 0 END ITEM_FEE60, \r\n");
+			strbuf.append("            CASE WHEN RTN_CD='67' THEN SUM(FEE) ELSE 0 END ITEM_FEE67 \r\n");
+			strbuf.append("        FROM \r\n");
+			strbuf.append("            TB_MNG_DEPDATA \r\n");
+			strbuf.append("        WHERE MID IN (SELECT MID FROM TB_BAS_MIDMAP where ORG_CD= '" + orgcd + "')  " + set_where_dep + " \r\n");
+			strbuf.append("        GROUP BY DEP_SEQ, RTN_CD \r\n");
+			strbuf.append("    ) \r\n");
+			strbuf.append("    GROUP BY DEP_SEQ \r\n");
 			strbuf.append(")T2 ON(T1.DEP_SEQ=T2.DEP_SEQ) \r\n");
 			strbuf.append("GROUP BY MID, EXP_DD \r\n");
 			strbuf.append(")T1 \r\n");
-			strbuf.append("LEFT OUTER JOIN( \r\n");
-			strbuf.append("SELECT \r\n");
-			strbuf.append("EXP_DD \r\n");
-			strbuf.append(", MID \r\n");
-			strbuf.append(", CASE WHEN SUM(DEPOSIT_AMT) IS NULL THEN 0 ELSE SUM(DEPOSIT_AMT) END BANK_AMT \r\n");
-			strbuf.append("FROM \r\n");
-			strbuf.append("TB_MNG_BANKDATA \r\n");
-			strbuf.append("GROUP BY EXP_DD, MID \r\n");
+			strbuf.append("LEFT OUTER JOIN ( \r\n");
+			strbuf.append("    SELECT \r\n");
+			strbuf.append("        EXP_DD, MID, \r\n");
+			strbuf.append("        CASE WHEN SUM(DEPOSIT_AMT) IS NULL THEN 0 ELSE SUM(DEPOSIT_AMT) END BANK_AMT \r\n");
+			strbuf.append("    FROM \r\n");
+			strbuf.append("        TB_MNG_BANKDATA \r\n");
+			strbuf.append("    GROUP BY EXP_DD, MID \r\n");
 			strbuf.append(")T2 ON(T1.MID=T2.MID AND T1.EXP_DD=T2.EXP_DD) \r\n");
-			strbuf.append("LEFT OUTER JOIN( \r\n");
-			strbuf.append("SELECT ORG_CD, DEP_CD, MER_NO, PUR_CD FROM TB_BAS_MERINFO \r\n");
+			strbuf.append("LEFT OUTER JOIN ( \r\n");
+			strbuf.append("    SELECT ORG_CD, DEP_CD, MER_NO, PUR_CD FROM TB_BAS_MERINFO \r\n");
 			strbuf.append(")T3 ON(T1.MID=T3.MER_NO) \r\n");
-			strbuf.append("LEFT OUTER JOIN( \r\n");
-			strbuf.append("SELECT ORG_CD, ORG_NM FROM TB_BAS_ORG \r\n");
+			strbuf.append("LEFT OUTER JOIN ( \r\n");
+			strbuf.append("    SELECT ORG_CD, ORG_NM FROM TB_BAS_ORG \r\n");
 			strbuf.append(")T4 ON(T3.ORG_CD=T4.ORG_CD) \r\n");
-			strbuf.append("LEFT OUTER JOIN( \r\n");
-			strbuf.append("SELECT DEP_CD, DEP_NM FROM TB_BAS_DEPART \r\n");
+			strbuf.append("LEFT OUTER JOIN ( \r\n");
+			strbuf.append("    SELECT DEP_CD, DEP_NM FROM TB_BAS_DEPART \r\n");
 			strbuf.append(")T5 ON(T3.DEP_CD=T5.DEP_CD) \r\n");
-			strbuf.append("LEFT OUTER JOIN( \r\n");
-			strbuf.append("SELECT PUR_CD, PUR_NM, PUR_SORT, PUR_KOCES,PUR_OCD FROM TB_BAS_PURINFO \r\n");
+			strbuf.append("LEFT OUTER JOIN ( \r\n");
+			strbuf.append("    SELECT PUR_CD, PUR_NM, PUR_SORT, PUR_KOCES,PUR_OCD FROM TB_BAS_PURINFO \r\n");
 			strbuf.append(")T6 ON(T3.PUR_CD=T6.PUR_CD) \r\n");
 			strbuf.append("ORDER BY DEP_NM ASC, PUR_NM ASC, PUR_SORT ASC \r\n");
 
@@ -2761,7 +2755,7 @@ public class trans_ora_manager {
 			strbuf.append("    DEP_NM, \r\n");
 			strbuf.append("    TERM_NM, \r\n");
 			strbuf.append("    T1.APP_DD,  \r\n");
-			strbuf.append("    RTN_CD,  \r\n");
+			strbuf.append("    APPGB,  \r\n");
 			strbuf.append("    PUR_NM,  \r\n");
 			strbuf.append("    CARD_NO,  \r\n");
 			strbuf.append("    T1.APP_NO,  \r\n");
@@ -2806,8 +2800,8 @@ public class trans_ora_manager {
 			strbuf.append("LEFT OUTER JOIN( \r\n");
 			strbuf.append("SELECT PUR_CD, PUR_NM FROM TB_BAS_PURINFO \r\n");
 			strbuf.append(")T6 ON(T2.PUR_CD=T6.PUR_CD) \r\n");
-			strbuf.append("LEFT OUTER JOIN( \r\n");
-			strbuf.append("SELECT APPDD, TRANIDX, EXT_FIELD,ADD_CID, ADD_CASHER,ADD_DATE,APPTM,OAPPDD FROM GLOB_MNG_ICVAN \r\n");
+			strbuf.append("INNER JOIN( \r\n");
+			strbuf.append("SELECT APPDD, APPGB,TRANIDX, EXT_FIELD,ADD_CID, ADD_CASHER,ADD_DATE,APPTM,OAPPDD FROM GLOB_MNG_ICVAN \r\n");
 			strbuf.append("WHERE MID IN (SELECT MID FROM TB_BAS_MIDMAP where ORG_CD='" + orgcd + "')" + set_where + " \r\n");
 			strbuf.append(")T7 ON(T1.APP_DD=T7.APPDD AND T1.TRANIDX=T7.TRANIDX) \r\n");
 			strbuf.append("WHERE MID IN (SELECT MID FROM TB_BAS_MIDMAP where ORG_CD='" + orgcd + "')" + set_where_dep + " \r\n");
@@ -2928,7 +2922,7 @@ public class trans_ora_manager {
 			strbuf.append("LEFT OUTER JOIN( \r\n");
 			strbuf.append("SELECT PUR_CD, PUR_NM, STO_CD FROM TB_BAS_PURINFO \r\n");
 			strbuf.append(")T6 ON(T2.PUR_CD=T6.PUR_CD) \r\n");
-			strbuf.append("LEFT OUTER JOIN( \r\n");
+			strbuf.append("INNER JOIN( \r\n");
 			strbuf.append("SELECT APPDD, TRANIDX, EXT_FIELD,ADD_CID, CHECK_CARD FROM GLOB_MNG_ICVAN \r\n");
 			strbuf.append("WHERE MID IN (SELECT MID FROM TB_BAS_MIDMAP where ORG_CD='" + orgcd + "')" + set_where + " \r\n");
 			strbuf.append(")T7 ON(T1.APP_DD=T7.APPDD AND T1.TRANIDX=T7.TRANIDX) \r\n");
@@ -4788,6 +4782,22 @@ public class trans_ora_manager {
 			strbuf = new StringBuffer();
 			//쿼리입력
 			strbuf.append("SELECT \r\n");
+			strbuf.append("    DEP_NM TR_DEPNM, PUR_NM TR_ACQNM, MID TR_MID, EXP_DD, EXP_AMT, ACC_TXT BANK_MSG, UPLOAD_DD    \r\n");
+			strbuf.append("FROM \r\n");
+			strbuf.append("    TB_MNG_BANKDATA T1 \r\n");
+			strbuf.append("LEFT OUTER JOIN ( \r\n");
+			strbuf.append("    SELECT ORG_CD, ORG_NM FROM TB_BAS_ORG \r\n");
+			strbuf.append(" )T2 ON(T1.ORG_CD=T2.ORG_CD) \r\n");
+			strbuf.append(" LEFT OUTER JOIN( \r\n");
+			strbuf.append(" SELECT DEP_CD, DEP_NM FROM TB_BAS_DEPART WHERE ORG_CD= '" + orgcd + "' \r\n");
+			strbuf.append(" )T3 ON(T1.DEP_CD=T3.DEP_CD) \r\n");
+			strbuf.append(" LEFT OUTER JOIN( \r\n");
+			strbuf.append(" SELECT PUR_CD, PUR_NM, PUR_SORT, PUR_KOCES, PUR_OCD FROM TB_BAS_PURINFO \r\n");
+			strbuf.append(" )T4 ON(T1.ACQ_CD=T4.PUR_KOCES) \r\n");
+			strbuf.append(" WHERE MID IN (SELECT MID FROM TB_BAS_MIDMAP  where org_cd='" + orgcd + "')" + set_where_dep + " \r\n");
+			strbuf.append(" ORDER BY PUR_SORT ASC \r\n");
+			
+			
 			
 			//System.lineSeparator()
 			/**
@@ -5486,7 +5496,7 @@ public class trans_ora_manager {
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		JSONArray jsonary = new JSONArray();
-		JSONObject jsonob = new JSONObject();
+
 		try {
 			strbuf = new StringBuffer();
 			strbuf.append("SELECT \r\n");
@@ -5521,6 +5531,7 @@ public class trans_ora_manager {
 			
 			rs = stmt.executeQuery();
 			while(rs.next()) {
+				JSONObject jsonob = new JSONObject();
 	            jsonob.put("MEM_CD",um.getString(rs.getString("MEM_CD")));
 	            jsonob.put("ORG_CD",um.getString(rs.getString("ORG_CD")));
 	            jsonob.put("DEP_CD",um.getString(rs.getString("DEP_CD")));
@@ -5533,7 +5544,7 @@ public class trans_ora_manager {
 	            jsonob.put("USER_EMAIL",um.getString(rs.getString("USER_EMAIL")));
 	            jsonob.put("INS_DT",um.getString(rs.getString("INS_DT")));
 	            jsonob.put("USER_LV",um.getString(rs.getString("USER_LV")));
-	            
+	            jsonob.put("INS_ID",um.getString(rs.getString("USER_FAX")));
 	            jsonary.add(jsonob);
 			}
 
@@ -5548,7 +5559,7 @@ public class trans_ora_manager {
 	}
 	
 	/**
-	 * 가맹점관리_유저
+	 * 
 	 * @param orgcd
 	 * @return ...
 	 * 2023-04-03 김태균
@@ -5558,7 +5569,7 @@ public class trans_ora_manager {
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		JSONArray jsonary = new JSONArray();
-		JSONObject jsonob = new JSONObject();
+
 		try {
 			strbuf = new StringBuffer();
 			strbuf.append("SELECT \r\n");
@@ -5586,6 +5597,7 @@ public class trans_ora_manager {
 			
 			rs = stmt.executeQuery();
 			while(rs.next()) {
+				JSONObject jsonob = new JSONObject();
 	            jsonob.put("DEP_CD",um.getString(rs.getString("DEP_CD")));
 	            jsonob.put("DEP_NM",um.getString(rs.getString("DEP_NM")));
 	            jsonob.put("DEP_ADM_USER",um.getString(rs.getString("DEP_ADM_USER")));
@@ -5616,7 +5628,7 @@ public class trans_ora_manager {
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		JSONArray jsonary = new JSONArray();
-		JSONObject jsonob = new JSONObject();
+
 		try {
 			strbuf = new StringBuffer();
 			strbuf.append("SELECT \r\n");
@@ -5654,6 +5666,7 @@ public class trans_ora_manager {
 			
 			rs = stmt.executeQuery();
 			while(rs.next()) {
+				JSONObject jsonob = new JSONObject();
 	            jsonob.put("DEP_NM",um.getString(rs.getString("DEP_NM")));
 	            jsonob.put("PUR_CD",um.getString(rs.getString("PUR_CD")));
 	            jsonob.put("PUR_NM",um.getString(rs.getString("PUR_NM")));
@@ -5685,7 +5698,7 @@ public class trans_ora_manager {
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		JSONArray jsonary = new JSONArray();
-		JSONObject jsonob = new JSONObject();
+
 		try {
 			strbuf = new StringBuffer();
 			strbuf.append("SELECT \r\n");
@@ -5718,6 +5731,7 @@ public class trans_ora_manager {
 			
 			rs = stmt.executeQuery();
 			while(rs.next()) {
+				JSONObject jsonob = new JSONObject();
 	            jsonob.put("DEP_NM",um.getString(rs.getString("DEP_NM")));
 	            jsonob.put("PUR_NM",um.getString(rs.getString("PUR_NM")));
 	            jsonob.put("MID",um.getString(rs.getString("MID")));
@@ -5746,7 +5760,7 @@ public class trans_ora_manager {
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		JSONArray jsonary = new JSONArray();
-		JSONObject jsonob = new JSONObject();
+
 		try {
 			strbuf = new StringBuffer();
 			strbuf.append("SELECT \r\n");
@@ -5775,6 +5789,7 @@ public class trans_ora_manager {
 			
 			rs = stmt.executeQuery();
 			while(rs.next()) {
+				JSONObject jsonob = new JSONObject();
 	            jsonob.put("DEP_NM",um.getString(rs.getString("DEP_NM")));
 	            jsonob.put("TERM_NM",um.getString(rs.getString("TERM_NM")));
 	            jsonob.put("TERM_ID",um.getString(rs.getString("TERM_ID")));
@@ -5803,7 +5818,7 @@ public class trans_ora_manager {
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		JSONArray jsonary = new JSONArray();
-		JSONObject jsonob = new JSONObject();
+
 		try {
 			strbuf = new StringBuffer();
 			strbuf.append("SELECT\r\n");
@@ -5835,6 +5850,7 @@ public class trans_ora_manager {
 			
 			rs = stmt.executeQuery();
 			while(rs.next()) {
+				JSONObject jsonob = new JSONObject();
 	            jsonob.put("DEP_NM",um.getString(rs.getString("DEP_NM")));
 	            jsonob.put("TERM_NM",um.getString(rs.getString("TERM_NM")));
 	            jsonob.put("TID",um.getString(rs.getString("TID")));
@@ -5852,8 +5868,226 @@ public class trans_ora_manager {
 		return jsonary;
 	}
 
+	/**
+	 * 회원 추가
+	 * @param user_id,program_seq,sort
+	 * @return 1 : 성공 / 0 : 실패 (인서트된 로우 수)
+	 * 2023-04-05 김태균
+	 */
+	public int register_user(String depcd,String orgcd, String user_id, String user_pw, String user_lv, String user_tel1, String user_tel2, String user_name, String user_email, String ins_id) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		Date date = new Date();
+		String memcd = "NMEM" + date.getTime();
+		String auth_seq = (user_lv.equals("M")) ? "AS000001" : "AS000002"; 
+		try {
+			strbuf = new StringBuffer();
+			strbuf.append("BEGIN INSERT INTO TB_BAS_USER(MEM_CD,DEP_CD,ORG_CD,AUTH_SEQ,USER_ID,USER_PW,USER_TEL1,USER_TEL2,USER_LV,USER_NM,USER_EMAIL,USER_FAX,INS_DT) VALUES(\r\n");
+			strbuf.append("'"+memcd+"',\r\n");
+			strbuf.append("'"+depcd+"',\r\n");
+			strbuf.append("'"+orgcd+"',\r\n");
+			strbuf.append("'"+auth_seq+"',\r\n");
+			strbuf.append("'"+user_id+"',\r\n");
+			strbuf.append("'"+user_pw+"',\r\n");
+			strbuf.append("'"+user_tel1+"',\r\n");
+			strbuf.append("'"+user_tel2+"',\r\n");
+			strbuf.append("'"+user_lv+"',\r\n");
+			strbuf.append("'"+user_name+"',\r\n");
+			strbuf.append("'"+user_email+"',\r\n");
+			strbuf.append("'"+ins_id+"',\r\n");
+			strbuf.append("SYSDATE);\r\n");
+			strbuf.append("COMMIT; END;\r\n");
+					
+			con = getOraConnect();
+			stmt = con.prepareStatement(strbuf.toString());
+			System.out.println(strbuf.toString());	//로그
+			
+			int rowsInserted = stmt.executeUpdate();
+			
+            if (rowsInserted > 0) {
+                return rowsInserted;
+            } else {
+                return 0;
+            }
 
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			setOraClose(con,stmt,rs);
+		}
+		return 0;
+	}
 	
 	
+	/**
+	 * 아이디 중복
+	 * @param user_id
+	 * @return 1보다크면 : 중복 / 0 : 중복없음 (인서트된 로우 수)
+	 * 2023-04-05 김태균
+	 */
+	public int isIdDuplicated (String user_id) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			strbuf = new StringBuffer();
+			strbuf.append("SELECT COUNT(1) CNT FROM TB_BAS_USER WHERE\r\n");
+			strbuf.append("USER_ID = '"+user_id+"'\r\n");
+			con = getOraConnect();
+			stmt = con.prepareStatement(strbuf.toString());
+			System.out.println(strbuf.toString());	//로그
+			rs = stmt.executeQuery();
+			if(rs.next()) {
+			return rs.getInt("CNT");
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			setOraClose(con,stmt,rs);
+		}
+		return 0;
+	}
+	
+
+	/**
+	 * 가맹점관리_유저 디테일
+	 * @param orgcd
+	 * @return ...
+	 * 2023-04-03 김태균
+	 */
+	public JSONObject get_sub0602detail_user(String orgcd,String memcd) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		JSONObject jsonob = new JSONObject();
+
+		try {
+			strbuf = new StringBuffer();
+			strbuf.append("SELECT \r\n");
+			strbuf.append("MEM_CD\r\n");
+			strbuf.append(", ORG_CD\r\n");
+			strbuf.append(", T1.DEP_CD\r\n");
+			strbuf.append(", DEP_NM\r\n");
+			strbuf.append(", AUTH_SEQ\r\n");
+			strbuf.append(", USER_ID\r\n");
+			strbuf.append(", USER_PW\r\n");
+			strbuf.append(", USER_NM\r\n");
+			strbuf.append(", USER_TEL1\r\n");
+			strbuf.append(", USER_TEL2\r\n");
+			strbuf.append(", USER_MEMO\r\n");
+			strbuf.append(", USER_EMAIL\r\n");
+			strbuf.append(", USER_FAX\r\n");
+			strbuf.append(", USER_LV\r\n");
+			strbuf.append(", TO_CHAR(INS_DT,'YYYY-MM-DD HH24:MI:SS') INS_DT\r\n");
+			strbuf.append("FROM\r\n");
+			strbuf.append("TB_BAS_USER T1\r\n");
+			strbuf.append("LEFT OUTER JOIN(\r\n");
+			strbuf.append("SELECT DEP_NM, DEP_CD FROM TB_BAS_DEPART\r\n");
+			strbuf.append(")T2 ON(T1.DEP_CD=T2.DEP_CD)\r\n");
+			strbuf.append("WHERE \r\n");
+			strbuf.append("ORG_CD='"+orgcd+"' AND MEM_CD = '"+memcd+"'\r\n");
+			strbuf.append("ORDER BY USER_ID ASC, INS_DT ASC\r\n");
+
+
+			con = getOraConnect();
+			stmt = con.prepareStatement(strbuf.toString());
+			System.out.println(strbuf.toString());	//로그
+			
+			rs = stmt.executeQuery();
+			while(rs.next()) {
+	            jsonob.put("MEM_CD",um.getString(rs.getString("MEM_CD")));
+	            jsonob.put("ORG_CD",um.getString(rs.getString("ORG_CD")));
+	            jsonob.put("DEP_CD",um.getString(rs.getString("DEP_CD")));
+	            jsonob.put("DEP_NM",um.getString(rs.getString("DEP_NM")));
+	            jsonob.put("AUTH_SEQ",um.getString(rs.getString("AUTH_SEQ")));
+	            jsonob.put("USER_ID",um.getString(rs.getString("USER_ID")));
+	            jsonob.put("USER_NM",um.getString(rs.getString("USER_NM")));
+	            jsonob.put("USER_TEL1",um.getString(rs.getString("USER_TEL1")));
+	            jsonob.put("USER_TEL2",um.getString(rs.getString("USER_TEL2")));
+	            jsonob.put("USER_EMAIL",um.getString(rs.getString("USER_EMAIL")));
+	            jsonob.put("INS_DT",um.getString(rs.getString("INS_DT")));
+	            jsonob.put("USER_LV",um.getString(rs.getString("USER_LV")));
+	            jsonob.put("INS_ID",um.getString(rs.getString("USER_FAX")));
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			setOraClose(con,stmt,rs);
+		}
+		return jsonob;
+	}
+	
+	/**
+	 * 유저 정보 수정
+	 * @return ...
+	 * 2023-04-03 김태균
+	 */
+	public int modify_user(String memcd, String user_pw, String user_nm, String user_email, String user_tel1, String user_tel2, String user_lv) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		int rowsInserted = 0;
+		try {
+			strbuf = new StringBuffer();
+			strbuf.append("BEGIN \r\n");
+			strbuf.append("UPDATE TB_BAS_USER SET\r\n");
+			strbuf.append("USER_NM = '"+user_nm+"' \r\n");
+			if(!Objects.equals(user_pw, "")) strbuf.append(",USER_PW = '"+user_pw+"' \r\n");
+			strbuf.append(",USER_EMAIL = '"+user_email+"' \r\n");
+			strbuf.append(",USER_TEL1 = '"+user_tel1+"' \r\n");
+			strbuf.append(",USER_TEL2 = '"+user_tel2+"' \r\n");
+			strbuf.append(",USER_LV = '"+user_lv+"' \r\n");
+			strbuf.append("WHERE MEM_CD = '"+memcd+"'; \r\n");
+			strbuf.append("COMMIT; END; \r\n");
+
+			con = getOraConnect();
+			stmt = con.prepareStatement(strbuf.toString());
+			System.out.println(strbuf.toString());	//로그
+			
+			rowsInserted = stmt.executeUpdate();
+					
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			setOraClose(con,stmt,rs);
+		}
+		return rowsInserted;
+	}
+	
+	/**
+	 * 유저 정보 삭제
+	 * @return ...
+	 * 2023-04-03 김태균
+	 */
+	public int delete_user(String memcd) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		int rowsInserted = 0;
+		try {
+			strbuf = new StringBuffer();
+			strbuf.append("BEGIN \r\n");
+			strbuf.append("DELETE FROM TB_BAS_USER WHERE\r\n");
+			strbuf.append("MEM_CD = '"+memcd+"';\r\n");
+			strbuf.append("COMMIT; END; \r\n");
+
+			con = getOraConnect();
+			stmt = con.prepareStatement(strbuf.toString());
+			System.out.println(strbuf.toString());	//로그
+			
+			rowsInserted = stmt.executeUpdate();
+					
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			setOraClose(con,stmt,rs);
+		}
+		return rowsInserted;
+	}
 	
 }//end class

@@ -74,6 +74,15 @@ public class util_manager {
 			set_where_dep += " AND APP_NO = '" + whereqry.get("appno") + "'";
 		}
 		
+		if(!Objects.equals(whereqry.get("banstat"),null )) {
+			if(Objects.equals(whereqry.get("banstat"),"ba" )){
+				set_where_dep += " AND RTN_CD = '61'";
+			}else {
+				set_where_dep += " AND RTN_CD = '64'";
+			}			
+		}
+		
+		
 		if(!Objects.equals(whereqry.get("pid"),null )) {
 			set_where += " AND ADD_CID = '" + whereqry.get("pid") + "'";
 		}
@@ -102,6 +111,7 @@ public class util_manager {
 		
 		if(!Objects.equals(whereqry.get("acqcd"),null )) {
 			set_where += " AND ACQ_CD = '" + whereqry.get("acqcd") + "'";
+			set_where_dep += " AND ACQ_CD = '" + whereqry.get("acqcd") + "'";
 		}
 		
 		if(!Objects.equals(whereqry.get("cashid"),null )) {
@@ -132,11 +142,17 @@ public class util_manager {
 		
 		if(!Objects.equals(whereqry.get("tid"),null )) {
 			set_where += " AND TID = '" + whereqry.get("tid") + "'";
+			set_where_dep += " AND TID = '" + whereqry.get("tid") + "'";
+		}
+		
+		if(!Objects.equals(whereqry.get("mid"),null )) {
+			set_where += " AND MID = '" + whereqry.get("mid") + "'";
+			set_where_dep += " AND MID = '" + whereqry.get("mid") + "'";
 		}
 		
 		if(!Objects.equals(whereqry.get("authstat"),null )) {
 			set_where += " AND APPGB = '" + whereqry.get("authstat") + "'";
-			set_where_dep += " AND RTN_CD = '" + whereqry.get("authstat") + "'";
+			//set_where_dep += " AND RTN_CD = '" + whereqry.get("authstat") + "'";  //0302에서 걸려서 죽임
 		}
 		
 		if(!Objects.equals(whereqry.get("sexpdd"),null )) {
@@ -168,11 +184,11 @@ public class util_manager {
 		        value = value.trim(); // 공백 제거
 
 		        if (value.equals("1")) {
-		            conditionBuilder.append(" (APPGB = 'A' AND (OAPP_AMT IS NULL OR OAPP_AMT = 0))");
+		            conditionBuilder.append(" (APPGB = 'A' AND (OAPPDD IS NULL OR OAPP_AMT = 0))");
 		        } else if (value.equals("2")) {
-		            conditionBuilder.append(" ((APPGB = 'A' AND OAPP_AMT = APPDD) OR (APPGB = 'C' AND OAPPDD = APPDD))");
+		            conditionBuilder.append(" ((APPGB = 'A' AND OAPPDD = APPDD) OR (APPGB = 'C' AND OAPPDD = APPDD))");
 		        } else if (value.equals("3")) {
-		            conditionBuilder.append(" ((APPGB = 'A' AND OAPP_AMT <> APPDD) OR (APPGB = 'C' AND OAPPDD <> APPDD))");
+		            conditionBuilder.append(" ((APPGB = 'A' AND OAPPDD <> APPDD) OR (APPGB = 'C' AND OAPPDD <> APPDD))");
 		        }
 
 		        // 다음 조건을 위해 OR 추가
