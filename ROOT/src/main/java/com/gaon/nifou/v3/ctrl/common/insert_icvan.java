@@ -1,4 +1,4 @@
-package com.gaon.nifou.v3.ctrl.sub02;
+package com.gaon.nifou.v3.ctrl.common;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -11,31 +11,34 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 
 import com.gaon.nifou.v3.trans_ora_manager;
 import com.gaon.nifou.v3.util_manager;
 
-@WebServlet("/sub02/06T.gaon")
-public class sub02_06T extends HttpServlet {
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) 
-			throws ServletException, IOException {
+/**
+ * Servlet implementation class test
+ */
+@WebServlet("/common/insert_icvan.gaon")
+public class insert_icvan extends HttpServlet {
+
+	
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
 		response.setHeader("Access-Control-Allow-Origin", "*");
 		trans_ora_manager oram = new trans_ora_manager();
         JSONArray jsonary = new JSONArray();
-		PrintWriter out = response.getWriter();		
+		PrintWriter out = response.getWriter();
 		
 		String orgcd = request.getParameter("orgcd");
-		String pages = request.getParameter("pages");
+		String pages = request.getParameter("pages");		
 		String DEBUG = request.getParameter("DEBUG");
 		
 		util_manager um = new util_manager();
-		HashMap<String, String> whereqry = um.get_where_qry(request);
+		HashMap<String, String> whereqry = um.get_where_qry(request);		
 		
-		out.print(oram.get_sub0206T(oram.get_tb_sys_domain(orgcd, pages),DEBUG,whereqry));
-		
+		out.print(oram.insert_icvan(whereqry,DEBUG));		
 		
 	}
+
 }
