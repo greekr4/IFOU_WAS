@@ -2,6 +2,7 @@ package com.gaon.nifou.v3.ctrl.common;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.simple.JSONArray;
 
 import com.gaon.nifou.v3.trans_ora_manager;
+import com.gaon.nifou.v3.util_manager;
 
 /**
  * Servlet implementation class test
@@ -27,13 +29,15 @@ public class insert_icvan extends HttpServlet {
 		trans_ora_manager oram = new trans_ora_manager();
         JSONArray jsonary = new JSONArray();
 		PrintWriter out = response.getWriter();
-		String userid = request.getParameter("userid");
-		String program_seq = request.getParameter("program_seq");
-		String sort = request.getParameter("sort");
 		
-		out.print(oram.insert_icvan(userid,program_seq,sort));
+		String orgcd = request.getParameter("orgcd");
+		String pages = request.getParameter("pages");		
+		String DEBUG = request.getParameter("DEBUG");
 		
+		util_manager um = new util_manager();
+		HashMap<String, String> whereqry = um.get_where_qry(request);		
 		
+		out.print(oram.insert_icvan(whereqry,DEBUG));		
 		
 	}
 
