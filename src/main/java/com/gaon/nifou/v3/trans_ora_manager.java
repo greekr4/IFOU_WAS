@@ -439,7 +439,7 @@ public class trans_ora_manager {
 			strbuf.append("	   DEPO_DD DP_REQ_DD,\r\n");
 			strbuf.append("	   REQ_DD DP_RES_DD,	\r\n");
 			strbuf.append("	   REG_DD DP_REG_DD, \r\n");
-			strbuf.append("    SEQNO \r\n");
+			strbuf.append("    SEQNO, TRANIDX HIDDEN \r\n");
 			strbuf.append("FROM(\r\n");
 			strbuf.append("	SELECT\r\n");
 			strbuf.append("		SEQNO, DEP_NM, TERM_NM, TID, MID, PUR_NM,\r\n");
@@ -539,14 +539,14 @@ public class trans_ora_manager {
 					jsonob2 = (JSONObject) jary.get(i);	
 					String id = (String)(jsonob2.get("id"));
 					if(!Objects.equals(id, "ORN") && !Objects.equals(id, null)) {
-					//System.out.println(id);
+					System.out.println(id);
 					
 					if(Objects.equals(rs.getString(id), null)) {
 						jsonob.put(id,"");	
 					}else{
 						jsonob.put(id,rs.getString(id));	
 					}
-					//System.out.println("성공");
+					System.out.println("성공");
 					}else {
 					jsonob.put("ORN",orn);
 					orn++;
