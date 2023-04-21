@@ -16,8 +16,8 @@ import org.json.simple.JSONObject;
 import com.gaon.nifou.v3.trans_ora_manager;
 import com.gaon.nifou.v3.util_manager;
 
-@WebServlet("/sub06/03.gaon")
-public class sub06_03 extends HttpServlet {
+@WebServlet("/sub06/03_tidmap.gaon")
+public class sub06_03_tidmap extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
@@ -26,9 +26,8 @@ public class sub06_03 extends HttpServlet {
 		trans_ora_manager oram = new trans_ora_manager();
 		PrintWriter out = response.getWriter();
 		String orgcd = request.getParameter("orgcd");
-		String depcd = request.getParameter("depcd");
 		
-		out.print(oram.get_sub0603(orgcd,depcd));
+		out.print(oram.get_tidmap(orgcd));
 
 	}
 
