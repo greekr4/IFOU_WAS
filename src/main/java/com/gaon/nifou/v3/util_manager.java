@@ -96,6 +96,7 @@ public class util_manager {
 		
 		if(!Objects.equals(whereqry.get("pid"),null )) {
 			set_where += " AND ADD_CID = '" + whereqry.get("pid") + "'";
+			set_where_dep += " AND ADD_CID = '" + whereqry.get("pid") + "'";
 		}
 		
 		if(!Objects.equals(whereqry.get("cid"),null )) {
@@ -142,6 +143,10 @@ public class util_manager {
 		if(!Objects.equals(whereqry.get("tid"),null )) {
 			set_where += " AND TID = '" + whereqry.get("tid") + "'";
 			set_where_dep += " AND TID = '" + whereqry.get("tid") + "'";
+		}
+		
+		if(!Objects.equals(whereqry.get("mid"),null )) {
+			set_where_dep += " AND MID = '" + whereqry.get("mid") + "'";
 		}
 		
 		if(!Objects.equals(whereqry.get("authstat"),null )) {
@@ -194,6 +199,7 @@ public class util_manager {
 		    // 완성된 조건을 set_where에 추가
 		    if (conditionBuilder.length() > 0) {
 		        set_where += " AND (" + conditionBuilder.toString().trim().replaceAll("\\s+OR$", "") + ")";
+		        set_where_dep += " AND (" + conditionBuilder.toString().trim().replaceAll("\\s+OR$", "") + ")";
 		    }
 		}
 
@@ -224,6 +230,7 @@ public class util_manager {
 		    // 완성된 조건을 set_where에 추가
 		    if (conditionBuilder.length() > 0) {
 		        set_where += " AND (" + conditionBuilder.toString().trim().replaceAll("\\s+OR$", "") + ")";
+		        set_where_dep += " AND (" + conditionBuilder.toString().trim().replaceAll("\\s+OR$", "") + ")";
 		    }
 		}		
 		

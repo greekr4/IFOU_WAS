@@ -930,70 +930,72 @@ public class trans_ora_manager {
 			strbuf = new StringBuffer();
 			//�뜝�룞�삕�뜝�룞�삕�뜝�뙃琉꾩삕
 			strbuf.append("SELECT  \r\n");
-			strbuf.append("APPDD TR_APPDD  \r\n");
-			strbuf.append(",ADD_CASHER ADD_CID  \r\n");
-			strbuf.append(",SUM(BC_CNT) BC_CNT  \r\n");
-			strbuf.append(",SUM(BCA)-SUM(BCC) BC_AMT  \r\n");
-			strbuf.append(",SUM(NH_CNT) NH_CNT  \r\n");
-			strbuf.append(",SUM(NHA)-SUM(NHC) NH_AMT  \r\n");
-			strbuf.append(",SUM(KB_CNT) KB_CNT  \r\n");
-			strbuf.append(",SUM(KBA)-SUM(KBC) KB_AMT  \r\n");
-			strbuf.append(",SUM(SS_CNT) SS_CNT  \r\n");
-			strbuf.append(",SUM(SSA)-SUM(SSC) SS_AMT  \r\n");
-			strbuf.append(",SUM(HN_CNT) HN_CNT  \r\n");
-			strbuf.append(",SUM(HNA)-SUM(HNC) HN_AMT  \r\n");
-			strbuf.append(",SUM(LO_CNT) LO_CNT  \r\n");
-			strbuf.append(",SUM(LOA)-SUM(LOC) LO_AMT  \r\n");
-			strbuf.append(",SUM(HD_CNT) HD_CNT  \r\n");
-			strbuf.append(",SUM(HDA)-SUM(HDC) HD_AMT  \r\n");
-			strbuf.append(",SUM(SI_CNT) SI_CNT  \r\n");
-			strbuf.append(",SUM(SIA)-SUM(SIC) SI_AMT  \r\n");
-			strbuf.append(",SUM(GD_CNT) JH_CNT  \r\n");
-			strbuf.append(",SUM(GDA)-SUM(GDC) JH_AMT  \r\n");
-			strbuf.append(",SUM(BC_CNT)+SUM(NH_CNT)+SUM(KB_CNT)+SUM(SS_CNT)+SUM(HN_CNT)+SUM(LO_CNT)+SUM(HD_CNT)+SUM(SI_CNT)+SUM(GD_CNT) TOTCNT  \r\n");
-			strbuf.append(",SUM(BCA)-SUM(BCC)+SUM(NHA)-SUM(NHC)+SUM(KBA)-SUM(KBC)+SUM(SSA)-SUM(SSC)+SUM(HNA)-SUM(HNC)+SUM(LOA)-SUM(LOC)+SUM(HDA)-SUM(HDC)+SUM(SIA)-SUM(SIC)+SUM(GDA)-SUM(GDC) TOTAMT  \r\n");
-			strbuf.append(",SUM(APA)-SUM(APC) AP_AMT  \r\n");
-			strbuf.append(",SUM(AP_CNT) AP_CNT  \r\n");
-			strbuf.append(",SUM(WPA)-SUM(WPC) WP_AMT  \r\n");
-			strbuf.append(",SUM(WP_CNT) WP_CNT  \r\n");
-			strbuf.append(",SUM(ZEROA)-SUM(ZEROC) ZERO_AMT  \r\n");
-			strbuf.append(",SUM(ZERO_CNT) ZERO_CNT  \r\n");
-			strbuf.append(",SUM(KAKAOA)-SUM(KAKAOC) KAKAO_AMT  \r\n");
-			strbuf.append(",SUM(KAKAO_CNT) KAKAO_CNT  \r\n");
-			strbuf.append(",SUM(CASHA)-SUM(CASHC) CASH_AMT  \r\n");
-			strbuf.append(",SUM(CASH_CNT) CASH_CNT  \r\n");
-			strbuf.append(",SUM(CASH_IC_A)-SUM(CASH_IC_C) CASH_IC_AMT  \r\n");
-			strbuf.append(",SUM(CASH_IC_CNT) CASH_IC_CNT  \r\n");
+			strbuf.append("    APPDD TR_APPDD,  \r\n");
+			strbuf.append("    ADD_CASHER ADD_CID,  \r\n");
+			strbuf.append("    SUM(KB_CNT) KB_CNT,  \r\n");
+			strbuf.append("    SUM(KBA)-SUM(KBC) KB_AMT,  \r\n");
+			strbuf.append("    SUM(NH_CNT) NH_CNT,  \r\n");
+			strbuf.append("    SUM(NHA)-SUM(NHC) NH_AMT,  \r\n");
+			strbuf.append("    SUM(LO_CNT) LO_CNT,  \r\n");
+			strbuf.append("    SUM(LOA)-SUM(LOC) LO_AMT,  \r\n");			
+			strbuf.append("    SUM(BC_CNT) BC_CNT,  \r\n");
+			strbuf.append("    SUM(BCA)-SUM(BCC) BC_AMT,  \r\n");
+			strbuf.append("    SUM(SS_CNT) SS_CNT,  \r\n");   
+			strbuf.append("    SUM(SSA)-SUM(SSC) SS_AMT,  \r\n");
+			strbuf.append("    SUM(SI_CNT) SI_CNT,  \r\n");
+			strbuf.append("    SUM(SIA)-SUM(SIC) SI_AMT,  \r\n");			
+			strbuf.append("    SUM(HN_CNT) HN_CNT,  \r\n");
+			strbuf.append("    SUM(HNA)-SUM(HNC) HN_AMT,  \r\n");
+			strbuf.append("    SUM(HD_CNT) HD_CNT,  \r\n");
+			strbuf.append("    SUM(HDA)-SUM(HDC) HD_AMT,  \r\n");
+			strbuf.append("    SUM(GD_CNT) JH_CNT,  \r\n");
+			strbuf.append("    SUM(GDA)-SUM(GDC) JH_AMT,  \r\n");
+			
+			strbuf.append("    SUM(AP_CNT) AP_CNT,  \r\n");
+			strbuf.append("    SUM(APA)-SUM(APC) AP_AMT,  \r\n");
+			strbuf.append("    SUM(WP_CNT) WP_CNT,  \r\n");
+			strbuf.append("    SUM(WPA)-SUM(WPC) WP_AMT,  \r\n");
+			strbuf.append("    SUM(ZERO_CNT) ZERO_CNT,  \r\n");
+			strbuf.append("    SUM(ZEROA)-SUM(ZEROC) ZERO_AMT,  \r\n");		
+			strbuf.append("    SUM(KAKAO_CNT) KAKAO_CNT,  \r\n");
+			strbuf.append("    SUM(KAKAOA)-SUM(KAKAOC) KAKAO_AMT,  \r\n");
+			strbuf.append("    SUM(CASH_CNT) CASH_CNT,  \r\n");
+			strbuf.append("    SUM(CASHA)-SUM(CASHC) CASH_AMT,  \r\n");
+			strbuf.append("    SUM(CASH_IC_CNT) CASH_IC_CNT,  \r\n");
+			strbuf.append("    SUM(CASH_IC_A)-SUM(CASH_IC_C) CASH_IC_AMT  \r\n");
+			
+			//strbuf.append("SUM(BC_CNT)+SUM(NH_CNT)+SUM(KB_CNT)+SUM(SS_CNT)+SUM(HN_CNT)+SUM(LO_CNT)+SUM(HD_CNT)+SUM(SI_CNT)+SUM(GD_CNT) TOTCNT,  \r\n");
+			//strbuf.append("SUM(BCA)-SUM(BCC)+SUM(NHA)-SUM(NHC)+SUM(KBA)-SUM(KBC)+SUM(SSA)-SUM(SSC)+SUM(HNA)-SUM(HNC)+SUM(LOA)-SUM(LOC)+SUM(HDA)-SUM(HDC)+SUM(SIA)-SUM(SIC)+SUM(GDA)-SUM(GDC) TOTAMT  \r\n");
 			strbuf.append("FROM(  \r\n");
 			strbuf.append("SELECT   \r\n");
 			strbuf.append("ADD_CASHER  \r\n");
 			strbuf.append(",APPDD  \r\n");
-			strbuf.append(",CASE WHEN APPGB='A' AND ACQ_CD IN ('1106', '026') THEN SUM(AMOUNT) ELSE 0 END BCA  \r\n");
-			strbuf.append(",CASE WHEN APPGB='A' AND ACQ_CD IN ('2211', '018') THEN SUM(AMOUNT) ELSE 0 END NHA  \r\n");
-			strbuf.append(",CASE WHEN APPGB='A' AND ACQ_CD IN ('1101', '016') THEN SUM(AMOUNT) ELSE 0 END KBA  \r\n");
-			strbuf.append(",CASE WHEN APPGB='A' AND ACQ_CD IN ('1104', '031') THEN SUM(AMOUNT) ELSE 0 END SSA  \r\n");
-			strbuf.append(",CASE WHEN APPGB='A' AND ACQ_CD IN ('1105', '008') THEN SUM(AMOUNT) ELSE 0 END HNA  \r\n");
-			strbuf.append(",CASE WHEN APPGB='A' AND ACQ_CD IN ('1103', '047') THEN SUM(AMOUNT) ELSE 0 END LOA  \r\n");
-			strbuf.append(",CASE WHEN APPGB='A' AND ACQ_CD IN ('1102', '027') THEN SUM(AMOUNT) ELSE 0 END HDA  \r\n");
-			strbuf.append(",CASE WHEN APPGB='A' AND ACQ_CD IN ('1107', '029') THEN SUM(AMOUNT) ELSE 0 END SIA  \r\n");
+			strbuf.append(",CASE WHEN APPGB='A' AND ACQ_CD IN ('VC0006', '026', '1106','01') THEN SUM(AMOUNT) ELSE 0 END BCA  \r\n");
+			strbuf.append(",CASE WHEN APPGB='A' AND ACQ_CD IN ('VC0030', '018', '2211','11') THEN SUM(AMOUNT) ELSE 0 END NHA  \r\n");
+			strbuf.append(",CASE WHEN APPGB='A' AND ACQ_CD IN ('VC0001', '016', '1101','02') THEN SUM(AMOUNT) ELSE 0 END KBA  \r\n");
+			strbuf.append(",CASE WHEN APPGB='A' AND ACQ_CD IN ('VC0004', '031', '1104','06') THEN SUM(AMOUNT) ELSE 0 END SSA  \r\n");
+			strbuf.append(",CASE WHEN APPGB='A' AND ACQ_CD IN ('VC0005', '008', '1105','03') THEN SUM(AMOUNT) ELSE 0 END HNA  \r\n");
+			strbuf.append(",CASE WHEN APPGB='A' AND ACQ_CD IN ('VC0003', '047', '1103','33') THEN SUM(AMOUNT) ELSE 0 END LOA  \r\n");
+			strbuf.append(",CASE WHEN APPGB='A' AND ACQ_CD IN ('VC0002', '027', '1102','08') THEN SUM(AMOUNT) ELSE 0 END HDA  \r\n");
+			strbuf.append(",CASE WHEN APPGB='A' AND ACQ_CD IN ('VC0007', '029', '1107','07') THEN SUM(AMOUNT) ELSE 0 END SIA  \r\n");
 			strbuf.append(",CASE WHEN APPGB='A' AND ACQ_CD IN ('1113', '021') THEN SUM(AMOUNT) ELSE 0 END GDA  \r\n");
-			strbuf.append(",CASE WHEN APPGB='C' AND ACQ_CD IN ('1106', '026') THEN SUM(AMOUNT) ELSE 0 END BCC  \r\n");
-			strbuf.append(",CASE WHEN APPGB='C' AND ACQ_CD IN ('2211', '018') THEN SUM(AMOUNT) ELSE 0 END NHC  \r\n");
-			strbuf.append(",CASE WHEN APPGB='C' AND ACQ_CD IN ('1101', '016') THEN SUM(AMOUNT) ELSE 0 END KBC  \r\n");
-			strbuf.append(",CASE WHEN APPGB='C' AND ACQ_CD IN ('1104', '031') THEN SUM(AMOUNT) ELSE 0 END SSC  \r\n");
-			strbuf.append(",CASE WHEN APPGB='C' AND ACQ_CD IN ('1105', '008') THEN SUM(AMOUNT) ELSE 0 END HNC  \r\n");
-			strbuf.append(",CASE WHEN APPGB='C' AND ACQ_CD IN ('1103', '047') THEN SUM(AMOUNT) ELSE 0 END LOC  \r\n");
-			strbuf.append(",CASE WHEN APPGB='C' AND ACQ_CD IN ('1102', '027') THEN SUM(AMOUNT) ELSE 0 END HDC  \r\n");
-			strbuf.append(",CASE WHEN APPGB='C' AND ACQ_CD IN ('1107', '029') THEN SUM(AMOUNT) ELSE 0 END SIC  \r\n");
+			strbuf.append(",CASE WHEN APPGB='C' AND ACQ_CD IN ('VC0006', '026', '1106','01') THEN SUM(AMOUNT) ELSE 0 END BCC  \r\n");
+			strbuf.append(",CASE WHEN APPGB='C' AND ACQ_CD IN ('VC0030', '018', '2211','11') THEN SUM(AMOUNT) ELSE 0 END NHC  \r\n");
+			strbuf.append(",CASE WHEN APPGB='C' AND ACQ_CD IN ('VC0001', '016', '1101','02') THEN SUM(AMOUNT) ELSE 0 END KBC  \r\n");
+			strbuf.append(",CASE WHEN APPGB='C' AND ACQ_CD IN ('VC0004', '031', '1104','06') THEN SUM(AMOUNT) ELSE 0 END SSC  \r\n");
+			strbuf.append(",CASE WHEN APPGB='C' AND ACQ_CD IN ('VC0005', '008', '1105','03') THEN SUM(AMOUNT) ELSE 0 END HNC  \r\n");
+			strbuf.append(",CASE WHEN APPGB='C' AND ACQ_CD IN ('VC0003', '047', '1103','33') THEN SUM(AMOUNT) ELSE 0 END LOC  \r\n");
+			strbuf.append(",CASE WHEN APPGB='C' AND ACQ_CD IN ('VC0002', '027', '1102','08') THEN SUM(AMOUNT) ELSE 0 END HDC  \r\n");
+			strbuf.append(",CASE WHEN APPGB='C' AND ACQ_CD IN ('VC0007', '029', '1107','07') THEN SUM(AMOUNT) ELSE 0 END SIC  \r\n");
 			strbuf.append(",CASE WHEN APPGB='C' AND ACQ_CD IN ('1113', '021') THEN SUM(AMOUNT) ELSE 0 END GDC  \r\n");
-			strbuf.append(",CASE WHEN ACQ_CD IN ('1106', '026') THEN COUNT(1) ELSE 0 END BC_CNT  \r\n");
-			strbuf.append(",CASE WHEN ACQ_CD IN ('2211', '018') THEN COUNT(1) ELSE 0 END NH_CNT  \r\n");
-			strbuf.append(",CASE WHEN ACQ_CD IN ('1101', '016') THEN COUNT(1) ELSE 0 END KB_CNT  \r\n");
-			strbuf.append(",CASE WHEN ACQ_CD IN ('1104', '031') THEN COUNT(1) ELSE 0 END SS_CNT  \r\n");
-			strbuf.append(",CASE WHEN ACQ_CD IN ('1105', '008') THEN COUNT(1) ELSE 0 END HN_CNT  \r\n");
-			strbuf.append(",CASE WHEN ACQ_CD IN ('1103', '047') THEN COUNT(1) ELSE 0 END LO_CNT  \r\n");
-			strbuf.append(",CASE WHEN ACQ_CD IN ('1102', '027') THEN COUNT(1) ELSE 0 END HD_CNT  \r\n");
-			strbuf.append(",CASE WHEN ACQ_CD IN ('1107', '029') THEN COUNT(1) ELSE 0 END SI_CNT  \r\n");
+			strbuf.append(",CASE WHEN ACQ_CD IN ('VC0006', '026', '1106','01') THEN COUNT(1) ELSE 0 END BC_CNT  \r\n");
+			strbuf.append(",CASE WHEN ACQ_CD IN ('VC0030', '018', '2211','11') THEN COUNT(1) ELSE 0 END NH_CNT  \r\n");
+			strbuf.append(",CASE WHEN ACQ_CD IN ('VC0001', '016', '1101','02') THEN COUNT(1) ELSE 0 END KB_CNT  \r\n");
+			strbuf.append(",CASE WHEN ACQ_CD IN ('VC0004', '031', '1104','06') THEN COUNT(1) ELSE 0 END SS_CNT  \r\n");
+			strbuf.append(",CASE WHEN ACQ_CD IN ('VC0005', '008', '1105','03') THEN COUNT(1) ELSE 0 END HN_CNT  \r\n");
+			strbuf.append(",CASE WHEN ACQ_CD IN ('VC0003', '047', '1103','33') THEN COUNT(1) ELSE 0 END LO_CNT  \r\n");
+			strbuf.append(",CASE WHEN ACQ_CD IN ('VC0002', '027', '1102','08') THEN COUNT(1) ELSE 0 END HD_CNT  \r\n");
+			strbuf.append(",CASE WHEN ACQ_CD IN ('VC0007', '029', '1107','07') THEN COUNT(1) ELSE 0 END SI_CNT  \r\n");
 			strbuf.append(",CASE WHEN ACQ_CD IN ('1113', '021') THEN COUNT(1) ELSE 0 END GD_CNT  \r\n");
 			strbuf.append(",CASE WHEN APPGB='A' AND ACQ_CD IN ('9999', '999') THEN SUM(AMOUNT) ELSE 0 END APA  \r\n");
 			strbuf.append(",CASE WHEN APPGB='C' AND ACQ_CD IN ('9999', '999') THEN SUM(AMOUNT) ELSE 0 END APC  \r\n");
@@ -1205,15 +1207,16 @@ public class trans_ora_manager {
 			strbuf = new StringBuffer();
 			//�뜝�룞�삕�뜝�룞�삕�뜝�뙃琉꾩삕
 			strbuf.append("SELECT \r\n");
-			strbuf.append("DEP_NM, TID, TERM_NM, PUR_NM TR_ACQNM, MID TR_MID, ACQ_CD, ACNT, CCNT, AAMT, CAMT, ACNT+CCNT TOTCNT, AAMT-CAMT TOTAMT \r\n");
+			strbuf.append("DEP_NM, TID, TERM_NM, PUR_NM TR_ACQNM, MID TR_MID, ACQ_CD, ACNT, CCNT, AAMT, CAMT, ACNT+CCNT TOTCNT, AAMT-CAMT TOTAMT, APPDD HIDDEN \r\n");
 			strbuf.append("FROM( \r\n");
 			strbuf.append("SELECT \r\n");
-			strbuf.append("TID, MID, ACQ_CD, SUM(ACNT) ACNT, SUM(CCNT) CCNT, SUM(AAMT) AAMT, SUM(CAMT) CAMT \r\n");
+			strbuf.append("TID, MID, ACQ_CD, SUM(ACNT) ACNT, SUM(CCNT) CCNT, SUM(AAMT) AAMT, SUM(CAMT) CAMT, APPDD \r\n");
 			strbuf.append("FROM( \r\n");
 			strbuf.append("SELECT \r\n");
 			strbuf.append("TID, \r\n");
 			strbuf.append("MID, \r\n");
 			strbuf.append("ACQ_CD, \r\n");
+			strbuf.append("APPDD, \r\n");
 			strbuf.append("CASE WHEN APPGB='A' THEN COUNT(1) ELSE 0 END ACNT, \r\n");
 			strbuf.append("CASE WHEN APPGB='A' THEN SUM(AMOUNT) ELSE 0 END AAMT, \r\n");
 			strbuf.append("CASE WHEN APPGB='C' THEN COUNT(1) ELSE 0 END CCNT, \r\n");
@@ -1221,9 +1224,9 @@ public class trans_ora_manager {
 			strbuf.append("FROM \r\n");
 			strbuf.append("GLOB_MNG_ICVAN \r\n");
 			strbuf.append("WHERE SVCGB IN ('CC', 'CE') AND AUTHCD IN ('0000', '6666') AND TID IN (select tid from tb_bas_tidmap where ORG_CD='" + orgcd + "') "+ set_where +" \r\n");
-			strbuf.append("GROUP BY TID, MID, ACQ_CD, APPGB \r\n");
+			strbuf.append("GROUP BY TID, MID, ACQ_CD, APPGB, APPDD \r\n");
 			strbuf.append(") \r\n");
-			strbuf.append("GROUP BY TID, MID, ACQ_CD \r\n");
+			strbuf.append("GROUP BY TID, MID, ACQ_CD, APPDD \r\n");
 			strbuf.append(")T1 \r\n");
 			strbuf.append("LEFT OUTER JOIN( SELECT PUR_NM, PUR_KOCES, PUR_OCD, PUR_SORT FROM TB_BAS_PURINFO )T2 ON(T1.ACQ_CD=T2.PUR_OCD OR T1.ACQ_CD=T2.PUR_KOCES ) \r\n");
 			strbuf.append("LEFT OUTER JOIN( \r\n");
@@ -1427,36 +1430,38 @@ public class trans_ora_manager {
 			strbuf = new StringBuffer();
 			//�뜝�룞�삕�뜝�룞�삕�뜝�뙃琉꾩삕
 			strbuf.append("SELECT \r\n");
+			strbuf.append("    DEP_NM TR_DEPNM, \r\n");
+			strbuf.append("    TERM_NM TR_TIDNM, \r\n");
+			strbuf.append("    APPDD TR_APPDD, \r\n");
+			strbuf.append("    APPTM TR_APPTM, \r\n");
+			strbuf.append("    TSTAT_TXT TR_AUTHSTAT, \r\n");
+			strbuf.append("    ADD_CID ADD_PID, \r\n");
+			strbuf.append("    ADD_CASHER ADD_CID, \r\n");
+			strbuf.append("    APPNO TR_APPNO, \r\n");
+			strbuf.append("    AMOUNT TR_AMT, \r\n");
+			strbuf.append("    TRANTYPE CASH_TP, \r\n");
+			strbuf.append("    CARDNO CASH_ID, \r\n");
+			strbuf.append("    AUTHMSG APP_MSG, \r\n");
+			strbuf.append("    TSTAT TR_CANDD, \r\n");
+			strbuf.append("    OAPPDD TR_OAPPDD, \r\n");
+			strbuf.append("    ADD_CD ADD_RHK, \r\n");
+			strbuf.append("    ADD_GB ADD_PGB, \r\n");
+			strbuf.append("    TID TR_TID, \r\n");
+			
+			
 			strbuf.append("SEQNO, \r\n");
 			strbuf.append("APPGB, \r\n");
 			strbuf.append("	TSTAT, \r\n");
-			strbuf.append("DEP_NM TR_DEPNM, \r\n");
-			strbuf.append("TERM_NM TR_TIDNM, \r\n");
-			strbuf.append("TID TR_TID, \r\n");
 			strbuf.append("MID TR_MID, \r\n");
 			strbuf.append("PUR_NM TR_ACQNM, \r\n");
-			strbuf.append("TSTAT_TXT TR_AUTHSTAT, \r\n");
-			strbuf.append("APPDD TR_APPDD, \r\n");
-			strbuf.append("APPTM TR_APPTM, \r\n");
-			strbuf.append("TSTAT TR_CANDD, \r\n");
-			strbuf.append("OAPPDD TR_OAPPDD, \r\n");
-			strbuf.append("APPNO TR_APPNO, \r\n");
 			strbuf.append("APPGB_TXT TR_AUTHTXT, \r\n");
-			strbuf.append("CARDNO TR_CASH_ID, \r\n");
-			strbuf.append("AMOUNT TR_AMT, \r\n");
 			strbuf.append("AUTHCD TR_RST_CD, \r\n");
-			strbuf.append("TRANTYPE CASH_TP, \r\n");
 			strbuf.append("CANTYPE CANTYPE, \r\n");
-			strbuf.append("ADD_CID ADD_PID, \r\n");
-			strbuf.append("ADD_GB ADD_PGB, \r\n");
-			strbuf.append("ADD_CASHER ADD_CID, \r\n");
-			strbuf.append("ADD_CD ADD_RHK, \r\n");
 			strbuf.append("ADD_RECP ADD_PGB, \r\n");
 			strbuf.append("CASE \r\n");
 			strbuf.append("WHEN LENGTH(ADD_DATE) = 6 THEN '20'||ADD_DATE \r\n");
 			strbuf.append("END ADD_DATE, \r\n");
 			strbuf.append("TRANIDX TR_SEQNO, \r\n");
-			strbuf.append("AUTHMSG APP_MSG, \r\n");
 			strbuf.append("OAPP_AMT \r\n");
 			strbuf.append("FROM( \r\n");
 			strbuf.append("SELECT \r\n");
@@ -1648,22 +1653,22 @@ public class trans_ora_manager {
 			strbuf.append(",CASE WHEN APPGB='C' THEN COUNT(1) ELSE 0 END CCNT \r\n");
 			strbuf.append(",CASE WHEN APPGB='A' THEN SUM(AMOUNT) ELSE 0 END AAMT \r\n");
 			strbuf.append(",CASE WHEN APPGB='C' THEN SUM(AMOUNT) ELSE 0 END CAMT \r\n");
-			strbuf.append(",CASE WHEN APPGB='A' AND ACQ_CD IN ('026', '1106', '001') THEN SUM(AMOUNT) ELSE 0 END ABC \r\n");
-			strbuf.append(",CASE WHEN APPGB='A' AND ACQ_CD IN ('016', '2211') THEN SUM(AMOUNT) ELSE 0 END ANH \r\n");
-			strbuf.append(",CASE WHEN APPGB='A' AND ACQ_CD IN ('002', '1101') THEN SUM(AMOUNT) ELSE 0 END AKB \r\n");
-			strbuf.append(",CASE WHEN APPGB='A' AND ACQ_CD IN ('031', '1104', '003') THEN SUM(AMOUNT) ELSE 0 END ASS \r\n");
-			strbuf.append(",CASE WHEN APPGB='A' AND ACQ_CD IN ('005', '1105') THEN SUM(AMOUNT) ELSE 0 END AHN \r\n");
-			strbuf.append(",CASE WHEN APPGB='A' AND ACQ_CD IN ('047', '1103', '007') THEN SUM(AMOUNT) ELSE 0 END ALO \r\n");
-			strbuf.append(",CASE WHEN APPGB='A' AND ACQ_CD IN ('027', '1102', '008') THEN SUM(AMOUNT) ELSE 0 END AHD \r\n");
-			strbuf.append(",CASE WHEN APPGB='A' AND ACQ_CD IN ('029', '1107', '004') THEN SUM(AMOUNT) ELSE 0 END ASI \r\n");
-			strbuf.append(",CASE WHEN APPGB='C' AND ACQ_CD IN ('026', '1106', '001') THEN SUM(AMOUNT) ELSE 0 END CBC \r\n");
-			strbuf.append(",CASE WHEN APPGB='C' AND ACQ_CD IN ('016', '2211') THEN SUM(AMOUNT) ELSE 0 END CNH \r\n");
-			strbuf.append(",CASE WHEN APPGB='C' AND ACQ_CD IN ('002', '1101') THEN SUM(AMOUNT) ELSE 0 END CKB \r\n");
-			strbuf.append(",CASE WHEN APPGB='C' AND ACQ_CD IN ('031', '1104', '003') THEN SUM(AMOUNT) ELSE 0 END CSS \r\n");
-			strbuf.append(",CASE WHEN APPGB='C' AND ACQ_CD IN ('005', '1105') THEN SUM(AMOUNT) ELSE 0 END CHN \r\n");
-			strbuf.append(",CASE WHEN APPGB='C' AND ACQ_CD IN ('047', '1103', '007') THEN SUM(AMOUNT) ELSE 0 END CLO \r\n");
-			strbuf.append(",CASE WHEN APPGB='C' AND ACQ_CD IN ('027', '1102', '008') THEN SUM(AMOUNT) ELSE 0 END CHD \r\n");
-			strbuf.append(",CASE WHEN APPGB='C' AND ACQ_CD IN ('029', '1107', '004') THEN SUM(AMOUNT) ELSE 0 END CSI \r\n");
+			strbuf.append(",CASE WHEN APPGB='A' AND ACQ_CD IN ('VC0006', '026', '1106','01') THEN SUM(AMOUNT) ELSE 0 END ABC \r\n");
+			strbuf.append(",CASE WHEN APPGB='A' AND ACQ_CD IN ('VC0030', '018', '2211','11') THEN SUM(AMOUNT) ELSE 0 END ANH \r\n");
+			strbuf.append(",CASE WHEN APPGB='A' AND ACQ_CD IN ('VC0001', '016', '1101','02') THEN SUM(AMOUNT) ELSE 0 END AKB \r\n");
+			strbuf.append(",CASE WHEN APPGB='A' AND ACQ_CD IN ('VC0004', '031', '1104','06') THEN SUM(AMOUNT) ELSE 0 END ASS \r\n");
+			strbuf.append(",CASE WHEN APPGB='A' AND ACQ_CD IN ('VC0005', '008', '1105','03') THEN SUM(AMOUNT) ELSE 0 END AHN \r\n");
+			strbuf.append(",CASE WHEN APPGB='A' AND ACQ_CD IN ('VC0003', '047', '1103','33') THEN SUM(AMOUNT) ELSE 0 END ALO \r\n");
+			strbuf.append(",CASE WHEN APPGB='A' AND ACQ_CD IN ('VC0002', '027', '1102','08') THEN SUM(AMOUNT) ELSE 0 END AHD \r\n");
+			strbuf.append(",CASE WHEN APPGB='A' AND ACQ_CD IN ('VC0007', '029', '1107','07') THEN SUM(AMOUNT) ELSE 0 END ASI \r\n");
+			strbuf.append(",CASE WHEN APPGB='C' AND ACQ_CD IN ('VC0006', '026', '1106','01') THEN SUM(AMOUNT) ELSE 0 END CBC \r\n");
+			strbuf.append(",CASE WHEN APPGB='C' AND ACQ_CD IN ('VC0030', '018', '2211','11') THEN SUM(AMOUNT) ELSE 0 END CNH \r\n");
+			strbuf.append(",CASE WHEN APPGB='C' AND ACQ_CD IN ('VC0001', '016', '1101','02') THEN SUM(AMOUNT) ELSE 0 END CKB \r\n");
+			strbuf.append(",CASE WHEN APPGB='C' AND ACQ_CD IN ('VC0004', '031', '1104','06') THEN SUM(AMOUNT) ELSE 0 END CSS \r\n");
+			strbuf.append(",CASE WHEN APPGB='C' AND ACQ_CD IN ('VC0005', '008', '1105','03') THEN SUM(AMOUNT) ELSE 0 END CHN \r\n");
+			strbuf.append(",CASE WHEN APPGB='C' AND ACQ_CD IN ('VC0003', '047', '1103','33') THEN SUM(AMOUNT) ELSE 0 END CLO \r\n");
+			strbuf.append(",CASE WHEN APPGB='C' AND ACQ_CD IN ('VC0002', '027', '1102','08') THEN SUM(AMOUNT) ELSE 0 END CHD \r\n");
+			strbuf.append(",CASE WHEN APPGB='C' AND ACQ_CD IN ('VC0007', '029', '1107','07') THEN SUM(AMOUNT) ELSE 0 END CSI \r\n");
 			strbuf.append("FROM ( \r\n");
 			strbuf.append("SELECT \r\n");
 			strbuf.append("SEQNO, DEP_NM, TERM_NM, TID, MID, PUR_NM, TSTAT, ACQ_CD, \r\n");
@@ -2574,7 +2579,11 @@ public class trans_ora_manager {
 			strbuf.append(", BANK_AMT \r\n");
 			strbuf.append(", NVL(BANK_AMT,0) \r\n");
 			strbuf.append(", TO_NUMBER(T_EXP-I_EXP) AS DIF_TOT_AMT \r\n");
+<<<<<<< HEAD
 			strbuf.append(", '�뜝�룞�삕�뜝�룞�삕' DIF_BANK_AMT \r\n");
+=======
+			strbuf.append(", '�뜝�룞�삕�뜝�룞�삕' DIF_BANK_AMT, ACQ_CD HIDDEN \r\n");
+>>>>>>> origin/hs
 			strbuf.append("FROM( \r\n");
 			strbuf.append("SELECT \r\n");
 			strbuf.append("MID, EXP_DD, SUM(TOT_CNT) T_CNT, SUM(TOT_BAN) T_BAN, SUM(TOT_NETAMT) T_AMT \r\n");
@@ -2593,6 +2602,7 @@ public class trans_ora_manager {
 			strbuf.append("LEFT OUTER JOIN( \r\n");
 			strbuf.append("SELECT \r\n");
 			strbuf.append("DEP_SEQ \r\n");
+			strbuf.append(", ACQ_CD \r\n");
 			strbuf.append(", (SUM(ITEM_CNT60)+SUM(ITEM_CNT67)) I_CNT \r\n");
 			strbuf.append(", SUM(ITEM_CNTBAN) I_BAN \r\n");
 			strbuf.append(", (SUM(ITEM_AMT60)-SUM(ITEM_AMT67)) I_AMT \r\n");
@@ -2601,6 +2611,7 @@ public class trans_ora_manager {
 			strbuf.append("FROM( \r\n");
 			strbuf.append("SELECT \r\n");
 			strbuf.append("DEP_SEQ \r\n");
+			strbuf.append(", ACQ_CD \r\n");
 			strbuf.append(",CASE WHEN RTN_CD='60' THEN COUNT(1) ELSE 0 END ITEM_CNT60 \r\n");
 			strbuf.append(",CASE WHEN RTN_CD='67' THEN COUNT(1) ELSE 0 END ITEM_CNT67 \r\n");
 			strbuf.append(",CASE WHEN RTN_CD NOT IN ('60', '67') THEN COUNT(1) ELSE 0 END ITEM_CNTBAN \r\n");
@@ -2611,7 +2622,7 @@ public class trans_ora_manager {
 			strbuf.append("FROM \r\n");
 			strbuf.append("TB_MNG_DEPDATA \r\n");
 			strbuf.append("WHERE MID IN (SELECT MID FROM TB_BAS_MIDMAP where ORG_CD= '" + orgcd + "')  " + set_where_dep + " \r\n");
-			strbuf.append("GROUP BY DEP_SEQ, RTN_CD \r\n");
+			strbuf.append("GROUP BY DEP_SEQ, RTN_CD, ACQ_CD \r\n");
 			strbuf.append(") \r\n");
 			strbuf.append("GROUP BY DEP_SEQ \r\n");
 			strbuf.append(")T2 ON(T1.DEP_SEQ=T2.DEP_SEQ) \r\n");
@@ -2892,7 +2903,7 @@ public class trans_ora_manager {
 			strbuf.append("LEFT OUTER JOIN( \r\n");
 			strbuf.append("SELECT APPDD, TRANIDX, EXT_FIELD,ADD_CID, CHECK_CARD FROM GLOB_MNG_ICVAN \r\n");
 			strbuf.append(")T7 ON(T1.APP_DD=T7.APPDD AND T1.TRANIDX=T7.TRANIDX) \r\n");
-			strbuf.append("WHERE MID IN (SELECT MID FROM TB_BAS_MIDMAP where ORG_CD= '" + orgcd + "') " + set_where + " \r\n");
+			strbuf.append("WHERE MID IN (SELECT MID FROM TB_BAS_MIDMAP where ORG_CD= '" + orgcd + "') " + set_where_dep + " \r\n");
 			strbuf.append(") \r\n");
 			strbuf.append("GROUP BY MID, DEP_NM, PUR_NM, PUR_SORT, RTN_CD \r\n");
 			strbuf.append(") \r\n");
@@ -4318,22 +4329,22 @@ public class trans_ora_manager {
 			strbuf.append(",CASE WHEN APPGB='C' THEN COUNT(1) ELSE 0 END CCNT \r\n");
 			strbuf.append(",CASE WHEN APPGB='A' THEN SUM(AMOUNT) ELSE 0 END AAMT \r\n");
 			strbuf.append(",CASE WHEN APPGB='C' THEN SUM(AMOUNT) ELSE 0 END CAMT \r\n");
-			strbuf.append(",CASE WHEN APPGB='A' AND ACQ_CD IN ('VC0006', '026', '01') THEN SUM(AMOUNT) ELSE 0 END ABC \r\n");
-			strbuf.append(",CASE WHEN APPGB='A' AND ACQ_CD IN ('VC0030', '018', '11') THEN SUM(AMOUNT) ELSE 0 END ANH \r\n");
-			strbuf.append(",CASE WHEN APPGB='A' AND ACQ_CD IN ('VC0001', '016', '02') THEN SUM(AMOUNT) ELSE 0 END AKB \r\n");
-			strbuf.append(",CASE WHEN APPGB='A' AND ACQ_CD IN ('VC0004', '031', '06') THEN SUM(AMOUNT) ELSE 0 END ASS \r\n");
-			strbuf.append(",CASE WHEN APPGB='A' AND ACQ_CD IN ('VC0005', '008', '03') THEN SUM(AMOUNT) ELSE 0 END AHN \r\n");
-			strbuf.append(",CASE WHEN APPGB='A' AND ACQ_CD IN ('VC0003', '047', '33') THEN SUM(AMOUNT) ELSE 0 END ALO \r\n");
-			strbuf.append(",CASE WHEN APPGB='A' AND ACQ_CD IN ('VC0002', '027', '08') THEN SUM(AMOUNT) ELSE 0 END AHD \r\n");
-			strbuf.append(",CASE WHEN APPGB='A' AND ACQ_CD IN ('VC0007', '029', '07') THEN SUM(AMOUNT) ELSE 0 END ASI \r\n");
-			strbuf.append(",CASE WHEN APPGB='C' AND ACQ_CD IN ('VC0006', '026', '01') THEN SUM(AMOUNT) ELSE 0 END CBC \r\n");
-			strbuf.append(",CASE WHEN APPGB='C' AND ACQ_CD IN ('VC0030', '018', '11') THEN SUM(AMOUNT) ELSE 0 END CNH \r\n");
-			strbuf.append(",CASE WHEN APPGB='C' AND ACQ_CD IN ('VC0001', '016', '02') THEN SUM(AMOUNT) ELSE 0 END CKB \r\n");
-			strbuf.append(",CASE WHEN APPGB='C' AND ACQ_CD IN ('VC0004', '031', '06') THEN SUM(AMOUNT) ELSE 0 END CSS \r\n");
-			strbuf.append(",CASE WHEN APPGB='C' AND ACQ_CD IN ('VC0005', '008', '03') THEN SUM(AMOUNT) ELSE 0 END CHN \r\n");
-			strbuf.append(",CASE WHEN APPGB='C' AND ACQ_CD IN ('VC0003', '047', '33') THEN SUM(AMOUNT) ELSE 0 END CLO \r\n");
-			strbuf.append(",CASE WHEN APPGB='C' AND ACQ_CD IN ('VC0002', '027', '08') THEN SUM(AMOUNT) ELSE 0 END CHD \r\n");
-			strbuf.append(",CASE WHEN APPGB='C' AND ACQ_CD IN ('VC0007', '029', '07') THEN SUM(AMOUNT) ELSE 0 END CSI \r\n");
+			strbuf.append(",CASE WHEN APPGB='A' AND ACQ_CD IN ('VC0006', '026', '1106','01') THEN SUM(AMOUNT) ELSE 0 END ABC \r\n");
+			strbuf.append(",CASE WHEN APPGB='A' AND ACQ_CD IN ('VC0030', '018', '2211','11') THEN SUM(AMOUNT) ELSE 0 END ANH \r\n");
+			strbuf.append(",CASE WHEN APPGB='A' AND ACQ_CD IN ('VC0001', '016', '1101','02') THEN SUM(AMOUNT) ELSE 0 END AKB \r\n");
+			strbuf.append(",CASE WHEN APPGB='A' AND ACQ_CD IN ('VC0004', '031', '1104','06') THEN SUM(AMOUNT) ELSE 0 END ASS \r\n");
+			strbuf.append(",CASE WHEN APPGB='A' AND ACQ_CD IN ('VC0005', '008', '1105','03') THEN SUM(AMOUNT) ELSE 0 END AHN \r\n");
+			strbuf.append(",CASE WHEN APPGB='A' AND ACQ_CD IN ('VC0003', '047', '1103','33') THEN SUM(AMOUNT) ELSE 0 END ALO \r\n");
+			strbuf.append(",CASE WHEN APPGB='A' AND ACQ_CD IN ('VC0002', '027', '1102','08') THEN SUM(AMOUNT) ELSE 0 END AHD \r\n");
+			strbuf.append(",CASE WHEN APPGB='A' AND ACQ_CD IN ('VC0007', '029', '1107','07') THEN SUM(AMOUNT) ELSE 0 END ASI \r\n");
+			strbuf.append(",CASE WHEN APPGB='C' AND ACQ_CD IN ('VC0006', '026', '1106','01') THEN SUM(AMOUNT) ELSE 0 END CBC \r\n");
+			strbuf.append(",CASE WHEN APPGB='C' AND ACQ_CD IN ('VC0030', '018', '2211','11') THEN SUM(AMOUNT) ELSE 0 END CNH \r\n");
+			strbuf.append(",CASE WHEN APPGB='C' AND ACQ_CD IN ('VC0001', '016', '1101','02') THEN SUM(AMOUNT) ELSE 0 END CKB \r\n");
+			strbuf.append(",CASE WHEN APPGB='C' AND ACQ_CD IN ('VC0004', '031', '1104','06') THEN SUM(AMOUNT) ELSE 0 END CSS \r\n");
+			strbuf.append(",CASE WHEN APPGB='C' AND ACQ_CD IN ('VC0005', '008', '1105','03') THEN SUM(AMOUNT) ELSE 0 END CHN \r\n");
+			strbuf.append(",CASE WHEN APPGB='C' AND ACQ_CD IN ('VC0003', '047', '1103','33') THEN SUM(AMOUNT) ELSE 0 END CLO \r\n");
+			strbuf.append(",CASE WHEN APPGB='C' AND ACQ_CD IN ('VC0002', '027', '1102','08') THEN SUM(AMOUNT) ELSE 0 END CHD \r\n");
+			strbuf.append(",CASE WHEN APPGB='C' AND ACQ_CD IN ('VC0007', '029', '1107','07') THEN SUM(AMOUNT) ELSE 0 END CSI \r\n");
 			strbuf.append("FROM ( \r\n");
 			strbuf.append("SELECT \r\n");
 			strbuf.append("SEQNO, DEP_NM, TERM_NM, TID, MID, PUR_NM, TSTAT, ACQ_CD, \r\n");
@@ -6177,6 +6188,7 @@ public class trans_ora_manager {
 			stmt = con.prepareStatement(strbuf.toString());
 			
 			System.out.println(strbuf.toString());	//�뜝�떥源띿삕
+<<<<<<< HEAD
 			//if(Objects.equals(DEBUG,"Y")) {
 						
 			int rowsInserted = stmt.executeUpdate();
@@ -6218,6 +6230,8 @@ public class trans_ora_manager {
 			
 			
 			System.out.println(strbuf.toString());	//
+=======
+>>>>>>> origin/hs
 			//if(Objects.equals(DEBUG,"Y")) {
 						
 			int rowsInserted = stmt.executeUpdate();
