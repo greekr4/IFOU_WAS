@@ -26,8 +26,8 @@ public class sub06_03_tidmap extends HttpServlet {
 		trans_ora_manager oram = new trans_ora_manager();
 		PrintWriter out = response.getWriter();
 		String orgcd = request.getParameter("orgcd");
-		
-		out.print(oram.get_tidmap(orgcd));
+		String depcd = request.getParameter("depcd");
+		out.print(oram.get_tidmap(orgcd,depcd));
 
 	}
 

@@ -2579,11 +2579,8 @@ public class trans_ora_manager {
 			strbuf.append(", BANK_AMT \r\n");
 			strbuf.append(", NVL(BANK_AMT,0) \r\n");
 			strbuf.append(", TO_NUMBER(T_EXP-I_EXP) AS DIF_TOT_AMT \r\n");
-<<<<<<< HEAD
 			strbuf.append(", '�뜝�룞�삕�뜝�룞�삕' DIF_BANK_AMT \r\n");
-=======
 			strbuf.append(", '�뜝�룞�삕�뜝�룞�삕' DIF_BANK_AMT, ACQ_CD HIDDEN \r\n");
->>>>>>> origin/hs
 			strbuf.append("FROM( \r\n");
 			strbuf.append("SELECT \r\n");
 			strbuf.append("MID, EXP_DD, SUM(TOT_CNT) T_CNT, SUM(TOT_BAN) T_BAN, SUM(TOT_NETAMT) T_AMT \r\n");
@@ -6188,7 +6185,7 @@ public class trans_ora_manager {
 			stmt = con.prepareStatement(strbuf.toString());
 			
 			System.out.println(strbuf.toString());	//�뜝�떥源띿삕
-<<<<<<< HEAD
+
 			//if(Objects.equals(DEBUG,"Y")) {
 						
 			int rowsInserted = stmt.executeUpdate();
@@ -6230,8 +6227,7 @@ public class trans_ora_manager {
 			
 			
 			System.out.println(strbuf.toString());	//
-=======
->>>>>>> origin/hs
+
 			//if(Objects.equals(DEBUG,"Y")) {
 						
 			int rowsInserted = stmt.executeUpdate();
@@ -6251,7 +6247,7 @@ public class trans_ora_manager {
 	}
 	
 	
-	public int modify_dep(HashMap<String, String> ParamMap, String DEBUG) {
+	public int modify_tidmap(HashMap<String, String> ParamMap, String DEBUG) {
 
 		Connection con = null;
 		PreparedStatement stmt = null;
@@ -6259,37 +6255,42 @@ public class trans_ora_manager {
 
 		JSONArray jsonary = new JSONArray();
 
-		
-		try {
-			strbuf = new StringBuffer();
-			strbuf.append("UPDATE TB_BAS_DEPART SET  \r\n");		
-			strbuf.append("DEP_NM = '"+ParamMap.get("modify_depnm")+"', DEP_ADM_USER = '"+ParamMap.get("modify_user")+"'"
-					+ ", DEP_TEL1 = '"+ParamMap.get("modify_tel")+"' , DEP_EMAIL = '"+ParamMap.get("modify_email")+"' "
-					+ ",DEP_TYPE = '"+ParamMap.get("modify_type")+"' \r\n");
-			strbuf.append("WHERE DEP_CD = '"+ParamMap.get("modify_depcd")+"'\r\n");
-			
+		String tids = ParamMap.get("tids");
+		String tid[] = tids.split(",");
+		int res = 0;
+		for(int i=0;i<tid.length;i++) {
+			try {
+				strbuf = new StringBuffer();
+				strbuf.append("MERGE INTO TB_BAS_TIDMAP a\r\n");
+				strbuf.append("USING dual\r\n");
+				strbuf.append("ON (a.TID = '"+tid[i]+"' AND a.DEP_CD = '"+ParamMap.get("depcd")+"' AND a.ORG_CD = '"+ParamMap.get("orgcd")+"')\r\n");
+				strbuf.append("WHEN MATCHED THEN\r\n");
+				strbuf.append("UPDATE SET a.INSTIME = SYSDATE\r\n");
+				strbuf.append("WHEN NOT MATCHED THEN\r\n");
+				strbuf.append("INSERT (a.ORG_CD,a.DEP_CD,a.TID,a.INSTIME,a.INSUSER)\r\n");
+				strbuf.append("VALUES ('"+ParamMap.get("orgcd")+"','"+ParamMap.get("depcd")+"','"+tid[i]+"',SYSDATE,'"+ParamMap.get("insuser")+"')\r\n");
 
-			con = getOraConnect();
-			stmt = con.prepareStatement(strbuf.toString());
-			
-			
-			System.out.println(strbuf.toString());	//
-			//if(Objects.equals(DEBUG,"Y")) {
-						
-			int rowsInserted = stmt.executeUpdate();
-			
-            if (rowsInserted > 0) {
-                return rowsInserted;
-            } else {
-                return 0;
-            }
+				
+				con = getOraConnect();
+				stmt = con.prepareStatement(strbuf.toString());
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			setOraClose(con,stmt,rs);
+				System.out.println(strbuf.toString());	//
+				//if(Objects.equals(DEBUG,"Y")) {
+				int rowsInserted = stmt.executeUpdate();
+	            if (rowsInserted > 0) {
+	                res += rowsInserted;
+	            }
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				setOraClose(con,stmt,rs);
+			}
 		}
-		return 0;
+		
+		
+
+		return res;
 	}
 	
 	
@@ -6378,7 +6379,7 @@ public class trans_ora_manager {
 	}
 
 	
-	public JSONArray get_tidmap(String orgcd) {
+	public JSONArray get_tidmap(String orgcd, String depcd) {
 		Connection con = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -6386,10 +6387,14 @@ public class trans_ora_manager {
 
 		try {
 			strbuf = new StringBuffer();
-			strbuf.append("SELECT T1.DEP_CD,T1.TID,T2.TERM_NM  FROM TB_BAS_TIDMAP T1 \r\n");
-			strbuf.append("INNER JOIN TB_BAS_TIDMST T2 \r\n");
-			strbuf.append("ON (T1.TID = T2.TERM_ID) \r\n");
-			strbuf.append("WHERE T1.ORG_CD = '"+orgcd+"' ORDER BY T1.INSTIME \r\n");
+			strbuf.append("SELECT TERM_NM,T1.DEP_CD ,TERM_ID TID,T2.DEP_CD MAP_DEP  FROM \r\n");
+			strbuf.append("TB_BAS_TIDMST T1 \r\n");
+			strbuf.append("LEFT OUTER JOIN( \r\n");
+			strbuf.append("SELECT * FROM TB_BAS_TIDMAP WHERE ORG_CD='"+orgcd+"' AND DEP_CD='"+depcd+"' \r\n");
+			strbuf.append(")T2 ON(T1.ORG_CD=T2.ORG_CD AND T1.TERM_ID=T2.TID) \r\n");
+			strbuf.append("WHERE T1.ORG_CD='"+orgcd+"' \r\n");
+			strbuf.append("ORDER BY T1.TERM_ID ASC \r\n");
+
 
 
 			con = getOraConnect();
@@ -6400,8 +6405,10 @@ public class trans_ora_manager {
 			while(rs.next()) {
 				JSONObject jsonob = new JSONObject();
 	            jsonob.put("DEP_CD",um.getString(rs.getString("DEP_CD")));
+	            jsonob.put("DEP_CD",um.getString(rs.getString("DEP_CD")));
 	            jsonob.put("TID",um.getString(rs.getString("TID")));
 	            jsonob.put("TERM_NM",um.getString(rs.getString("TERM_NM")));
+	            jsonob.put("MAP_DEP",um.getString(rs.getString("MAP_DEP")));
 	            jsonary.add(jsonob);
 			}
 
@@ -6414,7 +6421,7 @@ public class trans_ora_manager {
 	}
 	
 	
-	public JSONArray get_midmap(String orgcd) {
+	public JSONArray get_midmap(String orgcd,String depcd) {
 		Connection con = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -6422,12 +6429,18 @@ public class trans_ora_manager {
 
 		try {
 			strbuf = new StringBuffer();
-			strbuf.append("SELECT MID,T1.DEP_CD,T3.PUR_NM  FROM TB_BAS_MIDMAP T1\r\n");
-			strbuf.append("INNER JOIN TB_BAS_MERINFO T2 \r\n");
-			strbuf.append("ON (T1.MID = T2.MER_NO)\r\n");
-			strbuf.append("INNER JOIN TB_BAS_PURINFO T3\r\n");
-			strbuf.append("ON (T2.PUR_CD=T3.PUR_CD)\r\n");
-			strbuf.append("WHERE T1.ORG_CD ='"+orgcd+"'\r\n");
+			strbuf.append("SELECT T1.DEP_CD,T2.DEP_CD MAP_DEP, MER_NO MID,PUR_NM FROM \r\n");
+			strbuf.append("TB_BAS_MERINFO T1\r\n");
+			strbuf.append("LEFT OUTER JOIN(\r\n");
+			strbuf.append("SELECT * FROM TB_BAS_MIDMAP WHERE ORG_CD='"+orgcd+"' AND DEP_CD='"+depcd+"'\r\n");
+			strbuf.append(")T2 ON(T1.ORG_CD=T2.ORG_CD AND T1.MER_NO=T2.MID)\r\n");
+			strbuf.append("LEFT OUTER JOIN(\r\n");
+			strbuf.append("SELECT PUR_CD, PUR_NM, PUR_SORT FROM TB_BAS_PURINFO \r\n");
+			strbuf.append(")T3 ON(T1.PUR_CD=T3.PUR_CD)\r\n");
+			strbuf.append("WHERE \r\n");
+			strbuf.append("T1.ORG_CD='"+orgcd+"'\r\n");
+			strbuf.append("ORDER BY PUR_SORT ASC\r\n");
+
 
 
 			con = getOraConnect();
@@ -6438,6 +6451,7 @@ public class trans_ora_manager {
 			while(rs.next()) {
 				JSONObject jsonob = new JSONObject();
 	            jsonob.put("DEP_CD",um.getString(rs.getString("DEP_CD")));
+	            jsonob.put("MAP_DEP",um.getString(rs.getString("MAP_DEP")));
 	            jsonob.put("MID",um.getString(rs.getString("MID")));
 	            jsonob.put("PUR_NM",um.getString(rs.getString("PUR_NM")));
 	            jsonary.add(jsonob);
@@ -6451,8 +6465,171 @@ public class trans_ora_manager {
 		return jsonary;
 	}
 
+	public int modify_dep(HashMap<String, String> ParamMap, String DEBUG) {
+
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+
+		JSONArray jsonary = new JSONArray();
+
+		
+		try {
+			strbuf = new StringBuffer();
+			strbuf.append("UPDATE TB_BAS_DEPART SET  \r\n");		
+			strbuf.append("DEP_NM = '"+ParamMap.get("modify_depnm")+"', DEP_ADM_USER = '"+ParamMap.get("modify_user")+"'"
+					+ ", DEP_TEL1 = '"+ParamMap.get("modify_tel")+"' , DEP_EMAIL = '"+ParamMap.get("modify_email")+"' "
+					+ ",DEP_TYPE = '"+ParamMap.get("modify_type")+"' \r\n");
+			strbuf.append("WHERE DEP_CD = '"+ParamMap.get("modify_depcd")+"'\r\n");
+			
+
+			con = getOraConnect();
+			stmt = con.prepareStatement(strbuf.toString());
+			
+			
+			System.out.println(strbuf.toString());	//
+			//if(Objects.equals(DEBUG,"Y")) {
+						
+			int rowsInserted = stmt.executeUpdate();
+			
+            if (rowsInserted > 0) {
+                return rowsInserted;
+            } else {
+                return 0;
+            }
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			setOraClose(con,stmt,rs);
+		}
+		return 0;
+	}
 	
 	
+	public int delete_tidmap(HashMap<String, String> ParamMap, String DEBUG) {
+
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+
+		JSONArray jsonary = new JSONArray();
+
+		
+		try {
+			strbuf = new StringBuffer();
+			strbuf.append("DELETE FROM TB_BAS_TIDMAP \r\n");
+			strbuf.append("WHERE ORG_CD = '"+ParamMap.get("orgcd")+"' AND DEP_CD = '"+ParamMap.get("depcd")+"' \r\n");
+			
+
+			con = getOraConnect();
+			stmt = con.prepareStatement(strbuf.toString());
+			
+			
+			System.out.println(strbuf.toString());	//
+			//if(Objects.equals(DEBUG,"Y")) {
+						
+			int rowsInserted = stmt.executeUpdate();
+			
+            if (rowsInserted > 0) {
+                return rowsInserted;
+            } else {
+                return 0;
+            }
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			setOraClose(con,stmt,rs);
+		}
+		return 0;
+	}
+	
+	
+	public int delete_midmap(HashMap<String, String> ParamMap, String DEBUG) {
+
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+
+		JSONArray jsonary = new JSONArray();
+
+		
+		try {
+			strbuf = new StringBuffer();
+			strbuf.append("DELETE FROM TB_BAS_MIDMAP \r\n");
+			strbuf.append("WHERE ORG_CD = '"+ParamMap.get("orgcd")+"' AND DEP_CD = '"+ParamMap.get("depcd")+"' \r\n");
+			
+
+			con = getOraConnect();
+			stmt = con.prepareStatement(strbuf.toString());
+			
+			
+			System.out.println(strbuf.toString());	//
+			//if(Objects.equals(DEBUG,"Y")) {
+						
+			int rowsInserted = stmt.executeUpdate();
+			
+            if (rowsInserted > 0) {
+                return rowsInserted;
+            } else {
+                return 0;
+            }
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			setOraClose(con,stmt,rs);
+		}
+		return 0;
+	}
+	
+	
+	public int modify_midmap(HashMap<String, String> ParamMap, String DEBUG) {
+
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+
+		JSONArray jsonary = new JSONArray();
+
+		String mids = ParamMap.get("mids");
+		String mid[] = mids.split(",");
+		int res = 0;
+		for(int i=0;i<mid.length;i++) {
+			try {
+				strbuf = new StringBuffer();
+				strbuf.append("MERGE INTO TB_BAS_MIDMAP a\r\n");
+				strbuf.append("USING dual\r\n");
+				strbuf.append("ON (a.MID = '"+mid[i]+"' AND a.DEP_CD = '"+ParamMap.get("depcd")+"' AND a.ORG_CD = '"+ParamMap.get("orgcd")+"')\r\n");
+				strbuf.append("WHEN MATCHED THEN\r\n");
+				strbuf.append("UPDATE SET a.INSTIME = SYSDATE\r\n");
+				strbuf.append("WHEN NOT MATCHED THEN\r\n");
+				strbuf.append("INSERT (a.ORG_CD,a.DEP_CD,a.MID,a.INSTIME,a.INSUSER)\r\n");
+				strbuf.append("VALUES ('"+ParamMap.get("orgcd")+"','"+ParamMap.get("depcd")+"','"+mid[i]+"',SYSDATE,'"+ParamMap.get("insuser")+"')\r\n");
+
+				
+				con = getOraConnect();
+				stmt = con.prepareStatement(strbuf.toString());
+
+				System.out.println(strbuf.toString());	//
+				//if(Objects.equals(DEBUG,"Y")) {
+				int rowsInserted = stmt.executeUpdate();
+	            if (rowsInserted > 0) {
+	                res += rowsInserted;
+	            }
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				setOraClose(con,stmt,rs);
+			}
+		}
+		
+		
+
+		return res;
+	}
 	
 
 
