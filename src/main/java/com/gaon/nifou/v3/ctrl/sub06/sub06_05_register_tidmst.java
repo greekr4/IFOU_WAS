@@ -16,8 +16,8 @@ import org.json.simple.JSONObject;
 import com.gaon.nifou.v3.trans_ora_manager;
 import com.gaon.nifou.v3.util_manager;
 
-@WebServlet("/sub06/04_register_merinfo.gaon")
-public class sub06_04_register_merinfo extends HttpServlet {
+@WebServlet("/sub06/05_register_tidmst.gaon")
+public class sub06_05_register_tidmst extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
@@ -28,25 +28,27 @@ public class sub06_04_register_merinfo extends HttpServlet {
 		String DEBUG = request.getParameter("DEBUG");
 		String orgcd = request.getParameter("orgcd");
 		String depcd = request.getParameter("depcd");
-		String purcd = request.getParameter("purcd");
-		String van = request.getParameter("van");
-		String mid = request.getParameter("mid");
+		String reg_model = request.getParameter("reg_model");
+		String reg_van = request.getParameter("reg_van");
+		String reg_tidno = request.getParameter("reg_tidno");
+		String reg_tidnm = request.getParameter("reg_tidnm");
+
 
 		
-		
 		String timestmap = String.valueOf(System.currentTimeMillis());
-		String reg_mer_mercd = "MD" + timestmap;
+		String reg_tidcd = "TD" + timestmap;
 		
 		HashMap<String, String> ParamMap = new HashMap<String, String>();
-		ParamMap.put("reg_mer_mercd", reg_mer_mercd);
+		ParamMap.put("reg_tidcd", reg_tidcd);
 		ParamMap.put("orgcd",orgcd);
 		ParamMap.put("depcd",depcd);
-		ParamMap.put("purcd",purcd);
-		ParamMap.put("van",van);
-		ParamMap.put("mid",mid);
+		ParamMap.put("reg_model",reg_model);
+		ParamMap.put("reg_van",reg_van);
+		ParamMap.put("reg_tidno",reg_tidno);
+		ParamMap.put("reg_tidnm",reg_tidnm);
 		
 		JSONObject res_json = new JSONObject();
-		int res = oram.register_merinfo(ParamMap,DEBUG);
+		int res = oram.register_tidmst(ParamMap,DEBUG);
 		res_json.put("res", res);
 		out.print(res_json);
 

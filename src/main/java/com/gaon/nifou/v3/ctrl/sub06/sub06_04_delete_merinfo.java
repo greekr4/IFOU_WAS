@@ -16,8 +16,8 @@ import org.json.simple.JSONObject;
 import com.gaon.nifou.v3.trans_ora_manager;
 import com.gaon.nifou.v3.util_manager;
 
-@WebServlet("/sub06/04_01.gaon")
-public class sub06_04_01 extends HttpServlet {
+@WebServlet("/sub06/04_delete_merinfo.gaon")
+public class sub06_04_delete_merinfo extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
@@ -25,10 +25,22 @@ public class sub06_04_01 extends HttpServlet {
 		response.setHeader("Access-Control-Allow-Origin", "*");
 		trans_ora_manager oram = new trans_ora_manager();
 		PrintWriter out = response.getWriter();
+		String DEBUG = request.getParameter("DEBUG");
+
 		String orgcd = request.getParameter("orgcd");
+		String mercd = request.getParameter("mercd");
+
 
 		
-		out.print(oram.get_sub0604_01(orgcd));
+		
+		HashMap<String, String> ParamMap = new HashMap<String, String>();
+		ParamMap.put("orgcd",orgcd);
+		ParamMap.put("mercd",mercd);
+		
+		JSONObject res_json = new JSONObject();
+		int res = oram.delete_merinfo(ParamMap,DEBUG);
+		res_json.put("res", res);
+		out.print(res_json);
 
 	}
 

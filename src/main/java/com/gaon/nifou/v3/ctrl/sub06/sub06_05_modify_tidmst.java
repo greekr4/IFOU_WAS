@@ -16,8 +16,8 @@ import org.json.simple.JSONObject;
 import com.gaon.nifou.v3.trans_ora_manager;
 import com.gaon.nifou.v3.util_manager;
 
-@WebServlet("/sub06/04_register_merinfo.gaon")
-public class sub06_04_register_merinfo extends HttpServlet {
+@WebServlet("/sub06/05_modify_tidmst.gaon")
+public class sub06_05_modify_tidmst extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
@@ -26,27 +26,28 @@ public class sub06_04_register_merinfo extends HttpServlet {
 		trans_ora_manager oram = new trans_ora_manager();
 		PrintWriter out = response.getWriter();
 		String DEBUG = request.getParameter("DEBUG");
+
 		String orgcd = request.getParameter("orgcd");
-		String depcd = request.getParameter("depcd");
-		String purcd = request.getParameter("purcd");
-		String van = request.getParameter("van");
-		String mid = request.getParameter("mid");
+		String modify_depcd = request.getParameter("modify_depcd");
+		String modify_tidnm = request.getParameter("modify_tidnm");
+		String modify_tidno = request.getParameter("modify_tidno");
+		String modify_van = request.getParameter("modify_van");
+		String modify_model = request.getParameter("modify_model");
+		String modify_tidcd = request.getParameter("modify_tidcd");
 
 		
 		
-		String timestmap = String.valueOf(System.currentTimeMillis());
-		String reg_mer_mercd = "MD" + timestmap;
-		
 		HashMap<String, String> ParamMap = new HashMap<String, String>();
-		ParamMap.put("reg_mer_mercd", reg_mer_mercd);
 		ParamMap.put("orgcd",orgcd);
-		ParamMap.put("depcd",depcd);
-		ParamMap.put("purcd",purcd);
-		ParamMap.put("van",van);
-		ParamMap.put("mid",mid);
+		ParamMap.put("modify_depcd",modify_depcd);
+		ParamMap.put("modify_tidnm",modify_tidnm);
+		ParamMap.put("modify_tidno",modify_tidno);
+		ParamMap.put("modify_van",modify_van);
+		ParamMap.put("modify_model",modify_model);
+		ParamMap.put("modify_tidcd",modify_tidcd);
 		
 		JSONObject res_json = new JSONObject();
-		int res = oram.register_merinfo(ParamMap,DEBUG);
+		int res = oram.modify_tidmst(ParamMap,DEBUG);
 		res_json.put("res", res);
 		out.print(res_json);
 
