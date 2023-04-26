@@ -411,30 +411,30 @@ public class trans_ora_manager {
 			strbuf.append("    SEQNO, \r\n");
 			strbuf.append("	   DEP_NM TR_DEPNM, \r\n");
 			strbuf.append("	   TERM_NM TR_TIDNM, \r\n");
-			strbuf.append("	   APPDD TR_APPDD,\r\n");
-			strbuf.append("	   APPTM TR_APPTM,\r\n");
+			strbuf.append("	   TO_CHAR(TO_DATE(APPDD, 'YYYYMMDD'), 'YYYY-MM-DD') TR_APPDD,\r\n");
+			strbuf.append("	   TO_CHAR(TO_DATE(APPTM, 'HH24MISS'), 'HH24:MI:SS') TR_APPTM,\r\n");
 			strbuf.append("	   APPGB TR_AUTHTXT,\r\n");
 			strbuf.append("	   ADD_CID ADD_PID,\r\n");
 			strbuf.append("	   ADD_CASHER ADD_CID,\r\n");
 			strbuf.append("	   PUR_NM TR_ACQNM, \r\n");
 			strbuf.append("	   CARDNO TR_CARDNO,	\r\n");
 			strbuf.append("	   APPNO TR_APPNO, \r\n");
-			strbuf.append("	   AMOUNT TR_AMT,	\r\n");
+			strbuf.append("	   TRIM(TO_CHAR((AMOUNT),'999,999,999,999,999,999')) TR_AMT,	\r\n");
 			strbuf.append("    HALBU TR_HALBU, \r\n");
 			strbuf.append("    APP_MSG,\r\n");
 			strbuf.append("    OAPP_AMT TR_CANDD,\r\n");
-			strbuf.append("	   OAPPDD TR_OAPPDD,\r\n");
+			strbuf.append("	   TO_CHAR(TO_DATE(OAPPDD, 'YYYYMMDD'), 'YYYY-MM-DD') TR_OAPPDD,\r\n");
 			strbuf.append("	   CARDTP_TXT TR_CARDTP, \r\n");
 			strbuf.append("    OVSEA_CARD, \r\n");			
 			strbuf.append("	   MID TR_MID, \r\n");
 			strbuf.append("	   ADD_CD ADD_RHK, \r\n"); //
 			strbuf.append("	   ADD_GB ADD_PGB,\r\n");
 			strbuf.append("	   TID TR_TID, \r\n");
-			strbuf.append("	   EXP_DD DP_EXP_DD,\r\n");
+			strbuf.append("	   TO_CHAR(TO_DATE(EXP_DD, 'YYYYMMDD'), 'YYYY-MM-DD') DP_EXP_DD,\r\n");
 			strbuf.append("	   RTN_TXT DP_RST_TXT,\r\n");
-			strbuf.append("	   DEPO_DD DP_REQ_DD,\r\n");
-			strbuf.append("	   REQ_DD DP_RES_DD,	\r\n");
-			strbuf.append("	   REG_DD DP_REG_DD,\r\n");
+			strbuf.append("	   TO_CHAR(TO_DATE(DEPO_DD, 'YYYYMMDD'), 'YYYY-MM-DD') DP_REQ_DD,\r\n");
+			strbuf.append("	   TO_CHAR(TO_DATE(REQ_DD, 'YYYYMMDD'), 'YYYY-MM-DD') DP_RES_DD,	\r\n");
+			strbuf.append("	   TO_CHAR(TO_DATE(REG_DD, 'YYYYMMDD'), 'YYYY-MM-DD') DP_REG_DD,\r\n");
 			strbuf.append("	   TRANIDX HIDDEN,\r\n");
 			//�뜝�룞�삕�뜝�룞�삕�뜝�룞�삕冶묈뜝占� �솗�뜝�룞�삕�뜝�뙏�뼲�삕�뜝�룞�삕
 			strbuf.append("	APPGB_TXT TR_AUTHSTAT, \r\n");
@@ -451,7 +451,11 @@ public class trans_ora_manager {
 			strbuf.append("		CARDNO,	AMOUNT,	HALBU,\r\n");
 			strbuf.append("		REQ_DD,	AUTHCD,	REG_DD,	RTN_CD,\r\n");
 			strbuf.append("		EXP_DD,	EXT_FIELD,	TRANIDX, AUTHMSG,\r\n");
-			strbuf.append("		ADD_GB, ADD_CID, ADD_CD, ADD_RECP, ADD_CNT, ADD_CASHER, ADD_DATE, DEPO_DD, OVSEA_CARD, \r\n");
+			strbuf.append("		ADD_GB, ADD_CID, ADD_CD, ADD_RECP, ADD_CNT, ADD_CASHER, ADD_DATE, DEPO_DD,  \r\n");
+			strbuf.append("		CASE \r\n");
+			strbuf.append("			WHEN OVSEA_CARD='Y' THEN '해외카드' \r\n");
+			strbuf.append("			WHEN OVSEA_CARD='N' THEN '국내카드' \r\n");
+			strbuf.append("		END OVSEA_CARD,\r\n");					
 			strbuf.append("		CASE \r\n");
 			strbuf.append("			WHEN APPGB='A' THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='" + orgcd + "' AND SCD_CD='SCD0015')\r\n");
 			strbuf.append("			WHEN APPGB='C' THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='" + orgcd + "' AND SCD_CD='SCD0016')\r\n");
@@ -1412,7 +1416,7 @@ public class trans_ora_manager {
 			strbuf.append("    DEP_NM TR_DEPNM, \r\n");
 			strbuf.append("    TERM_NM TR_TIDNM, \r\n");
 			strbuf.append("    APPDD TR_APPDD, \r\n");
-			strbuf.append("    APPTM TR_APPTM, \r\n");
+			strbuf.append("    TO_CHAR(TO_DATE(APPTM, 'HH24MISS'), 'HH24:MI:SS') TR_APPTM, \r\n");
 			strbuf.append("    APPGB_TXT TR_AUTHSTAT, \r\n");
 			strbuf.append("    ADD_CID ADD_PID, \r\n");
 			strbuf.append("    ADD_CASHER ADD_CID, \r\n");
@@ -1949,6 +1953,18 @@ public class trans_ora_manager {
 			strbuf = new StringBuffer();
 			//�뜝�룞�삕�뜝�룞�삕�뜝�뙃琉꾩삕
 			strbuf.append("SELECT \r\n");
+			strbuf.append("SUM(ACNT) ACNT \r\n");
+			strbuf.append(",SUM(CCNT) CCNT \r\n");
+			strbuf.append(",SUM(AAMT) AAMT \r\n");
+			strbuf.append(",SUM(AFEE) AFEE \r\n");
+			strbuf.append(",SUM(CAMT) CAMT \r\n");
+			strbuf.append(",SUM(CFEE) CFEE \r\n");
+			strbuf.append(",SUM(TOTCNT) TOTCNT \r\n");
+			strbuf.append(",SUM(TOTAMT) TOTAMT \r\n");
+			strbuf.append(",SUM(TOTFEE) TOTFEE \r\n");
+			strbuf.append(",SUM(DP_EXP_AMT) DP_EXP_AMT \r\n");
+			strbuf.append("FROM( \r\n");			
+			strbuf.append("SELECT \r\n");
 			strbuf.append("DEP_NM \r\n");
 			strbuf.append(",TERM_ID \r\n");
 			strbuf.append(",TERM_NM \r\n");
@@ -2041,6 +2057,7 @@ public class trans_ora_manager {
 			strbuf.append(")T2 \r\n");
 			strbuf.append("LEFT OUTER JOIN( SELECT DEP_CD, TERM_NM, TERM_ID FROM TB_BAS_TIDMST WHERE ORG_CD= '" + orgcd + "')T3 ON(T2.TID=T3.TERM_ID) \r\n");
 			strbuf.append("LEFT OUTER JOIN( SELECT DEP_NM, DEP_CD FROM TB_BAS_DEPART WHERE ORG_CD= '" + orgcd + "')T4 ON(T3.DEP_CD=T4.DEP_CD) \r\n");
+			strbuf.append(")   \r\n");
 
 			/**
 			 * ----------�뜝�룞�삕�뜝�룞�삕�뜝占�---------------
