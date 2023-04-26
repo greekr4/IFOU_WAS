@@ -1480,27 +1480,27 @@ public class trans_ora_manager {
 			strbuf.append("END TSTAT_TXT, \r\n");
 			strbuf.append("APPDD, APPTM, TSTAT CANDATE, OAPPDD, APPNO, APPGB, \r\n");
 			strbuf.append("CASE \r\n");
-<<<<<<< HEAD
+
 			strbuf.append("--�뜝�룞�삕�뜝�떥嫄곕쨪�삕 \r\n");
 			strbuf.append("WHEN APPGB='A' THEN '�뜝�룞�삕�뜝�룞�삕' \r\n");
 			strbuf.append("--�뜝�룞�삕�윴�궧�뜝占� \r\n");
 			strbuf.append("WHEN APPGB='C' THEN '�뜝�룞�삕�뜝占�' \r\n");
-=======
+
 			strbuf.append("WHEN APPGB='A' THEN '신용승인' \r\n");
 			strbuf.append("WHEN APPGB='C' THEN '신용취소' \r\n");
->>>>>>> origin/hs
+
 			strbuf.append("END APPGB_TXT, \r\n");
 			strbuf.append("CARDNO, AMOUNT, \r\n");
 			strbuf.append("AUTHCD, \r\n");
 			strbuf.append("CASE \r\n");
-<<<<<<< HEAD
+
 			strbuf.append("WHEN DDCGB='0' THEN '�뜝���벝�삕�뜝�룞�삕�뜝占�' \r\n");
 			strbuf.append("WHEN DDCGB='1' THEN '�뜝�룞�삕�뜝�룞�삕�뜝�룞�삕�뜝�룞�삕' \r\n");
-=======
+
 			strbuf.append("WHEN DDCGB='0' THEN '소득공제' \r\n");
 			strbuf.append("WHEN DDCGB='1' THEN '지출증빙' \r\n");
 			strbuf.append("ELSE '자진발급' \r\n");
->>>>>>> origin/hs
+
 			strbuf.append("END TRANTYPE, \r\n");
 			strbuf.append("CASE \r\n");
 			strbuf.append("WHEN OVSEA_CARD='1' THEN '�뜝�떊琉꾩삕�뜝�룞�삕�뜝占�' \r\n");
@@ -1510,21 +1510,21 @@ public class trans_ora_manager {
 			strbuf.append("EXT_FIELD, TRANIDX, AUTHMSG \r\n");
 			strbuf.append(",CASE WHEN TLINEGB IS NOT NULL THEN (SELECT CODE_VAL FROM TB_BAS_CODE WHERE TRIM(CODE_NO)=TRIM(TLINEGB)) END TLINEGBTXT \r\n");
 			strbuf.append(",CASE \r\n");
-<<<<<<< HEAD
+
 			strbuf.append("WHEN ADD_GB IN ('1', 'O') THEN '�뜝�뙟琉꾩삕' \r\n");
 			strbuf.append("WHEN ADD_GB IN ('2', 'E') THEN '�뜝�룞�삕�뜝�룞�삕' \r\n");
 			strbuf.append("WHEN ADD_GB IN ('3', 'I') THEN '�뜝�뙃�슱�삕' \r\n");
 			strbuf.append("WHEN ADD_GB IN ('4', 'G') THEN '�뜝�룞�삕�뜝�뙆怨ㅼ삕�뜝�룞�삕' \r\n");
 			strbuf.append("WHEN ADD_GB='5' THEN '�뜝�떦諛섍낀�삕�뜝�룞�삕' \r\n");
 			strbuf.append("WHEN ADD_GB='6' THEN '�뜝�룞�삕蓼뺝뜝�룞�삕�뜝占�' \r\n");
-=======
+
 			strbuf.append("WHEN ADD_GB IN ('1', 'O') THEN 'O' \r\n");
 			strbuf.append("WHEN ADD_GB IN ('2', 'E') THEN 'E' \r\n");
 			strbuf.append("WHEN ADD_GB IN ('3', 'I') THEN 'I' \r\n");
 			strbuf.append("WHEN ADD_GB IN ('4', 'G') THEN 'G' \r\n");
 			strbuf.append("WHEN ADD_GB='5' THEN 'ADDGB5' \r\n");
 			strbuf.append("WHEN ADD_GB='6' THEN 'ADDGB6' \r\n");
->>>>>>> origin/hs
+
 			strbuf.append("ELSE '' \r\n");
 			strbuf.append("END ADD_GB \r\n");
 			strbuf.append(", ADD_CID, ADD_CD, ADD_RECP, ADD_CNT, ADD_CASHER, ADD_DATE, DEPO_DD, OAPP_AMT \r\n");
@@ -1840,26 +1840,26 @@ public class trans_ora_manager {
 			strbuf.append("    TERM_NM TR_TIDNM, \r\n");
 			strbuf.append("    T1.APPDD TR_APPDD, \r\n");
 			strbuf.append("    APPTM TR_APPTM, \r\n");
-<<<<<<< HEAD
+
 			strbuf.append("    '�뜝�룞�삕�뜝�떥嫄곕쨪�삕' TR_AUTHSTAT, \r\n");
-=======
+
 			strbuf.append("    CASE \r\n");
 			strbuf.append("        WHEN T1.APPGB='A' THEN '신용승인' \r\n");
 			strbuf.append("        WHEN T1.APPGB='C' THEN '신용취소' \r\n");
 			strbuf.append("    END TR_AUTHSTAT, \r\n");
->>>>>>> origin/hs
+
 			strbuf.append("    ADD_CID ADD_PID,  \r\n");
 			strbuf.append("    ADD_CASHER ADD_CID,  \r\n");
 			strbuf.append("    T1.APPNO TR_APPNO,  \r\n");
 			strbuf.append("    T1.AMOUNT TR_AMT,  \r\n");
-<<<<<<< HEAD
+
 			strbuf.append("    ADD_RECP ADD_RHK,  \r\n");
 			strbuf.append("    ADD_GB ADD_PGB,  \r\n");
 			strbuf.append("    '�뜝�룞�삕�뜝�룞�삕�뜝�룞�삕�뜝占�' TR_CANDD,  \r\n");
 			strbuf.append("    OAPPDD TR_OAPPDD,  \r\n");
 			strbuf.append("    OAPPNO TR_OAPPNO,  \r\n");
 			strbuf.append("    '�뜝�룞�삕�뜝�듅源띿삕�뜝�룞�삕' APP_MSG, \r\n");
-=======
+
 			strbuf.append("    ADD_RECP ADD_RHK,  \r\n"); 
 			strbuf.append("    ADD_CD ADD_PGB,  \r\n");
 			strbuf.append("    CASE \r\n");
@@ -1875,7 +1875,7 @@ public class trans_ora_manager {
 			strbuf.append("        WHEN T1.APPGB='C' AND APPDD<>OAPPDD THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='" + orgcd +"' AND SCD_CD='SCD0013')  \r\n");
 			strbuf.append("        WHEN T1.APPGB='A' AND APPDD<>OAPP_AMT AND OAPP_AMT IS NOT NULL THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='" + orgcd + "' AND SCD_CD='SCD0013')  \r\n");
 			strbuf.append("    END APP_MSG,  \r\n");
->>>>>>> origin/hs
+
 			strbuf.append("    CASE  \r\n");
 			strbuf.append("        WHEN TRUNC(AMOUNT*0.01) < 10 THEN 10 ELSE TRUNC(AMOUNT*0.01)  \r\n");
 			strbuf.append("    END CIC_FEE,  \r\n");
@@ -1915,7 +1915,7 @@ public class trans_ora_manager {
 			strbuf.append("        WHEN LENGTH(ADD_DATE) = 6 THEN '20'||ADD_DATE  \r\n");
 			strbuf.append("    END ADD_DATE,  \r\n");
 			strbuf.append("    DEPOREQDD DEPO_DD,  \r\n");
-<<<<<<< HEAD
+
 			strbuf.append("    CASE  \r\n");
 			strbuf.append("        --�뜝�룞�삕�뜝�룞�삕�궧�뜝占�  \r\n");
 			strbuf.append("        WHEN T1.APPGB='A' AND OAPP_AMT IS NULL THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR0016' AND SCD_CD='SCD0011')  \r\n");
@@ -1928,8 +1928,8 @@ public class trans_ora_manager {
 			strbuf.append("        --�뜝�룞�삕�뜝�룞�삕�뜝�룞�삕�뜝占�  \r\n");
 			strbuf.append("        WHEN T1.APPGB='A' AND APPDD<>OAPP_AMT AND OAPP_AMT IS NOT NULL THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='OR0016' AND SCD_CD='SCD0013')  \r\n");
 			strbuf.append("    END AUTHSTAT,  \r\n");
-=======
->>>>>>> origin/hs
+
+
 			strbuf.append("    OAPP_AMT  \r\n");			
 			strbuf.append("FROM  \r\n");
 			strbuf.append("GLOB_MNG_ICVAN T1  \r\n");
@@ -2346,12 +2346,12 @@ public class trans_ora_manager {
 			strbuf.append("        WHEN CHECK_CARD='N' THEN '�뜝�떊�슱�삕移닷뜝�룞�삕' \r\n");
 			strbuf.append("        ELSE '' \r\n");
 			strbuf.append("    END APP_MSG, \r\n");
-<<<<<<< HEAD
+
 			strbuf.append("    '�뜝�룞�삕�뜝�룞�삕�뜝�룞�삕�뜝占�' TR_CANDD, \r\n");
 			strbuf.append("    OAPPDD TR_OAPPDD, \r\n");
 			strbuf.append("    '移닷뜝�룞�삕���뜝�룞�삕' TR_CARDTP, \r\n");
 			strbuf.append("    OVSEA_CARD, \r\n");
-=======
+
 			strbuf.append("    CASE \r\n");
 			strbuf.append("        WHEN T1.APPGB='C' THEN '' \r\n");
 			strbuf.append("        WHEN T1.APPGB='A' THEN (SELECT C1.APPDD FROM GLOB_MNG_ICVAN C1 WHERE C1.APPGB='C' AND T1.APPDD=C1.OAPPDD AND T1.APPNO=C1.APPNO AND T1.AMOUNT=C1.AMOUNT AND T1.CARDNO=C1.CARDNO) \r\n");
@@ -2365,7 +2365,7 @@ public class trans_ora_manager {
 			strbuf.append("        WHEN OVSEA_CARD='Y' THEN '해외' \r\n");
 			strbuf.append("        WHEN OVSEA_CARD='N' THEN '국내' \r\n");
 			strbuf.append("    END OVSEA_CARD, \r\n");
->>>>>>> origin/hs
+
 			strbuf.append("    MID TR_MID, \r\n");
 			strbuf.append("    ADD_RECP ADD_RHK, \r\n");
 			strbuf.append("    ADD_CD ADD_PGB, \r\n");
@@ -2376,11 +2376,11 @@ public class trans_ora_manager {
 			strbuf.append("        WHEN RTN_CD IN('61', '64') THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='" + orgcd + "' AND SCD_CD='SCD0026') \r\n");
 			strbuf.append("    END DP_RST_TXT,\r\n");
 			strbuf.append("    DEPOREQDD DP_REQ_DD, \r\n");
-<<<<<<< HEAD
+
 			strbuf.append("    '�뜝�룞�삕�뜝�룞�삕�뜝�룞�삕�뜝�룞�삕�뜝�룞�삕�뜝�룞�삕' DP_RES_DD, \r\n");
-=======
+
 			strbuf.append("    REG_DD DP_RES_DD, \r\n");
->>>>>>> origin/hs
+
 			strbuf.append("    REG_DD DP_REG_DD, \r\n");
 			strbuf.append("EXP_DD,    \r\n");
 			strbuf.append("SEQNO, \r\n");
@@ -2656,7 +2656,7 @@ public class trans_ora_manager {
 			 */			
 			
 			strbuf.append("SELECT \r\n");
-<<<<<<< HEAD
+
 			strbuf.append("DEP_NM TR_DEPNM, T3.DEP_CD DEP_CD, PUR_NM TR_ACQNM, T1.MID TR_MID, T1.EXP_DD DEP_EXP_DD, T_CNT TOT_CNT \r\n");
 			strbuf.append(", T_BAN TOT_BAN, T_AMT TOT_AMT, T_FEE TOT_FEE, T_EXP TOT_EXP \r\n");
 			strbuf.append(", I_CNT DEP_CNT \r\n");
@@ -2713,7 +2713,7 @@ public class trans_ora_manager {
 			strbuf.append(")T2 ON(T1.DEP_SEQ=T2.DEP_SEQ) \r\n");
 			strbuf.append("GROUP BY MID, EXP_DD \r\n");
 			strbuf.append(")T1 \r\n");
-=======
+
 			strbuf.append("    DEP_NM TR_DEPNM, T4.DEP_CD DEP_CD, PUR_NM TR_ACQNM, T1.MID TR_MID, T1.EXP_DD DEP_EXP_DD,  \r\n");
 			strbuf.append("    T_CNT TOT_CNT,T_BAN TOT_BAN, T_AMT TOT_AMT, T_FEE TOT_FEE, T_EXP TOT_EXP, \r\n");
 			strbuf.append("    I_CNT DEP_CNT, I_BAN DEP_BAN, I_AMT DEP_AMT, I_FEE DEP_FEE, I_EXP DEP_EXP, \r\n");
@@ -2764,7 +2764,7 @@ public class trans_ora_manager {
 			strbuf.append("    SELECT EXP_DD, MID, EXP_AMT BANK_AMT FROM TB_MNG_BANKDATA \r\n");
 			strbuf.append("    GROUP BY EXP_DD, MID, EXP_AMT \r\n");
 			strbuf.append(")T3 ON(T1.MID=T3.MID AND T1.EXP_DD=T3.EXP_DD) \r\n");
->>>>>>> origin/hs
+
 			strbuf.append("LEFT OUTER JOIN( \r\n");
 			strbuf.append("    SELECT ORG_CD, DEP_CD, MER_NO, PUR_CD FROM TB_BAS_MERINFO \r\n");
 			strbuf.append(")T4 ON(T1.MID=T4.MER_NO) \r\n");
@@ -2877,10 +2877,10 @@ public class trans_ora_manager {
 			strbuf.append("    HALBU, \r\n");
 			strbuf.append("    FEE,  \r\n");			
 			strbuf.append("    (SALE_AMT-FEE) EXP_AMT, \r\n");
-<<<<<<< HEAD
+
 			strbuf.append("    '�뜝�떊�슱�삕' TR_CARDTP,  \r\n");
 			strbuf.append("    '�뜝�룞�삕�뜝�룞�삕' OVERSEA_CARD, \r\n");
-=======
+
 			strbuf.append("	   CASE \r\n");
 			strbuf.append("	       WHEN CHECK_CARD='Y' THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='" + orgcd + "' AND SCD_CD='SCD0019') \r\n");
 			strbuf.append("		   ELSE (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='" + orgcd + "' AND SCD_CD='SCD0018') \r\n");
@@ -2889,7 +2889,7 @@ public class trans_ora_manager {
 			strbuf.append("        WHEN T7.OVSEA_CARD='Y' THEN '해외' \r\n");
 			strbuf.append("        WHEN T7.OVSEA_CARD='N' THEN '국내' \r\n");
 			strbuf.append("    END OVSEA_CARD, \r\n");
->>>>>>> origin/hs
+
 			strbuf.append("    MID, \r\n");
 			strbuf.append("    TID, \r\n");
 			strbuf.append("    ADD_CID,  \r\n");	
@@ -3508,18 +3508,18 @@ public class trans_ora_manager {
 			strbuf.append(",T5.TERM_NM TR_TIDNM \r\n");
 			strbuf.append(",TID TR_TID \r\n");
 			strbuf.append(",T6.PUR_NM TR_ACQNM \r\n");
-<<<<<<< HEAD
+
 			strbuf.append(",MID TR_MID \r\n");
 			strbuf.append(",CASE WHEN RTN_CD IN ('60', '67') THEN '�뜝�룞�삕�뜝�룞�삕�뜝�룞�삕�뜝占�' ELSE '�뜝�룞�삕�뜝�룞�삕�뇸�뜝占�' END RTN_TXT \r\n");
 			strbuf.append(",CASE WHEN RTN_CD IN ('60', '61') THEN '�뜝�룞�삕�뜝�룞�삕' WHEN RTN_CD IN ('64','67') THEN '�뜝�룞�삕�뜝占�' END TR_AUTHSTAT \r\n");
-=======
+
 			strbuf.append(",MID TR_MID, \r\n");
 			strbuf.append("CASE   \r\n");
 			strbuf.append("    WHEN RTN_CD IS NULL THEN '결과없음' \r\n");
 			strbuf.append("    WHEN RTN_CD IN('60', '67') THEN '정상매입' \r\n");
 			strbuf.append("    WHEN RTN_CD IN('61', '64') THEN '매입반송' \r\n");
 			strbuf.append("END TR_AUTHSTAT \r\n");
->>>>>>> origin/hs
+
 			strbuf.append(",CARD_NO TR_CARDNO \r\n");
 			strbuf.append(",SALE_AMT TR_AMT \r\n");
 			strbuf.append(",HALBU TR_HALBU \r\n");
@@ -3531,14 +3531,14 @@ public class trans_ora_manager {
 			strbuf.append(",REQ_DD \r\n");
 			strbuf.append(",REG_DD DP_REG_DD \r\n");
 			strbuf.append(",RTN_CD \r\n");
-<<<<<<< HEAD
+
 			strbuf.append(",EXP_DD DP_EXP_DD \r\n");
 			strbuf.append(",RS_MSG DP_RST_TXT \r\n");
 			strbuf.append(",'�뜝�떊�슱�삕' TR_CARDTP\r\n"); //�뜝�듅源띿삕_�뜝�룞�삕�뜝�룞�삕
 			strbuf.append(",'�뜝�룞�삕�뜝�룞�삕'OVERSEA_CARD\r\n"); //�뜝�듅源띿삕_�뜝�룞�삕�뜝�룞�삕
 			strbuf.append(",'�솚�뜝�뙓諭꾩삕�샇' ADD_PID\r\n"); //�뜝�듅源띿삕_�뜝�룞�삕�뜝�룞�삕
 			strbuf.append(",'�뜝�룞�삕�뜝�룞�삕�뜝�뙓�벝�삕' DP_DEPO\r\n"); //�뜝�듅源띿삕_�뜝�룞�삕�뜝�룞�삕
-=======
+
 			strbuf.append(",EXP_DD DP_EXP_DD, \r\n");
 			strbuf.append("	   CASE \r\n");
 			strbuf.append("	       WHEN CHECK_CARD='Y' THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD='" + orgcd + "' AND SCD_CD='SCD0019') \r\n");
@@ -3556,7 +3556,7 @@ public class trans_ora_manager {
 			strbuf.append("    END DP_RST_TXT, \r\n");			
 			strbuf.append("    RTN_CD DP_DEPO  \r\n");	
 			
->>>>>>> origin/hs
+
 			strbuf.append("FROM \r\n");
 			strbuf.append("TB_MNG_DEPDATA T1 \r\n");
 			strbuf.append("LEFT OUTER JOIN( \r\n");
@@ -3845,7 +3845,7 @@ public class trans_ora_manager {
 			strbuf = new StringBuffer();
 			//�뜝�룞�삕�뜝�룞�삕�뜝�뙃琉꾩삕
 			strbuf.append("SELECT \r\n");
-<<<<<<< HEAD
+
 			strbuf.append("SEQNO \r\n");
 			strbuf.append(", DEP_NM TR_DEPNM \r\n");
 			strbuf.append(", TERM_NM TR_TIDNM \r\n");
@@ -3936,7 +3936,7 @@ public class trans_ora_manager {
 			strbuf.append(") and NVL(TRAN_STAT,'TR00') IN ('TR00','RV01','DP99') " + set_where + " \r\n");
 			strbuf.append("order by APPDD desc, apptm desc \r\n");
 			strbuf.append(") \r\n");
-=======
+
 			strbuf.append("    '보류' DELEY, \r\n");
 			strbuf.append("    DEP_NM TR_DEPNM, \r\n");
 			strbuf.append("    TERM_NM TR_TIDNM, \r\n");
@@ -4052,7 +4052,7 @@ public class trans_ora_manager {
 			strbuf.append("        ) and NVL(TRAN_STAT,'TR00') IN ('TR00','RV01','DP99') " + set_where + " \r\n");
 			strbuf.append("        order by APPDD desc, apptm desc \r\n");
 			strbuf.append("    ) \r\n");
->>>>>>> origin/hs
+
 			strbuf.append(") \r\n");
 			
 
@@ -4137,7 +4137,7 @@ public class trans_ora_manager {
 			strbuf = new StringBuffer();
 			//�뜝�룞�삕�뜝�룞�삕�뜝�뙃琉꾩삕
 			strbuf.append("SELECT \r\n");
-<<<<<<< HEAD
+
 			strbuf.append("PUR_NM TR_ACQNM, TT1.MID, ACNT, CCNT, AAMT, CAMT, RACNT DELEY_ACNT, RAAMT DELAY_AAMT, RCCNT DELAY_CCNT, RCAMT DELAY_CAMT, (ACNT+CCNT) TOTCNT, (AAMT-CAMT) TOTAMT \r\n");
 			strbuf.append("FROM ( \r\n");
 			strbuf.append("SELECT \r\n");
@@ -4197,7 +4197,7 @@ public class trans_ora_manager {
 			strbuf.append(") \r\n");
 			strbuf.append(") \r\n");
 
-=======
+
 			strbuf.append("    TR_ACQNM, \r\n");
 			strbuf.append("    SUM(TOTCNT) TOTCNT,	\r\n");
 			strbuf.append("    SUM(TOTAMT) TOTAMT,	\r\n");
@@ -4269,7 +4269,7 @@ public class trans_ora_manager {
 			strbuf.append(")T7 ON(TT1.TRANIDX=T7.TRANIDX AND TT1.APPDD = T7.APP_DD AND TT1.APPNO = T7.APP_NO) \r\n");						
 			strbuf.append("ORDER BY PUR_SORT ASC \r\n");
 			strbuf.append("    ) GROUP BY MID, TR_ACQNM \r\n"); 
->>>>>>> origin/hs
+
 			
 			
 			
@@ -4556,16 +4556,16 @@ public class trans_ora_manager {
 			strbuf.append("    APPNO TR_APPNO, \r\n");
 			strbuf.append("    AMOUNT TR_AMT, \r\n");
 			strbuf.append("    HALBU TR_HALBU, \r\n");
-<<<<<<< HEAD
+
 			strbuf.append("    CASE \r\n");
 			strbuf.append("        --�뜝�룞�삕�뜝�떥嫄곕쨪�삕 \r\n");
 			strbuf.append("        WHEN APPGB='A' THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD= '" + orgcd + "' AND SCD_CD='SCD0015') \r\n");
 			strbuf.append("        --�뜝�룞�삕�윴�궧�뜝占� \r\n");
 			strbuf.append("        WHEN APPGB='C' THEN (SELECT SCD_DIP FROM TB_BAS_SITECODE WHERE ORG_CD= '" + orgcd + "' AND SCD_CD='SCD0016') \r\n");
 			strbuf.append("    END APP_MSG, \r\n");			
-=======
+
 			strbuf.append("    APP_MSG, \r\n");
->>>>>>> origin/hs
+
 			strbuf.append("    TSTAT TR_CANDD, \r\n");
 			strbuf.append("    OAPPDD TR_OAPPDD, \r\n");
 			strbuf.append("    CARDTP_TXT TR_CARDTP, \r\n");
@@ -4592,7 +4592,7 @@ public class trans_ora_manager {
 //			strbuf.append("AUTHMSG TR_RST_MSG, \r\n");
 //			strbuf.append("MEDI_GOODS MEDI_GOODS \r\n");
 			strbuf.append("FROM( \r\n");
-<<<<<<< HEAD
+
 			strbuf.append("SELECT \r\n");
 			strbuf.append("SEQNO, DEP_NM, TERM_NM, TID, MID, PUR_NM, TSTAT, \r\n");
 			strbuf.append("    CASE \r\n");
@@ -4670,7 +4670,7 @@ public class trans_ora_manager {
 			strbuf.append("WHEN T2.RTN_CD='67' THEN 'C' \r\n");
 			strbuf.append("END \r\n");
 			strbuf.append(") \r\n");
-=======
+
 			strbuf.append("    SELECT \r\n");
 //			strbuf.append("SEQNO, \r\n");
 			strbuf.append("        DEP_NM, TERM_NM, APPDD, \r\n");
@@ -4756,7 +4756,7 @@ public class trans_ora_manager {
 			strbuf.append("                WHEN T2.RTN_CD='67' THEN 'C' \r\n");
 			strbuf.append("            END \r\n");
 			strbuf.append("            ) \r\n");
->>>>>>> origin/hs
+
 			strbuf.append("LEFT OUTER JOIN( \r\n");
 			strbuf.append("SELECT DEP_CD, TERM_NM, TERM_ID FROM TB_BAS_TIDMST WHERE ORG_CD= '" + orgcd + "' \r\n");
 			strbuf.append(")T3 ON(T1.TID=T3.TERM_ID) \r\n");
