@@ -68,11 +68,13 @@ public class util_manager {
 		String depcd_where = "";
 		String set_where = "";
 		String set_where_dep ="";
+		String set_where_depextra ="";
 		String set_where_req ="";
 		String set_where_daesa ="";
 		
 		if(!Objects.equals(whereqry.get("depcd"),null )) {
 			depcd_where += " AND DEP_CD = '" + whereqry.get("depcd") + "'";
+			set_where_depextra += " AND T4.DEP_CD = '" + whereqry.get("depcd") + "'";
 		}
 		
 		if(!Objects.equals(whereqry.get("sappdd"),null )) {
@@ -105,10 +107,12 @@ public class util_manager {
 		
 		if(!Objects.equals(whereqry.get("pgb"),null )) {
 			set_where += " AND ADD_GB = '" + whereqry.get("pgb") + "'";
+			set_where_dep += " AND ADD_GB = '" + whereqry.get("pgb") + "'";
 		}
 		
 		if(!Objects.equals(whereqry.get("rhk"),null )) {
 			set_where += " AND ADD_CD = '" + whereqry.get("rhk") + "'";
+			set_where_dep += " AND ADD_CD = '" + whereqry.get("rhk") + "'";
 		}
 		
 		if(!Objects.equals(whereqry.get("samt"),null )) {
@@ -123,12 +127,22 @@ public class util_manager {
 		
 		if(!Objects.equals(whereqry.get("acqcd"),null )) {
 			set_where += " AND ACQ_CD = '" + whereqry.get("acqcd") + "'";
-			set_where_dep += " AND ACQ_CD = '" + whereqry.get("acqcd") + "'";
+			set_where_depextra += " AND T1.ACQ_CD = '" + whereqry.get("acqcd") + "'";
 		}
 		
 		if(!Objects.equals(whereqry.get("cardtp"),null )) {
 			set_where += " AND NVL(CHECK_CARD,'N') = '" + whereqry.get("cardtp") + "'";
+			set_where_depextra += " AND NVL(CHECK_CARD,'N') = '" + whereqry.get("cardtp") + "'";
 		}
+		
+		if(!Objects.equals(whereqry.get("cashtp"),null )) {
+			if(whereqry.get("cashtp").equals("3")) {
+				
+			} else {
+			set_where += " AND DDCGB = '" + whereqry.get("cashtp") + "'";
+			}
+		}
+		
 		
 		if(!Objects.equals(whereqry.get("cardno"),null )) {
 			set_where += " AND CARDNO = '" + whereqry.get("cardno") + "'";
@@ -146,12 +160,21 @@ public class util_manager {
 		}
 		
 		if(!Objects.equals(whereqry.get("mid"),null )) {
-			set_where_dep += " AND MID = '" + whereqry.get("mid") + "'";
+			set_where += " AND MID = '" + whereqry.get("mid") + "'";
+			set_where_depextra += " AND T1.MID = '" + whereqry.get("mid") + "'";
 		}
 		
 		if(!Objects.equals(whereqry.get("authstat"),null )) {
 			set_where += " AND APPGB = '" + whereqry.get("authstat") + "'";
 			set_where_dep += " AND RTN_CD = '" + whereqry.get("authstat") + "'";
+		}
+		
+		if(!Objects.equals(whereqry.get("banstat"),null )) {
+			 if (whereqry.get("banstat").equals("BA")) {
+				 set_where_dep += " AND RTN_CD = '61'";
+			 } else if (whereqry.get("banstat").equals("BC")) {		           
+				 set_where_dep += " AND RTN_CD = '64'";
+		     }
 		}
 		
 		if(!Objects.equals(whereqry.get("sexpdd"),null )) {
@@ -187,7 +210,8 @@ public class util_manager {
 		        } else if (value.equals("2")) {
 		            conditionBuilder.append(" ((APPGB = 'A' AND OAPP_AMT = APPDD) OR (APPGB = 'C' AND OAPPDD = APPDD))");
 		        } else if (value.equals("3")) {
-		            conditionBuilder.append(" ((APPGB = 'A' AND OAPP_AMT <> APPDD) OR (APPGB = 'C' AND OAPPDD <> APPDD))");
+		            //conditionBuilder.append(" ((APPGB = 'A' AND OAPP_AMT <> APPDD) OR (APPGB = 'C' AND OAPPDD <> APPDD))");
+		            conditionBuilder.append(" (APPGB = 'C' AND OAPPDD <> APPDD)");
 		        }
 
 		        // 다음 조건을 위해 OR 추가
@@ -213,13 +237,22 @@ public class util_manager {
 		    for (String value : transtatValues) {
 		        value = value.trim(); // 공백 제거
 
-		        if (value.equals("1")) {
-		            conditionBuilder.append(" (APPGB = 'A' AND (OAPP_AMT IS NULL OR OAPP_AMT = 0))");
-		        } else if (value.equals("2")) {
-		            conditionBuilder.append(" ((APPGB = 'A' AND OAPP_AMT = APPDD) OR (APPGB = 'C' AND OAPPDD = APPDD))");
-		        } else if (value.equals("3")) {
-		            conditionBuilder.append(" ((APPGB = 'A' AND OAPP_AMT <> APPDD) OR (APPGB = 'C' AND OAPPDD <> APPDD))");
-		        }
+		    if (value.equals("1")) {
+	            conditionBuilder.append(" (RTN_CD IN('60', '67'))");
+	        } else if (value.equals("2")) {
+	            conditionBuilder.append(" (RTN_CD IN('61', '64')) ");
+	        } else if (value.equals("3")) {
+	            conditionBuilder.append(" (RTN_CD IS NULL)");
+	        }
+
+		        
+//		        if (value.equals("1")) {
+//		            conditionBuilder.append(" (APPGB = 'A' AND (OAPP_AMT IS NULL OR OAPP_AMT = 0))");
+//		        } else if (value.equals("2")) {
+//		            conditionBuilder.append(" ((APPGB = 'A' AND OAPP_AMT = APPDD) OR (APPGB = 'C' AND OAPPDD = APPDD))");
+//		        } else if (value.equals("3")) {
+//		            conditionBuilder.append(" ((APPGB = 'A' AND OAPP_AMT <> APPDD) OR (APPGB = 'C' AND OAPPDD <> APPDD))");
+//		        }
 
 		        // 다음 조건을 위해 OR 추가
 		        if (!value.equals(transtatValues[transtatValues.length - 1])) {
@@ -234,6 +267,48 @@ public class util_manager {
 		    }
 		}		
 		
+		if (!Objects.equals(whereqry.get("reqstat"), null)) {
+
+		    // transtat 값을 쉼표(,)로 분리하여 배열로 변환
+		    String[] transtatValues = whereqry.get("reqstat").split(",");
+
+		    // transtat 배열의 값들을 순회하며 쿼리에 추가
+		    StringBuilder conditionBuilder = new StringBuilder();
+		    for (String value : transtatValues) {
+		        value = value.trim(); // 공백 제거
+
+		    if (value.equals("1")) {
+	            conditionBuilder.append(" (TRAN_STAT IN('TR00', 'RQ00'))");
+	        } else if (value.equals("2")) {
+	            conditionBuilder.append(" (TRAN_STAT IN('RV00')) ");
+	        } else if (value.equals("3")) {
+	            conditionBuilder.append(" (TRAN_STAT IN('RQ01'))");
+	        }
+
+		        
+//		        if (value.equals("1")) {
+//		            conditionBuilder.append(" (APPGB = 'A' AND (OAPP_AMT IS NULL OR OAPP_AMT = 0))");
+//		        } else if (value.equals("2")) {
+//		            conditionBuilder.append(" ((APPGB = 'A' AND OAPP_AMT = APPDD) OR (APPGB = 'C' AND OAPPDD = APPDD))");
+//		        } else if (value.equals("3")) {
+//		            conditionBuilder.append(" ((APPGB = 'A' AND OAPP_AMT <> APPDD) OR (APPGB = 'C' AND OAPPDD <> APPDD))");
+//		        }
+
+		        // 다음 조건을 위해 OR 추가
+		        if (!value.equals(transtatValues[transtatValues.length - 1])) {
+		            conditionBuilder.append(" OR");
+		        }
+		    }
+
+		    // 완성된 조건을 set_where에 추가
+		    if (conditionBuilder.length() > 0) {
+		        set_where += " AND (" + conditionBuilder.toString().trim().replaceAll("\\s+OR$", "") + ")";
+		        set_where_dep += " AND (" + conditionBuilder.toString().trim().replaceAll("\\s+OR$", "") + ")";
+		    }
+		}		
+		
+		
+		
 //		미작업
 //		if(!Objects.equals(whereqry.get("depstat"),null )) {
 //			set_where += " AND APP_GB = '" + whereqry.get("depstat") + "'";
@@ -246,6 +321,7 @@ public class util_manager {
 		inputHashMap.put("set_where_dep", set_where_dep);
 		inputHashMap.put("set_where_req", set_where_req);
 		inputHashMap.put("set_where_daesa", set_where_daesa);
+		inputHashMap.put("set_where_depextra", set_where_depextra);
 		
 	    List<String> resultList = new ArrayList<>();
         resultList.add(inputHashMap.get("orgcd"));
@@ -254,6 +330,7 @@ public class util_manager {
         resultList.add(inputHashMap.get("set_where_dep"));
         resultList.add(inputHashMap.get("set_where_req"));
         resultList.add(inputHashMap.get("set_where_daesa"));
+        resultList.add(inputHashMap.get("set_where_depextra"));
 		///WHERE QRY END///		
 		return resultList;
 	}
