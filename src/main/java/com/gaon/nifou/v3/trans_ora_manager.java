@@ -6028,9 +6028,9 @@ public class trans_ora_manager {
 			strbuf.append("FROM(\r\n ");
 			strbuf.append("SELECT\r\n ");
 			strbuf.append("CASE\r\n ");
-			strbuf.append("WHEN SVCGB ='CC' THEN '�뜝�떊�슱�삕'\r\n ");
-			strbuf.append("WHEN SVCGB ='CB' THEN '�뜝�룞�삕�뜝�룞�삕'\r\n ");
-			strbuf.append("WHEN SVCGB ='IC' THEN '�뜝�룞�삕�뜝�룞�삕IC'\r\n ");
+			strbuf.append("WHEN SVCGB ='CC' THEN '신용'\r\n ");
+			strbuf.append("WHEN SVCGB ='CB' THEN '현금'\r\n ");
+			strbuf.append("WHEN SVCGB ='IC' THEN '현금IC'\r\n ");
 			strbuf.append("END SVCGB\r\n ");
 			strbuf.append(",APPDD,SUM(AAMT) AAMT,SUM(CAMT) CAMT\r\n ");
 			strbuf.append("FROM(\r\n ");
