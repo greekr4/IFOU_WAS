@@ -1,64 +1,52 @@
 package com.gaon.nifou.v3.ctrl.common;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.Part;
 
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 
 import com.gaon.nifou.v3.trans_ora_manager;
 import com.gaon.nifou.v3.util_manager;
 
-@WebServlet("/upload.gaon")
+/**
+ * Servlet implementation class test
+ */
+@WebServlet("/common/upload.gaon")
 public class upload extends HttpServlet {
-    private static final long serialVersionUID = 1L;
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
-        response.setHeader("Access-Control-Allow-Origin", "*");
-        trans_ora_manager oram = new trans_ora_manager();
+		response.setHeader("Access-Control-Allow-Origin", "*");
+		trans_ora_manager oram = new trans_ora_manager();
         JSONArray jsonary = new JSONArray();
-        PrintWriter out = response.getWriter();
+		PrintWriter out = response.getWriter();
+		
+		String[] inputArray = request.getParameter("inputArray").split(",");
 
-        try {
-            // JSON 데이터를 읽어옴
-            BufferedReader reader = request.getReader();
-            StringBuilder sb = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                sb.append(line);
-            }
-            reader.close();
+		String exp_dd = inputArray[0].trim();
+		String acc_txt = inputArray[1].trim();
+		String mid = inputArray[2].trim();
+		int    exp_amt = Integer.parseInt(inputArray[3].trim());
+		String update_dd = inputArray[4].trim();
+		
+		String orgcd = request.getParameter("orgcd");
+		String pages = request.getParameter("pages");		
+		String DEBUG = request.getParameter("DEBUG");
+		
+		util_manager um = new util_manager();
+		HashMap<String, String> whereqry = um.get_where_qry(request);		
+		
+		out.print(oram.insert_bankdata(DEBUG,whereqry,exp_dd,acc_txt,mid,exp_amt,update_dd));		
+		
+	}
 
-            // JSON 데이터를 JSONArray로 변환
-            //jsonary = new JSONArray(sb.toString());
-
-            // JSONArray를 이용한 DB 입력 로직
-            // ...
-
-            out.println("Success"); // 처리 완료 메시지 출력
-        } catch (Exception e) {
-            out.println("Error"); // 처리 실패 메시지 출력
-            e.printStackTrace();
-        }
-    }
 }

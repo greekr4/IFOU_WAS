@@ -5227,6 +5227,75 @@ public class trans_ora_manager {
 	}
 	
 	
+	/**
+	 * insert_bankdata 
+	 * @param jary(tb_sys_domain)
+	 * @return json�뜝�룞�삕�뜝�룞�삕�뜝�룞�삕�뜝�룞�삕 dhx�뜝�룞�삕�뜝�떇�슱�삕 �뜝�듅怨ㅼ삕
+	 * 2023-02-22 �뜝�룞�삕�뜝�룞�삕�뜝�룞�삕
+	 */
+	public JSONArray insert_bankdata(String DEBUG,HashMap<String, String> whereqry,
+			String exp_dd, String acc_txt, String mid, int exp_amt, String update_dd) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		JSONArray jsonary = new JSONArray();
+		
+		///WHERE QRY///
+		util_manager util = new util_manager();
+		List<String> resultList = util.make_query(whereqry);
+		
+		String orgcd = resultList.get(0);
+		String depcd_where = resultList.get(1);
+		String set_where = resultList.get(2);
+		String set_where_dep = resultList.get(3);
+		String set_where_depextra = resultList.get(6);
+		
+		try {
+			strbuf = new StringBuffer();
+			//�뜝�룞�삕�뜝�룞�삕�뜝�뙃琉꾩삕
+			strbuf.append("INSERT INTO TB_MNG_BANKDATA \r\n");
+			strbuf.append("(ORG_CD, DEP_CD, ACC_TXT, MID, EXP_DD, EXP_AMT, UPDATE_DD) \r\n");
+			strbuf.append("VALUES('"+ orgcd + "','" + depcd_where + "','" + acc_txt + "','" + mid + "','" + " \r\n");
+			strbuf.append(exp_dd+"','" + exp_amt + "','" + update_dd + "') \r\n");
+		
+			//DEPNM
+			
+			//System.lineSeparator()
+			/**
+			 * ----------�뜝�룞�삕�뜝�룞�삕�뜝占�---------------
+			 */
+			System.out.println(strbuf.toString());	//�뜝�떥源띿삕
+			if(Objects.equals(DEBUG,"Y")) {
+				JSONObject debugqry = new JSONObject();
+				String qry = "<br><br>" + strbuf.toString().replace("\r\n", "<br>").replace("\t","") + "<br>";
+				debugqry.put("qry", qry);
+				jsonary.add(debugqry);
+				return jsonary;
+			}
+
+			
+			con = getOraConnect();
+			stmt = con.prepareStatement(strbuf.toString());
+			
+			
+			rs = stmt.executeQuery();
+
+			
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			setOraClose(con,stmt,rs);
+		}
+		return jsonary;
+	}
+	
+	
+	
+	
+	
+	
 	
 	/**
 	 * depcd �뜝�떆琉꾩삕 Select Query
