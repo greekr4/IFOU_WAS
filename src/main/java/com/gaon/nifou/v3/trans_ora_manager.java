@@ -801,10 +801,10 @@ public class trans_ora_manager {
 			strbuf.append("    TO_CHAR(TO_DATE(APPDD, 'YYYYMMDD'), 'YYYY-MM-DD') TR_APPDD, \r\n");
 			strbuf.append("    TRIM(TO_CHAR((ACNT+CCNT),'999,999,999,999,999,999')) TOTCNT, \r\n");
 			strbuf.append("    TRIM(TO_CHAR((AAMT-CAMT),'999,999,999,999,999,999')) TOTAMT, \r\n");
-			strbuf.append("    TRIM(TO_CHAR((ACNT),'999,999,999,999,999,999')), \r\n");
-			strbuf.append("    TRIM(TO_CHAR((CCNT),'999,999,999,999,999,999')), \r\n");
-			strbuf.append("    TRIM(TO_CHAR((AAMT),'999,999,999,999,999,999')), \r\n");
-			strbuf.append("    TRIM(TO_CHAR((CAMT),'999,999,999,999,999,999')), \r\n");
+			strbuf.append("    TRIM(TO_CHAR((ACNT),'999,999,999,999,999,999')) ACNT, \r\n");
+			strbuf.append("    TRIM(TO_CHAR((CCNT),'999,999,999,999,999,999')) CCNT, \r\n");
+			strbuf.append("    TRIM(TO_CHAR((AAMT),'999,999,999,999,999,999')) AAMT, \r\n");
+			strbuf.append("    TRIM(TO_CHAR((CAMT),'999,999,999,999,999,999')) CAMT, \r\n");
 			strbuf.append("    ACQ_CD HIDDEN \r\n");
 			strbuf.append("FROM( \r\n");
 			strbuf.append("			SELECT \r\n");
