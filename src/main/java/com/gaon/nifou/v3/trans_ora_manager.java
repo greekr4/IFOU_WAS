@@ -33,7 +33,7 @@ public class trans_ora_manager {
 	private String db_pwd[] = null;
 	private String debugmode = null;
 	private util_manager um = new util_manager();
-	
+	private trans_seed_manager sm = new trans_seed_manager();
 	//DB�뜝�룞�삕�뜝�룞�삕 �뜝�룞�삕�뜝�룞�삕
 	public Connection getOraConnect(){
 		Connection con = null;
@@ -534,7 +534,9 @@ public class trans_ora_manager {
 					if(Objects.equals(rs.getString(id), null)) {
 						jsonob.put(id,"");	
 					}else{
-						jsonob.put(id,rs.getString(id));	
+						if(Objects.equals(id, "TR_CARDNO") || Objects.equals(id, "IFOU_CARDNO") || Objects.equals(id, "HOSPITAL_CARDNO") || Objects.equals(id, "CARD_NO") ) {
+							jsonob.put(id, sm.seed_dec_card(rs.getString(id)));
+						}else {	jsonob.put(id,rs.getString(id)); }
 					}
 					//System.out.println("�뜝�룞�삕�뜝�룞�삕");
 					}else {
@@ -2097,7 +2099,9 @@ public class trans_ora_manager {
 					if(Objects.equals(rs.getString(id), null)) {
 						jsonob.put(id,"");	
 					}else{
-						jsonob.put(id,rs.getString(id));	
+						if(Objects.equals(id, "TR_CARDNO") || Objects.equals(id, "IFOU_CARDNO") || Objects.equals(id, "HOSPITAL_CARDNO") || Objects.equals(id, "CARD_NO") ) {
+							jsonob.put(id, sm.seed_dec_card(rs.getString(id)));
+						}else {	jsonob.put(id,rs.getString(id)); }
 					}
 					System.out.println("success");
 					}else {
@@ -2245,7 +2249,9 @@ public class trans_ora_manager {
 					if(Objects.equals(rs.getString(id), null)) {
 						jsonob.put(id,"");	
 					}else{
-						jsonob.put(id,rs.getString(id));	
+						if(Objects.equals(id, "TR_CARDNO") || Objects.equals(id, "IFOU_CARDNO") || Objects.equals(id, "HOSPITAL_CARDNO") || Objects.equals(id, "CARD_NO") ) {
+							jsonob.put(id, sm.seed_dec_card(rs.getString(id)));
+						}else {	jsonob.put(id,rs.getString(id)); }
 					}
 					System.out.println("success");
 					}else {
@@ -2695,7 +2701,9 @@ public class trans_ora_manager {
 					if(Objects.equals(rs.getString(id), null)) {
 						jsonob.put(id,"");	
 					}else{
-						jsonob.put(id,rs.getString(id));	
+						if(Objects.equals(id, "TR_CARDNO") || Objects.equals(id, "IFOU_CARDNO") || Objects.equals(id, "HOSPITAL_CARDNO") || Objects.equals(id, "CARD_NO") ) {
+							jsonob.put(id, sm.seed_dec_card(rs.getString(id)));
+						}else {	jsonob.put(id,rs.getString(id)); }
 					}
 					System.out.println("success");
 					}else {
@@ -3325,7 +3333,9 @@ public class trans_ora_manager {
 					if(Objects.equals(rs.getString(id), null)) {
 						jsonob.put(id,"");	
 					}else{
-						jsonob.put(id,rs.getString(id));	
+						if(Objects.equals(id, "TR_CARDNO") || Objects.equals(id, "IFOU_CARDNO") || Objects.equals(id, "HOSPITAL_CARDNO") || Objects.equals(id, "CARD_NO") ) {
+							jsonob.put(id, sm.seed_dec_card(rs.getString(id)));
+						}else {	jsonob.put(id,rs.getString(id)); }
 					}
 					System.out.println("success");
 					}else {
@@ -3662,7 +3672,9 @@ public class trans_ora_manager {
 					if(Objects.equals(rs.getString(id), null)) {
 						jsonob.put(id,"");	
 					}else{
-						jsonob.put(id,rs.getString(id));	
+						if(Objects.equals(id, "TR_CARDNO") || Objects.equals(id, "IFOU_CARDNO") || Objects.equals(id, "HOSPITAL_CARDNO") || Objects.equals(id, "CARD_NO") ) {
+							jsonob.put(id, sm.seed_dec_card(rs.getString(id)));
+						}else {	jsonob.put(id,rs.getString(id)); }
 					}
 					System.out.println("success");
 					}else {
@@ -4108,7 +4120,9 @@ public class trans_ora_manager {
 					if(Objects.equals(rs.getString(id), null)) {
 						jsonob.put(id,"");	
 					}else{
-						jsonob.put(id,rs.getString(id));	
+						if(Objects.equals(id, "TR_CARDNO") || Objects.equals(id, "IFOU_CARDNO") || Objects.equals(id, "HOSPITAL_CARDNO") || Objects.equals(id, "CARD_NO") ) {
+							jsonob.put(id, sm.seed_dec_card(rs.getString(id)));
+						}else {	jsonob.put(id,rs.getString(id)); }
 					}
 					System.out.println("success");
 					}else {
